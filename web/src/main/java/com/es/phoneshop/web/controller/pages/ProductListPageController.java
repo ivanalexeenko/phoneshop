@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.es.core.model.phone.PhoneDao;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
+
 @Controller
 @RequestMapping (value = "/productList")
 public class ProductListPageController {
@@ -16,7 +19,7 @@ public class ProductListPageController {
     private PhoneDao phoneDao;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String showProductList(Model model) {
+    public String showProductList(Model model) throws IllegalAccessException, IntrospectionException, InvocationTargetException {
         model.addAttribute("phones", phoneDao.findAll(0, 10));
         return "productList";
     }
