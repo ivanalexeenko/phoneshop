@@ -3,6 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean name="properties" id="appProp" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="WEB-INF/conf/application.properties"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
+
 </beans>
