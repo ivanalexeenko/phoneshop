@@ -1,5 +1,5 @@
 <html>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
   <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -41,27 +41,18 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="index.html">Phoneshop Spring</a>
+    <a class="navbar-brand" href="<c:url value="/productList"/>">Phoneshop Spring</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
       <ul class="navbar-nav m-auto">
-        <li class="nav-item m-auto">
-          <a class="nav-link" href="index.html">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="category.html">Categories</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="product.html">Product</a>
-        </li>
         <li class="nav-item active">
-          <a class="nav-link" href="contact.html">Cart <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="<c:url value="/productList"/>">Product List<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="contact.html">Contact</a>
+        <li class="nav-item m-auto">
+          <a class="nav-link" href="<c:url value="/cart"/>">Cart</a>
         </li>
       </ul>
 
