@@ -10,18 +10,17 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
-
 import javax.annotation.Resource;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import static com.es.core.helping.ConstantsCore.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(TEST_CONFIG_LOCATION)
+
 public class JdbcPhoneDaoTest {
 
     @Resource
@@ -32,7 +31,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void saveSameModelBrandTest() throws GetterInvokerException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhonesTest() throws GetterInvokerException {
         Phone phone = new Phone();
         phone.setModel("Modely Model");
         phone.setBrand("Brandy Brand");
@@ -47,7 +46,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void saveSuccessTest() throws GetterInvokerException {
+    public void shouldAssertOnePhoneAddedNextIdGeneratedSuccessTest() throws GetterInvokerException {
         Long amountStart = jdbcTemplateTest.queryForObject( SELECT_PHONES_COUNT_QUERY,Long.class);
         Long maxIdStart = jdbcTemplateTest.queryForObject( SELECT_MAX_PHONE_ID_QUERY,Long.class);
 
@@ -69,7 +68,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void saveNullBrandTest() throws GetterInvokerException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveNullBrandTest() throws GetterInvokerException {
         Phone phone = new Phone();
         phone.setBrand(null);
 
@@ -78,7 +77,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void saveNullModelTest() throws GetterInvokerException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveNullModelTest() throws GetterInvokerException {
         Phone phone = new Phone();
         phone.setModel(null);
 
@@ -87,7 +86,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void getKeyOutRangeTest() {
+    public void shouldAssertPhonesNotFoundWhenGetKeyOutRangeTest() {
         final Long key = -1234L;
 
         Optional<Phone> phones = phoneDao.get(key);
@@ -97,7 +96,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void getKeyInRangeTest() {
+    public void shouldAssertPhoneIsFoundWhenGetKeyInRangeTest() {
         Long key = 1009L;
 
         Optional<Phone> phones = phoneDao.get(key);
@@ -107,7 +106,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void findAllInRangeTest() {
+    public void shouldAssertLimitedPhonesFromOffsetFoundWhenFindAllInRangeTest() {
         int offset = 3;
         int limit = 5;
 
@@ -118,7 +117,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void findAllZeroLimitTest() {
+    public void shouldAssertPhonesNotFoundWhenFindAllZeroLimitTest() {
         List phones = phoneDao.findAll(7,0);
 
         Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
@@ -126,7 +125,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void findAllOffsetOutRangeTest() {
+    public void shouldAssertPhonesNotFoundWhenFindAllOffsetOutRangeTest() {
         List phones = phoneDao.findAll(12,12);
 
         Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
