@@ -13,11 +13,14 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.es.core.helping.ConstantsCore.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/context/test-config.xml")
+@ContextConfiguration(TEST_CONFIG_LOCATION)
 public class JdbcPhoneDaoTest {
 
     @Resource
@@ -44,8 +47,8 @@ public class JdbcPhoneDaoTest {
     @Test
     @DirtiesContext
     public void saveSuccessTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
-        Long amountStart = jdbcTemplateTest.queryForObject( "SELECT COUNT (*) FROM phones",Long.class);
-        Long maxIdStart = jdbcTemplateTest.queryForObject( "SELECT MAX(id)FROM phones",Long.class);
+        Long amountStart = jdbcTemplateTest.queryForObject( SELECT_PHONES_COUNT_QUERY,Long.class);
+        Long maxIdStart = jdbcTemplateTest.queryForObject( SELECT_MAX_PHONE_ID_QUERY,Long.class);
 
         Phone phone = new Phone();
         phone.setModel("Modely Model");
@@ -53,13 +56,13 @@ public class JdbcPhoneDaoTest {
 
         phoneDao.save(phone);
 
-        Long amountFinish = jdbcTemplateTest.queryForObject( "SELECT COUNT (*) FROM phones",Long.class);
-        Long maxIdFinish = jdbcTemplateTest.queryForObject( "SELECT MAX(id) FROM phones",Long.class);
+        Long amountFinish = jdbcTemplateTest.queryForObject( SELECT_PHONES_COUNT_QUERY,Long.class);
+        Long maxIdFinish = jdbcTemplateTest.queryForObject( SELECT_MAX_PHONE_ID_QUERY,Long.class);
         Long differenceAmount = amountFinish - amountStart;
         Long differenceId = maxIdFinish - maxIdStart;
 
-        Assert.isTrue(differenceAmount.equals(1L),"Error occurred with phone addition: one added, " + differenceAmount + " found");
-        Assert.isTrue(differenceId.equals(1L),"ID generation failure: " + (maxIdStart + 1) + " expected, " + maxIdFinish + " found");
+        Assert.isTrue(differenceAmount.equals(1L),ERROR_PHONE_SAVE + Arrays.toString(new Object[]{1, differenceAmount}));
+        Assert.isTrue(differenceId.equals(1L),ERROR_ID_GENERATE + Arrays.toString(new Object[]{maxIdStart + 1,maxIdFinish}));
 
     }
 
@@ -88,17 +91,17 @@ public class JdbcPhoneDaoTest {
 
         Optional<Phone> phones = phoneDao.get(key);
 
-        Assert.isTrue(!phones.isPresent(),"Result for out of range key should be empty");
+        Assert.isTrue(!phones.isPresent(),ERROR_OUT_OF_RANGE_KEY);
     }
 
     @Test
     @DirtiesContext
     public void getKeyInRangeTest() {
-        final Long key = 1010L;
+        Long key = 1009L;
 
         Optional<Phone> phones = phoneDao.get(key);
 
-        Assert.isTrue(phones.isPresent(),"Result for in range key should be not empty");
+        Assert.isTrue(phones.isPresent(),ERROR_IN_RANGE_KEY);
     }
 
     @Test
@@ -109,7 +112,7 @@ public class JdbcPhoneDaoTest {
 
         List phones = phoneDao.findAll(offset,limit);
 
-        Assert.isTrue(phones.size() == limit,"Expected " + limit + " phones, " + phones.size() + " found");
+        Assert.isTrue(phones.size() == limit,ERROR_PHONES_FIND_ALL + Arrays.toString(new Object[]{limit,phones.size()}));
     }
 
     @Test
@@ -117,7 +120,7 @@ public class JdbcPhoneDaoTest {
     public void findAllZeroLimitTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
         List phones = phoneDao.findAll(7,0);
 
-        Assert.isTrue(phones.isEmpty(),"Empty phoneList expected");
+        Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
     }
 
     @Test
@@ -125,7 +128,7 @@ public class JdbcPhoneDaoTest {
     public void findAllOffsetOutRangeTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
         List phones = phoneDao.findAll(12,12);
 
-        Assert.isTrue(phones.isEmpty(),"Empty phoneList expected");
+        Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
     }
 
 

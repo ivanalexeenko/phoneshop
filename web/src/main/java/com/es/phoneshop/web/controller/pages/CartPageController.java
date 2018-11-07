@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 
+import static com.es.phoneshop.web.helping.ConstantsWeb.*;
+
 @Controller
-@RequestMapping(value = "/cart")
+@RequestMapping(value = CART_PAGE_REQUEST_MAPPING_VALUE)
 public class CartPageController {
     @Resource
     private CartService cartService;
