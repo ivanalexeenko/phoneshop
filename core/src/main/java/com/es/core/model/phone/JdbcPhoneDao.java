@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.exception.GetterInvokerException;
 import com.es.core.model.getter.GetterInvoker;
 import com.es.core.model.row_mapper.ColorRowMapper;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,17 +23,19 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public Optional<Phone> get(Long key) {
         List <Phone> phones = jdbcTemplate.query(SELECT_PHONE_BY_ID_QUERY,new Object[] {key},new BeanPropertyRowMapper<Phone>(Phone.class));
-        if(phones.isEmpty()) {
+
+        if(phones == null || phones.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(phones.get(0));
     }
 
-    public void save(final Phone phone) throws InvocationTargetException, IllegalAccessException, IntrospectionException,IllegalArgumentException {
+    public void save(Phone phone) throws IllegalArgumentException, GetterInvokerException {
 
-        if(get(phone.getId()).isPresent()) {
+        if(phone == null || get(phone.getId()).isPresent()) {
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
         }
+
         GetterInvoker getterInvoker = new GetterInvoker();
         Field[] fields = Phone.class.getDeclaredFields();
         Object[] values = new Object[fields.length];
@@ -42,7 +45,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     }
 
-    public List findAll(int offset, int limit) throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public List findAll(int offset, int limit) {
 
         List phones = jdbcTemplate.query(SELECT_PHONES_BY_LIMIT_AND_OFFSET_QUERY,new Object[]{limit,offset}, new BeanPropertyRowMapper<Phone>(Phone.class));
         List colors = jdbcTemplate.query(SELECT_COLORS_QUERY, new BeanPropertyRowMapper<Color>(Color.class));
@@ -52,7 +55,7 @@ public class JdbcPhoneDao implements PhoneDao {
         return phones;
     }
 
-    private void invokeGetters(Field[] fields,Object[] values,GetterInvoker getterInvoker,final Phone phone) throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    private void invokeGetters(Field[] fields,Object[] values,GetterInvoker getterInvoker,final Phone phone) throws GetterInvokerException {
         for (int i = 0; i < fields.length; i++) {
             String fieldName = fields[i].getName();
             values[i] = getterInvoker.invokeGetter(phone, fieldName);
@@ -70,7 +73,7 @@ public class JdbcPhoneDao implements PhoneDao {
             simpleJdbcInsert.execute(parameters);
         }
         catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException(DUPLICATE_ENTRY_MESSAGE);
+            throw new IllegalArgumentException(DUPLICATE_ENTRY_MESSAGE,e);
         }
     }
 

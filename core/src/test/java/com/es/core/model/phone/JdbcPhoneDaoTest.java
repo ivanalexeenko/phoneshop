@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.exception.GetterInvokerException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -31,7 +32,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void saveSameModelBrandTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void saveSameModelBrandTest() throws GetterInvokerException {
         Phone phone = new Phone();
         phone.setModel("Modely Model");
         phone.setBrand("Brandy Brand");
@@ -46,7 +47,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void saveSuccessTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void saveSuccessTest() throws GetterInvokerException {
         Long amountStart = jdbcTemplateTest.queryForObject( SELECT_PHONES_COUNT_QUERY,Long.class);
         Long maxIdStart = jdbcTemplateTest.queryForObject( SELECT_MAX_PHONE_ID_QUERY,Long.class);
 
@@ -68,7 +69,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void saveNullBrandTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void saveNullBrandTest() throws GetterInvokerException {
         Phone phone = new Phone();
         phone.setBrand(null);
 
@@ -77,7 +78,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void saveNullModelTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void saveNullModelTest() throws GetterInvokerException {
         Phone phone = new Phone();
         phone.setModel(null);
 
@@ -106,7 +107,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void findAllInRangeTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void findAllInRangeTest() {
         int offset = 3;
         int limit = 5;
 
@@ -117,7 +118,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void findAllZeroLimitTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void findAllZeroLimitTest() {
         List phones = phoneDao.findAll(7,0);
 
         Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
@@ -125,7 +126,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void findAllOffsetOutRangeTest() throws IllegalAccessException, IntrospectionException, InvocationTargetException {
+    public void findAllOffsetOutRangeTest() {
         List phones = phoneDao.findAll(12,12);
 
         Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
