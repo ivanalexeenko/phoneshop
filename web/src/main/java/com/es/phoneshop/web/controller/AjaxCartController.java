@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
-import static com.es.phoneshop.web.helping.ConstantsWeb.*;
+
 @Controller
-@RequestMapping(value = AJAX_CART_PAGE_REQUEST_MAPPING_VALUE)
+@RequestMapping(value = "/ajaxCart")
 public class AjaxCartController {
     @Resource
     private CartService cartService;

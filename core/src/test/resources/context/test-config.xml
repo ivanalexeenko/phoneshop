@@ -6,23 +6,23 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
-    <context:component-scan base-package="com.es.core" />
+    <context:component-scan base-package="com.es.core"/>
 
     <bean name="dataSourceTest" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="org.h2.Driver" />
-        <property name="url" value="jdbc:h2:mem:schemaTest" />
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:mem:schemaTest"/>
     </bean>
     <bean id="phoneDao" class="com.es.core.model.phone.JdbcPhoneDao">
 
     </bean>
     <bean id="jdbcTemplateTest" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSourceTest" />
+        <property name="dataSource" ref="dataSourceTest"/>
     </bean>
     <jdbc:initialize-database data-source="dataSourceTest">
-        <jdbc:script location="classpath:db/schemaTest.sql" />
+        <jdbc:script location="classpath:db/schemaTest.sql"/>
 
     </jdbc:initialize-database>
     <jdbc:initialize-database data-source="dataSourceTest">
-        <jdbc:script location="classpath:db/phoneTest.sql" />
+        <jdbc:script location="classpath:db/phoneTest.sql"/>
     </jdbc:initialize-database>
 </beans>

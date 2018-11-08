@@ -1,13 +1,15 @@
 package com.es.core.exception;
 
 public class GetterInvokerException extends Exception {
-    public GetterInvokerException(String s) {
-        super(s);
+    public GetterInvokerException(String message) {
+        super(message);
     }
-    public GetterInvokerException(Exception e) {
-        super(e);
+
+    public GetterInvokerException(Exception exception) {
+        super(exception);
     }
-    public GetterInvokerException(String s,Exception e) {
-        super(s,e);
+
+    public GetterInvokerException(String message, Exception exception) {
+        super(message, exception);
     }
 }

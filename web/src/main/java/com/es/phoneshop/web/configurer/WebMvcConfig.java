@@ -6,14 +6,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import static com.es.phoneshop.web.helping.ConstantsWeb.*;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {WEB_MVC_CONFIG_BASE_PACKAGE})
+@ComponentScan(basePackages = {"com.es.phoneshop.web.configurer"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(WEBJARS_PATH_PATTERN).addResourceLocations(WEBJARS_RESOURCE_LOCATION);
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }

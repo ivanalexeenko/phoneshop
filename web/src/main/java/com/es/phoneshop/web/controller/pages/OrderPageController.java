@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
-import static com.es.phoneshop.web.helping.ConstantsWeb.*;
 
 @Controller
-@RequestMapping(value = ORDER_PAGE_REQUEST_MAPPING_VALUE)
+@RequestMapping(value = "/order")
 public class OrderPageController {
     @Resource
     private OrderService orderService;

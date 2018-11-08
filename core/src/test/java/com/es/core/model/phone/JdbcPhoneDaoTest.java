@@ -1,42 +1,73 @@
 package com.es.core.model.phone;
 
 import com.es.core.exception.GetterInvokerException;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
+
 import javax.annotation.Resource;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import static com.es.core.helping.ConstantsCore.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(TEST_CONFIG_LOCATION)
+@ContextConfiguration("/context/test-config.xml")
 
 public class JdbcPhoneDaoTest {
-
+    private static final String SELECT_PHONES_COUNT_QUERY = "SELECT COUNT (*) FROM phones";
+    private static final String SELECT_MAX_PHONE_ID_QUERY = "SELECT MAX(id)FROM phones";
+    private static final String ERROR_PHONE_SAVE = "Error occurred with phone addition: [added,found] = ";
+    private static final String ERROR_ID_GENERATE = "ID generation failure: [expected,found] = ";
+    private static final String ERROR_OUT_OF_RANGE_KEY = "Result for out of range key should be empty";
+    private static final String ERROR_IN_RANGE_KEY = "Result for in range key should be not empty";
+    private static final String ERROR_EMPTY_PHONELIST = "Empty phoneList expected";
+    private static final String ERROR_PHONES_FIND_ALL = "Phones [expected,found] = ";
+    private static final String REPEAT_MODEL = "Modely Model";
+    private static final String REPEAT_BRAND = "Brandy Brand";
+    private static final String ORDINARY_MODEL = "XYZ";
+    private static final String ORDINARY_BRAND = "Apple";
+    private static final Long NEGATIVE_PRIMARY_KEY = -1234L;
+    private static final Long POSITIVE_PRIMARY_KEY = 1009L;
+    private static final int IN_RANGE_OFFSET = 3;
+    private static final int IN_RANGE_LIMIT = 5;
+    private static final int EMPTY_LIMIT = 0;
+    private static final int OUT_RANGE_OFFSET = 12;
+    private static final int OUT_RANGE_LIMIT = 12;
+    private static final Long ADDED_PHONE_AMOUNT = 1L;
+    private Phone phone, phone1;
+    private List phones;
+    private Optional<Phone> optionalPhone;
     @Resource
     private PhoneDao phoneDao;
 
     @Resource
     private JdbcTemplate jdbcTemplateTest;
 
+    @Before
+    public void init() {
+        phone = new Phone();
+        phone1 = new Phone();
+    }
+
+    @After
+    public void destroy() {
+        phone = null;
+        phone1 = null;
+    }
+
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhonesTest() throws GetterInvokerException {
-        Phone phone = new Phone();
-        phone.setModel("Modely Model");
-        phone.setBrand("Brandy Brand");
+    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhones() throws GetterInvokerException {
+        phone.setModel(REPEAT_MODEL);
+        phone.setBrand(REPEAT_BRAND);
 
-        Phone phone1 = new Phone();
         phone1.setModel(phone.getModel());
         phone1.setBrand(phone.getBrand());
 
@@ -46,30 +77,28 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void shouldAssertOnePhoneAddedNextIdGeneratedSuccessTest() throws GetterInvokerException {
-        Long amountStart = jdbcTemplateTest.queryForObject( SELECT_PHONES_COUNT_QUERY,Long.class);
-        Long maxIdStart = jdbcTemplateTest.queryForObject( SELECT_MAX_PHONE_ID_QUERY,Long.class);
+    public void shouldAssertOnePhoneAddedNextIdGeneratedSuccess() throws GetterInvokerException {
+        Long amountStart = jdbcTemplateTest.queryForObject(SELECT_PHONES_COUNT_QUERY, Long.class);
+        Long maxIdStart = jdbcTemplateTest.queryForObject(SELECT_MAX_PHONE_ID_QUERY, Long.class);
 
-        Phone phone = new Phone();
-        phone.setModel("Modely Model");
-        phone.setBrand("Brandy Brand");
+        phone.setModel(ORDINARY_MODEL);
+        phone.setBrand(ORDINARY_BRAND);
 
         phoneDao.save(phone);
 
-        Long amountFinish = jdbcTemplateTest.queryForObject( SELECT_PHONES_COUNT_QUERY,Long.class);
-        Long maxIdFinish = jdbcTemplateTest.queryForObject( SELECT_MAX_PHONE_ID_QUERY,Long.class);
+        Long amountFinish = jdbcTemplateTest.queryForObject(SELECT_PHONES_COUNT_QUERY, Long.class);
+        Long maxIdFinish = jdbcTemplateTest.queryForObject(SELECT_MAX_PHONE_ID_QUERY, Long.class);
         Long differenceAmount = amountFinish - amountStart;
         Long differenceId = maxIdFinish - maxIdStart;
 
-        Assert.isTrue(differenceAmount.equals(1L),ERROR_PHONE_SAVE + Arrays.toString(new Object[]{1, differenceAmount}));
-        Assert.isTrue(differenceId.equals(1L),ERROR_ID_GENERATE + Arrays.toString(new Object[]{maxIdStart + 1,maxIdFinish}));
+        Assert.isTrue(differenceAmount.equals(ADDED_PHONE_AMOUNT), ERROR_PHONE_SAVE + Arrays.toString(new Object[]{ADDED_PHONE_AMOUNT, differenceAmount}));
+        Assert.isTrue(differenceId.equals(ADDED_PHONE_AMOUNT), ERROR_ID_GENERATE + Arrays.toString(new Object[]{maxIdStart + ADDED_PHONE_AMOUNT, maxIdFinish}));
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveNullBrandTest() throws GetterInvokerException {
-        Phone phone = new Phone();
+    public void shouldThrowIllegalArgumentExceptionWhenSaveNullBrand() throws GetterInvokerException {
         phone.setBrand(null);
 
         phoneDao.save(phone);
@@ -77,8 +106,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveNullModelTest() throws GetterInvokerException {
-        Phone phone = new Phone();
+    public void shouldThrowIllegalArgumentExceptionWhenSaveNullModel() throws GetterInvokerException {
         phone.setModel(null);
 
         phoneDao.save(phone);
@@ -86,55 +114,43 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void shouldAssertPhonesNotFoundWhenGetKeyOutRangeTest() {
-        final Long key = -1234L;
+    public void shouldAssertPhonesNotFoundWhenGetKeyOutRange() {
+        optionalPhone = phoneDao.get(NEGATIVE_PRIMARY_KEY);
 
-        Optional<Phone> phones = phoneDao.get(key);
-
-        Assert.isTrue(!phones.isPresent(),ERROR_OUT_OF_RANGE_KEY);
+        Assert.isTrue(!optionalPhone.isPresent(), ERROR_OUT_OF_RANGE_KEY);
     }
 
     @Test
     @DirtiesContext
-    public void shouldAssertPhoneIsFoundWhenGetKeyInRangeTest() {
-        Long key = 1009L;
+    public void shouldAssertPhoneIsFoundWhenGetKeyInRange() {
+        optionalPhone = phoneDao.get(POSITIVE_PRIMARY_KEY);
 
-        Optional<Phone> phones = phoneDao.get(key);
-
-        Assert.isTrue(phones.isPresent(),ERROR_IN_RANGE_KEY);
+        Assert.isTrue(optionalPhone.isPresent(), ERROR_IN_RANGE_KEY);
     }
 
     @Test
     @DirtiesContext
-    public void shouldAssertLimitedPhonesFromOffsetFoundWhenFindAllInRangeTest() {
-        int offset = 3;
-        int limit = 5;
+    public void shouldAssertLimitedPhonesFromOffsetFoundWhenFindAllInRange() {
+        phones = phoneDao.findAll(IN_RANGE_OFFSET, IN_RANGE_LIMIT);
 
-        List phones = phoneDao.findAll(offset,limit);
-
-        Assert.isTrue(phones.size() == limit,ERROR_PHONES_FIND_ALL + Arrays.toString(new Object[]{limit,phones.size()}));
+        Assert.isTrue(phones.size() == IN_RANGE_LIMIT, ERROR_PHONES_FIND_ALL + Arrays.toString(new Object[]{IN_RANGE_LIMIT, phones.size()}));
     }
 
     @Test
     @DirtiesContext
-    public void shouldAssertPhonesNotFoundWhenFindAllZeroLimitTest() {
-        List phones = phoneDao.findAll(7,0);
+    public void shouldAssertPhonesNotFoundWhenFindAllZeroLimit() {
+        phones = phoneDao.findAll(IN_RANGE_OFFSET, EMPTY_LIMIT);
 
-        Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
+        Assert.isTrue(phones.isEmpty(), ERROR_EMPTY_PHONELIST);
     }
 
     @Test
     @DirtiesContext
-    public void shouldAssertPhonesNotFoundWhenFindAllOffsetOutRangeTest() {
-        List phones = phoneDao.findAll(12,12);
+    public void shouldAssertPhonesNotFoundWhenFindAllOffsetOutRange() {
+        phones = phoneDao.findAll(OUT_RANGE_OFFSET, OUT_RANGE_LIMIT);
 
-        Assert.isTrue(phones.isEmpty(),ERROR_EMPTY_PHONELIST);
+        Assert.isTrue(phones.isEmpty(), ERROR_EMPTY_PHONELIST);
     }
-
-
-
-
-
 
 
 }

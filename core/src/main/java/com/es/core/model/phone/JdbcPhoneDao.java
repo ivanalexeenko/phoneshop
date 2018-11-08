@@ -14,17 +14,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import static com.es.core.helping.ConstantsCore.*;
-
 @Component
 public class JdbcPhoneDao implements PhoneDao {
+    private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
+    private static final String SELECT_PHONES_BY_LIMIT_AND_OFFSET_QUERY = "select * from phones limit ? offset ?";
+    private static final String SELECT_COLORS_QUERY = "select * from colors";
+    private static final String SELECT_PHONE2COLOR_BY_ID_QUERY = "select * from phone2color where phoneId = ?";
+    private static final String ILLEGAL_ARGUMENT_MESSAGE = "Item with current ID already exists";
+    private static final String DUPLICATE_ENTRY_MESSAGE = " Duplicate entry, such kind of item already exists";
+    private static final String PHONES_TABLE_NAME = "phones";
+    private static final String GENERATED_KEY_NAME = "id";
     @Resource
     private JdbcTemplate jdbcTemplate;
 
     public Optional<Phone> get(Long key) {
-        List <Phone> phones = jdbcTemplate.query(SELECT_PHONE_BY_ID_QUERY,new Object[] {key},new BeanPropertyRowMapper<Phone>(Phone.class));
+        List<Phone> phones = jdbcTemplate.query(SELECT_PHONE_BY_ID_QUERY, new Object[]{key}, new BeanPropertyRowMapper<Phone>(Phone.class));
 
-        if(phones == null || phones.isEmpty()) {
+        if (phones == null || phones.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(phones.get(0));
@@ -32,7 +38,7 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public void save(Phone phone) throws IllegalArgumentException, GetterInvokerException {
 
-        if(phone == null || get(phone.getId()).isPresent()) {
+        if (phone == null || get(phone.getId()).isPresent()) {
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
         }
 
@@ -40,54 +46,53 @@ public class JdbcPhoneDao implements PhoneDao {
         Field[] fields = Phone.class.getDeclaredFields();
         Object[] values = new Object[fields.length];
 
-        invokeGetters(fields,values,getterInvoker,phone);
-        insert(fields,values);
+        invokeGetters(fields, values, getterInvoker, phone);
+        insert(fields, values);
 
     }
 
     public List findAll(int offset, int limit) {
 
-        List phones = jdbcTemplate.query(SELECT_PHONES_BY_LIMIT_AND_OFFSET_QUERY,new Object[]{limit,offset}, new BeanPropertyRowMapper<Phone>(Phone.class));
+        List phones = jdbcTemplate.query(SELECT_PHONES_BY_LIMIT_AND_OFFSET_QUERY, new Object[]{limit, offset}, new BeanPropertyRowMapper<Phone>(Phone.class));
         List colors = jdbcTemplate.query(SELECT_COLORS_QUERY, new BeanPropertyRowMapper<Color>(Color.class));
 
-        setPhonesColors(phones,colors);
+        setPhonesColors(phones, colors);
 
         return phones;
     }
 
-    private void invokeGetters(Field[] fields,Object[] values,GetterInvoker getterInvoker,final Phone phone) throws GetterInvokerException {
+    private void invokeGetters(Field[] fields, Object[] values, GetterInvoker getterInvoker, final Phone phone) throws GetterInvokerException {
         for (int i = 0; i < fields.length; i++) {
             String fieldName = fields[i].getName();
             values[i] = getterInvoker.invokeGetter(phone, fieldName);
         }
     }
 
-    private void fillParameters(Field[] fields,Object[] values,Map<String,Object> parameters) {
-        for(int i = 0;i < fields.length;i++) {
-            parameters.put(fields[i].getName(),values[i]);
+    private void fillParameters(Field[] fields, Object[] values, Map<String, Object> parameters) {
+        for (int i = 0; i < fields.length; i++) {
+            parameters.put(fields[i].getName(), values[i]);
         }
     }
 
-    private void executeInsertion(SimpleJdbcInsert simpleJdbcInsert,Map<String,Object> parameters) {
+    private void executeInsertion(SimpleJdbcInsert simpleJdbcInsert, Map<String, Object> parameters) {
         try {
             simpleJdbcInsert.execute(parameters);
-        }
-        catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException(DUPLICATE_ENTRY_MESSAGE,e);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(DUPLICATE_ENTRY_MESSAGE, e);
         }
     }
 
-    private void insert(Field[] fields,Object[] values) {
+    private void insert(Field[] fields, Object[] values) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
                 .withTableName(PHONES_TABLE_NAME)
                 .usingGeneratedKeyColumns(GENERATED_KEY_NAME);
 
         Map<String, Object> parameters = new HashMap<>();
-        fillParameters(fields,values,parameters);
-        executeInsertion(simpleJdbcInsert,parameters);
+        fillParameters(fields, values, parameters);
+        executeInsertion(simpleJdbcInsert, parameters);
     }
 
-    private void setPhoneColors(List<Long> colorIds,List<Color> colors,Phone phone) {
+    private void setPhoneColors(List<Long> colorIds, List<Color> colors, Phone phone) {
         Set<Color> colors2phones = new HashSet<>();
         for (Long colorId : colorIds) {
             Optional<Color> any = colors.stream().filter(color -> color.getId().equals(colorId)).findAny();
@@ -96,11 +101,11 @@ public class JdbcPhoneDao implements PhoneDao {
         phone.setColors(colors2phones);
     }
 
-    private void setPhonesColors(List<Phone> phones,List<Color> colors) {
+    private void setPhonesColors(List<Phone> phones, List<Color> colors) {
         for (Phone phone : phones) {
-            List<Long> colorIds = jdbcTemplate.query( SELECT_PHONE2COLOR_BY_ID_QUERY,new Object[] {phone.getId()}, new ColorRowMapper());
+            List<Long> colorIds = jdbcTemplate.query(SELECT_PHONE2COLOR_BY_ID_QUERY, new Object[]{phone.getId()}, new ColorRowMapper());
             if (colorIds != null) {
-                setPhoneColors(colorIds,colors,phone);
+                setPhoneColors(colorIds, colors, phone);
             }
         }
     }
