@@ -1,27 +1,113 @@
 package com.es.core.model.phone;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.es.core.exception.GetterInvokerException;
+import com.es.core.model.getter.GetterInvoker;
+import com.es.core.model.row_mapper.ColorRowMapper;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
+import java.beans.IntrospectionException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 @Component
-public class JdbcPhoneDao implements PhoneDao{
+public class JdbcPhoneDao implements PhoneDao {
+    private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
+    private static final String SELECT_PHONES_BY_LIMIT_AND_OFFSET_QUERY = "select * from phones limit ? offset ?";
+    private static final String SELECT_COLORS_QUERY = "select * from colors";
+    private static final String SELECT_PHONE2COLOR_BY_ID_QUERY = "select * from phone2color where phoneId = ?";
+    private static final String ILLEGAL_ARGUMENT_MESSAGE = "Item with current ID already exists";
+    private static final String DUPLICATE_ENTRY_MESSAGE = " Duplicate entry, such kind of item already exists";
+    private static final String PHONES_TABLE_NAME = "phones";
+    private static final String GENERATED_KEY_NAME = "id";
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    public Optional<Phone> get(final Long key) {
-        throw new UnsupportedOperationException("TODO");
+    public Optional<Phone> get(Long key) {
+        List<Phone> phones = jdbcTemplate.query(SELECT_PHONE_BY_ID_QUERY, new Object[]{key}, new BeanPropertyRowMapper<Phone>(Phone.class));
+
+        if (phones == null || phones.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(phones.get(0));
     }
 
-    public void save(final Phone phone) {
-        throw new UnsupportedOperationException("TODO");
+    public void save(Phone phone) throws IllegalArgumentException, GetterInvokerException {
+
+        if (phone == null || get(phone.getId()).isPresent()) {
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
+        }
+
+        GetterInvoker getterInvoker = new GetterInvoker();
+        Field[] fields = Phone.class.getDeclaredFields();
+        Object[] values = new Object[fields.length];
+
+        invokeGetters(fields, values, getterInvoker, phone);
+        insert(fields, values);
+
     }
 
-    public List<Phone> findAll(int offset, int limit) {
-        return jdbcTemplate.query("select * from phones offset " + offset + " limit " + limit, new BeanPropertyRowMapper(Phone.class));
+    public List findAll(int offset, int limit) {
+
+        List phones = jdbcTemplate.query(SELECT_PHONES_BY_LIMIT_AND_OFFSET_QUERY, new Object[]{limit, offset}, new BeanPropertyRowMapper<Phone>(Phone.class));
+        List colors = jdbcTemplate.query(SELECT_COLORS_QUERY, new BeanPropertyRowMapper<Color>(Color.class));
+
+        setPhonesColors(phones, colors);
+
+        return phones;
     }
+
+    private void invokeGetters(Field[] fields, Object[] values, GetterInvoker getterInvoker, final Phone phone) throws GetterInvokerException {
+        for (int i = 0; i < fields.length; i++) {
+            String fieldName = fields[i].getName();
+            values[i] = getterInvoker.invokeGetter(phone, fieldName);
+        }
+    }
+
+    private void fillParameters(Field[] fields, Object[] values, Map<String, Object> parameters) {
+        for (int i = 0; i < fields.length; i++) {
+            parameters.put(fields[i].getName(), values[i]);
+        }
+    }
+
+    private void executeInsertion(SimpleJdbcInsert simpleJdbcInsert, Map<String, Object> parameters) {
+        try {
+            simpleJdbcInsert.execute(parameters);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(DUPLICATE_ENTRY_MESSAGE, e);
+        }
+    }
+
+    private void insert(Field[] fields, Object[] values) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+                .withTableName(PHONES_TABLE_NAME)
+                .usingGeneratedKeyColumns(GENERATED_KEY_NAME);
+
+        Map<String, Object> parameters = new HashMap<>();
+        fillParameters(fields, values, parameters);
+        executeInsertion(simpleJdbcInsert, parameters);
+    }
+
+    private void setPhoneColors(List<Long> colorIds, List<Color> colors, Phone phone) {
+        Set<Color> colors2phones = new HashSet<>();
+        for (Long colorId : colorIds) {
+            Optional<Color> any = colors.stream().filter(color -> color.getId().equals(colorId)).findAny();
+            any.ifPresent(colors2phones::add);
+        }
+        phone.setColors(colors2phones);
+    }
+
+    private void setPhonesColors(List<Phone> phones, List<Color> colors) {
+        for (Phone phone : phones) {
+            List<Long> colorIds = jdbcTemplate.query(SELECT_PHONE2COLOR_BY_ID_QUERY, new Object[]{phone.getId()}, new ColorRowMapper());
+            if (colorIds != null) {
+                setPhoneColors(colorIds, colors, phone);
+            }
+        }
+    }
+
 }
