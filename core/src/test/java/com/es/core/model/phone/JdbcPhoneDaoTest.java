@@ -49,7 +49,7 @@ public class JdbcPhoneDaoTest {
 
     @Resource
     private JdbcTemplate jdbcTemplateTest;
-
+/*
     @Before
     public void init() {
         phone = new Phone();
@@ -152,5 +152,5 @@ public class JdbcPhoneDaoTest {
         Assert.isTrue(phones.isEmpty(), ERROR_EMPTY_PHONELIST);
     }
 
-
+*/
 }

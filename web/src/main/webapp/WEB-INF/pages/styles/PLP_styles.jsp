@@ -7,7 +7,9 @@
     }
 
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    .row.content {height: 450px}
+    .row.content {
+        height: 450px
+    }
 
     /* Set gray background color and 100% height */
     .sidenav {
@@ -29,7 +31,37 @@
             height: auto;
             padding: 15px;
         }
-        .row.content {height:auto;}
+
+        .row.content {
+            height: auto;
+        }
     }
+</style>
+<style>
+    .rotate {
+        -moz-transition: all .2s linear;
+        -webkit-transition: all .2s linear;
+        transition: all .2s linear;
+        color: gray;
+    }
+
+    .rotate.desc {
+        -moz-transform: rotate(-180deg);
+        -webkit-transform: rotate(-180deg);
+        transform: rotate(-180deg);
+        color: black;
+    }
+
+    .rotate.asc {
+        color: black;
+    }
+
+    .rotate.neutral {
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        color: gray;
+    }
+
 </style>
 </html>

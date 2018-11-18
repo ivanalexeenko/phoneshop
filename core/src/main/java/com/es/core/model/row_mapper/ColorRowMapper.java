@@ -1,6 +1,5 @@
 package com.es.core.model.row_mapper;
 
-import javafx.util.Pair;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -12,5 +12,7 @@ public interface PhoneDao {
 
     void save(Phone phone) throws IllegalArgumentException, GetterInvokerException;
 
-    List findAll(int offset, int limit);
+    List findAll(int offset, int limit, String search,String orderBy,Boolean isAscend);
+
+    Integer countStocks(String search);
 }
