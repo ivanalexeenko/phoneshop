@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.es.core.cart.CartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ public class ProductListPageController {
     private static final String ORDER_BY_ASCEND_PARAMETER = "orderByAscend";
     private static final String ORDER_DATA_STRING_PARAMETER = "orderDataString";
     private static final String REGEX = ",";
+    private static final String CART_SIZE = "cartSize";
 
     private Integer currentPage = 1;
     private Integer totalPages;
@@ -50,6 +52,9 @@ public class ProductListPageController {
 
     @Resource
     private PhoneDao phoneDao;
+
+    @Resource
+    private CartService cartService;
 
     @PostConstruct
     public void init() {
@@ -115,6 +120,7 @@ public class ProductListPageController {
         session.setAttribute(ORDER_BY_ATTRIBUTE_NAME, orderBy);
         session.setAttribute(IS_ASCEND_ATTRIBUTE_NAME, isAscend);
         session.setAttribute(DATA_ATTRIBUTE_NAME, data);
+        session.setAttribute(CART_SIZE, cartService.getCart().getCartItems().size());
     }
 
     private void countPageParameters() {

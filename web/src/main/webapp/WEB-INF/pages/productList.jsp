@@ -11,6 +11,15 @@
     <jsp:useBean id="data" type="java.util.List" scope="session"/>
     <jsp:include page="/WEB-INF/pages/styles/PLP_styles.jsp"/>
     <jsp:include page="/WEB-INF/pages/sorting/iconClickHandler.jsp"/>
+    <style type="text/css">
+        span.error {
+            color: darkred;
+        }
+
+        span.success {
+            color: darkgreen;
+        }
+    </style>
 
 </head>
 <body>
@@ -44,7 +53,7 @@
                 </div>
                 <a class="btn btn-success btn-md ml-3" href="<c:url value="/cart"/>">
                     <i class="fa fa-shopping-cart"></i> Cart
-                    <span class="badge badge-light">0</span>
+                    <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
             </form>
         </div>
@@ -133,13 +142,41 @@
                             </td>
                             <td class="text-right"><i class="fa fa-dollar"></i>${phone.price}</td>
                             <td>
-                                <input type="text" class="form-control" aria-label="Small"
+                                <input id="input${phone.id}" type="text" class="form-control" aria-label="Small"
                                        aria-describedby="inputGroup-sizing-lg" placeholder="Enter quantity...">
                             </td>
                             <td>
-                                <button type="submit" class="btn btn-success btn-md ml-3">
+                                <button type="submit" id="add${phone.id}" class="btn btn-success btn-md ml-3">
                                     <i class="fa fa-plus-circle"></i> Add to Cart
                                 </button>
+                                <script>
+                                    $("#add${phone.id}").click(function (event) {
+                                        event.preventDefault();
+                                        var cartItem = {};
+                                        cartItem["phoneId"] = ${phone.id};
+                                        cartItem["quantity"] = $("#input${phone.id}").val();
+                                        $("#input${phone.id}").find("p").find("span").text("");
+                                        $.ajax({
+                                            type: "POST",
+                                            async: false,
+                                            data: JSON.stringify(cartItem),
+                                            contentType: "application/json",
+                                            dataType: 'json',
+                                            url: "ajaxCart",
+                                            success: function (res) {
+                                                if (res.isValidated) {
+                                                    $("#input${phone.id}").after('<p><span class="success">' + res.successMessage + '</span></p>');
+                                                }
+                                                else {
+                                                    $.each(res.errorMessages, function (key, value) {
+                                                        $("#input${phone.id}").after('<p><span class="error">' + value + '</span></p>');
+                                                    });
+                                                }
+                                                $("#cartSize").text(res.cartSize);
+                                            }
+                                        })
+                                    });
+                                </script>
                             </td>
                         </tr>
                     </c:forEach>
