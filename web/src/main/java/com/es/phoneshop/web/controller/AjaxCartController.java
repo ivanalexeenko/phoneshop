@@ -45,11 +45,6 @@ public class AjaxCartController {
                     Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
             );
 
-            if (errors.get(PHONE_ID_FIELD_NAME) == null || errors.get(QUANTITY_FIELD_NAME) == null) {
-                errors = new HashMap<>();
-                errors.put(QUANTITY_FIELD_NAME, NOT_ENOUGH_MESSAGE);
-            }
-
             response.setIsValidated(false);
             response.setErrorMessages(errors);
         } else {
@@ -64,11 +59,13 @@ public class AjaxCartController {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public void handleException() {
+    @ResponseBody
+    public CartItemJsonResponse handleException() {
         Map<String, String> error = new HashMap<>();
         error.put(QUANTITY_FIELD_NAME, NOT_A_NUMBER_MESSAGE);
         CartItemJsonResponse response = new CartItemJsonResponse();
         response.setIsValidated(false);
         response.setErrorMessages(error);
+        return response;
     }
 }

@@ -14,6 +14,7 @@ import javax.validation.ConstraintValidatorContext;
 public class QuantityAgreedStockValidator implements ConstraintValidator<QuantityAgreedStock, Object> {
     private static final String STOCK_WITH_ID_QUERY = "select * from stocks where phoneId = ?";
 
+
     private String fieldId;
     private String fieldQuantity;
 

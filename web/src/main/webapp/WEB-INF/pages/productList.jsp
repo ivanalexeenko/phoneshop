@@ -21,6 +21,7 @@
         }
     </style>
 
+
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -158,7 +159,6 @@
                                         $("#input${phone.id}").find("p").find("span").text("");
                                         $.ajax({
                                             type: "POST",
-                                            async: false,
                                             data: JSON.stringify(cartItem),
                                             contentType: "application/json",
                                             dataType: 'json',
@@ -176,6 +176,7 @@
                                             }
                                         })
                                     });
+
                                 </script>
                             </td>
                         </tr>
