@@ -1,10 +1,9 @@
-package com.es.core.cart;
+package com.es.core.service;
 
-import com.es.core.model.order.OrderItem;
-import com.es.core.model.phone.PhoneDao;
+import com.es.core.cart.Cart;
+import com.es.core.cart.CartItem;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 @Service
@@ -36,5 +35,10 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void remove(Long phoneId) {
         throw new UnsupportedOperationException("TODO");
+    }
+
+    @Override
+    public int getCartSize() {
+        return cart.getCartItems().size();
     }
 }

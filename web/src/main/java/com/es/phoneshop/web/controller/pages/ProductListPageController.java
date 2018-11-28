@@ -1,19 +1,20 @@
 package com.es.phoneshop.web.controller.pages;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.es.core.cart.CartService;
+import com.es.core.service.CartService;
+import com.es.core.service.PhoneService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.es.core.model.phone.PhoneDao;
+import com.es.core.dao.PhoneDao;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.*;
@@ -51,32 +52,26 @@ public class ProductListPageController {
     private List data;
 
     @Resource
-    private PhoneDao phoneDao;
+    private PhoneService phoneService;
 
     @Resource
     private CartService cartService;
 
-    @PostConstruct
-    public void init() {
+    @RequestMapping(method = RequestMethod.GET)
+    public String showProductList(Model model) {
         countPageParameters();
         data = Arrays.asList(dataArray);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public String showProductList(HttpSession session) {
-        setSessionAttributes(session);
+        setModelAttributes(model);
         return PRODUCT_LIST_ATTRIBUTE_NAME;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void getFormParam(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+    public void getFormParam(HttpServletRequest request, HttpServletResponse response,Model model) throws IOException {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);
         String tempAscend = request.getParameter(ORDER_BY_ASCEND_PARAMETER);
         String dataString = request.getParameter(ORDER_DATA_STRING_PARAMETER);
-
         if (tempCurrentPage != null) {
             currentPage = Integer.valueOf(tempCurrentPage);
         } else if (tempSearch != null) {
@@ -90,14 +85,14 @@ public class ProductListPageController {
             }
         }
         data = recalculateData(dataString);
-        setSessionAttributes(request.getSession());
+        setModelAttributes(model);
         response.sendRedirect(request.getRequestURI());
     }
 
     private List recalculateData(String dataString) {
         Integer[] tempArray;
         try {
-            if (dataString != null && !dataString.isEmpty()) {
+            if (!StringUtils.isEmpty(dataString)) {
                 String[] dataStringArray = dataString.split(REGEX);
                 tempArray = new Integer[dataStringArray.length];
                 for (int i = 0; i < dataStringArray.length; i++) {
@@ -110,25 +105,26 @@ public class ProductListPageController {
         return Arrays.asList(tempArray);
     }
 
-    private void setSessionAttributes(HttpSession session) {
-        session.setAttribute(PHONES_ATTRIBUTE_NAME, phoneDao.findAll(amountPerPage * (currentPage - 1), amountPerPage, search, orderBy, isAscend));
-        session.setAttribute(TOTAL_PAGES_ATTRIBUTE_NAME, totalPages);
-        session.setAttribute(VISIBLE_PAGES_ATTRIBUTE_NAME, visiblePages);
-        session.setAttribute(CURRENT_PAGE_ATTRIBUTE_NAME, currentPage);
-        session.setAttribute(PHONE_AMOUNT_ATTRIBUTE_NAME, phoneAmount);
-        session.setAttribute(SEARCH_FIELD_ATTRIBUTE_NAME, search);
-        session.setAttribute(ORDER_BY_ATTRIBUTE_NAME, orderBy);
-        session.setAttribute(IS_ASCEND_ATTRIBUTE_NAME, isAscend);
-        session.setAttribute(DATA_ATTRIBUTE_NAME, data);
-        session.setAttribute(CART_SIZE, cartService.getCart().getCartItems().size());
+    private void setModelAttributes(Model model) {
+        model.addAttribute(PHONES_ATTRIBUTE_NAME, phoneService.findAll(amountPerPage * (currentPage - 1), amountPerPage, search, orderBy, isAscend));
+        model.addAttribute(TOTAL_PAGES_ATTRIBUTE_NAME, totalPages);
+        model.addAttribute(VISIBLE_PAGES_ATTRIBUTE_NAME, visiblePages);
+        model.addAttribute(CURRENT_PAGE_ATTRIBUTE_NAME, currentPage);
+        model.addAttribute(PHONE_AMOUNT_ATTRIBUTE_NAME, phoneAmount);
+        model.addAttribute(SEARCH_FIELD_ATTRIBUTE_NAME, search);
+        model.addAttribute(ORDER_BY_ATTRIBUTE_NAME, orderBy);
+        model.addAttribute(IS_ASCEND_ATTRIBUTE_NAME, isAscend);
+        model.addAttribute(DATA_ATTRIBUTE_NAME, data);
+        model.addAttribute(CART_SIZE, cartService.getCart().getCartItems().size());
     }
 
     private void countPageParameters() {
-        phoneAmount = phoneDao.countStocks(search);
+        phoneAmount = phoneService.countPhonesStockBiggerZero(search);
         totalPages = (int) Math.ceil(phoneAmount.doubleValue() / amountPerPage.doubleValue());
         if (totalPages == 0) {
             totalPages = DEFAULT_TOTAL_PAGES;
             currentPage = DEFAULT_CURRENT_PAGE;
         }
     }
+
 }

@@ -1,6 +1,7 @@
-package com.es.core.model.phone;
+package com.es.core.dao;
 
 import com.es.core.exception.GetterInvokerException;
+import com.es.core.model.phone.Phone;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +13,8 @@ public interface PhoneDao {
 
     void save(Phone phone) throws IllegalArgumentException, GetterInvokerException;
 
-    List findAll(int offset, int limit, String search,String orderBy,Boolean isAscend);
+    List findAll(int offset, int limit, String search, String orderBy, Boolean isAscend);
 
-    Integer countStocks(String search);
+    Integer countPhonesStockBiggerZero(String search);
+
 }

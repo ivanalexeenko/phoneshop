@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 //@QuantityAgreedStock(fieldId = "phoneId", fieldQuantity = "quantity")
 public class CartItem {
     private static final String PHONE_ID_IS_NULL_MESSAGE = "Phone id is empty";
-    public static final String INPUT_IS_NULL_MESSAGE = "Input field is empty";
+    private static final String INPUT_IS_NULL_MESSAGE = "Input field is empty";
     private static final String QUANTITY_BIGGER_ZERO_MESSAGE = "Quantity should be >= zero";
 
     public void setPhoneId(Long phoneId) {

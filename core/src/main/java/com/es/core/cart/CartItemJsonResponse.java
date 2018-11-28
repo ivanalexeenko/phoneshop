@@ -12,6 +12,7 @@ public class CartItemJsonResponse {
     private Boolean isValidated;
     private Map<String, String> errorMessages;
     private int cartSize;
+    private String successMessage;
 
     public void setSuccessMessage() {
         this.successMessage = String.join(DELIMITER, PHONE_SHARP_SUCCESS_MESSAGE_PART,
@@ -23,12 +24,9 @@ public class CartItemJsonResponse {
         return successMessage;
     }
 
-    private String successMessage;
-
     public void setCartItem(CartItem cartItem) {
         this.cartItem = cartItem;
     }
-
 
     public void setErrorMessages(Map<String, String> errorMessages) {
         this.errorMessages = errorMessages;

@@ -1,5 +1,6 @@
 package com.es.core.model.phone;
 
+import com.es.core.dao.PhoneDao;
 import com.es.core.exception.GetterInvokerException;
 
 import org.junit.After;
@@ -14,7 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.AssertTrue;
 import java.math.BigDecimal;
 import java.util.*;
 

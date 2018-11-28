@@ -1,4 +1,4 @@
-package com.es.core.model.row_mapper;
+package com.es.core.model.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
 

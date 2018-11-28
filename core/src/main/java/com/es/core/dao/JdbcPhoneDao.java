@@ -1,17 +1,15 @@
-package com.es.core.model.phone;
+package com.es.core.dao;
 
-import com.es.core.exception.GetterInvokerException;
-import com.es.core.model.row_mapper.ColorRowMapper;
-import com.es.core.model.row_mapper.StockRowMapper;
+import com.es.core.dao.PhoneDao;
+import com.es.core.model.phone.Color;
+import com.es.core.model.phone.Phone;
+import com.es.core.model.rowmapper.ColorRowMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.beans.IntrospectionException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Component
@@ -47,6 +45,7 @@ public class JdbcPhoneDao implements PhoneDao {
             "positioning", "imageUrl", "description"};
     private static final String DELIMITER = "";
     private static final String ORDER_BY_PREFIX = "%";
+
     @Resource
     private JdbcTemplate jdbcTemplate;
 
@@ -83,7 +82,7 @@ public class JdbcPhoneDao implements PhoneDao {
         return phones;
     }
 
-    public Integer countStocks(String search) {
+    public Integer countPhonesStockBiggerZero(String search) {
         String partSearch = fullSearchToPartSearch(search);
         return jdbcTemplate.queryForObject(COUNT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_QUERY,
                 new Object[]{partSearch, partSearch, partSearch, partSearch, partSearch}, Integer.class);
