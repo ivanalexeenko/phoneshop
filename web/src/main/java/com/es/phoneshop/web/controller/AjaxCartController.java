@@ -45,10 +45,11 @@ public class AjaxCartController {
             );
             return handleResponse(true, errors, null);
         }
-        Stock stock = stockService.getStock(cartItem.getPhoneId());
 
+        Stock stock = stockService.getStock(cartItem.getPhoneId());
         Long quantityInCart = 0L;
         Optional<CartItem> optional = cartService.get(cartItem.getPhoneId());
+
         if (optional.isPresent()) {
             quantityInCart = optional.get().getQuantity();
         }

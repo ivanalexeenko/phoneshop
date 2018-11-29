@@ -148,8 +148,12 @@
                             </td>
                             <td class="text-right"><i class="fa fa-dollar"></i>${phone.price}</td>
                             <td>
-                                <input id="input${phone.id}" type="text" class="form-control" aria-label="Small"
+                                <input id="input${phone.id}" type="text" class="addition form-control" aria-label="Small"
                                        aria-describedby="inputGroup-sizing-lg" placeholder="Enter quantity...">
+                                <p><span class="success" id="messageSuccess${phone.id}"></span></p>
+                                <p><span class="error" id="messageError${phone.id}">
+
+                                </span></p>
                             </td>
                             <td>
                                 <button type="submit" id="add${phone.id}" class="addition btn btn-success btn-md ml-3">

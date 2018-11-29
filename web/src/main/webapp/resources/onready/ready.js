@@ -5,5 +5,4 @@ $(document).ready(function () {
     $('button.ordering').click(function () {
         handleClick(this);
     });
-
 });

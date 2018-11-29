@@ -7,7 +7,6 @@ function addToCart(event, button) {
     var cartItem = {};
     cartItem["phoneId"] = id;
     cartItem["quantity"] = $("#input" + id).val();
-    $("#input" + id).find("p").find("span").text("");
     $.ajax({
         async: false,
         type: "POST",
@@ -16,13 +15,17 @@ function addToCart(event, button) {
         dataType: 'json',
         url: "ajaxCart",
         success: function (res) {
+            $('span.error').empty();
+            $('span.success').empty();
             if (res.isValidated) {
-                $("#input" + id).after('<p><span class="success">' + res.successMessage + '</span></p>');
+                $("#messageSuccess" + id).text(res.successMessage);
             }
             else {
+                var message = "";
                 $.each(res.errorMessages, function (key, value) {
-                    $("#input" + id).after('<p><span class="error">' + value + '</span></p>');
+                    message += ('<p><span>' + value + '</span></p>');
                 });
+                $("#messageError" + id).html(message);
             }
             $("#cartSize").text(res.cartSize);
         }
