@@ -1,10 +1,5 @@
 package com.es.phoneshop.web.controller.pages;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.es.core.service.CartService;
 import com.es.core.service.PhoneService;
 import org.springframework.stereotype.Controller;
@@ -13,11 +8,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.es.core.dao.PhoneDao;
-import org.springframework.web.servlet.ModelAndView;
-
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/productList")
@@ -66,7 +63,7 @@ public class ProductListPageController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void getFormParam(HttpServletRequest request, HttpServletResponse response,Model model) throws IOException {
+    public void getFormParam(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);
@@ -84,7 +81,9 @@ public class ProductListPageController {
                 isAscend = Boolean.valueOf(tempAscend);
             }
         }
+
         data = recalculateData(dataString);
+        dataArray = (Integer[]) data.toArray();
         setModelAttributes(model);
         response.sendRedirect(request.getRequestURI());
     }

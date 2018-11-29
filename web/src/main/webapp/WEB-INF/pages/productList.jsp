@@ -1,26 +1,30 @@
 <html>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <head>
-    <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Product List Page</title>
+
+    <script>
+        var data = "${data}";
+        var totalPages = "${totalPages}";
+        var currentPage = "${currentPage}";
+        var visiblePages = "${visiblePages}";
+    </script>
+
     <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
     <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
-    <title>Product List Page</title>
-    <jsp:useBean id="data" type="java.util.List" scope="session"/>
-    <jsp:include page="/WEB-INF/pages/styles/PLP_styles.jsp"/>
-    <jsp:include page="/WEB-INF/pages/sorting/iconClickHandler.jsp"/>
-    <style type="text/css">
-        span.error {
-            color: darkred;
-        }
 
-        span.success {
-            color: darkgreen;
-        }
-    </style>
+    <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
+    <spring:url value="/resources/sorting/iconClickHandler.js" var="iconClickHandler"/>
+    <spring:url value="/resources/pagination/pagination.js" var="pagination"/>
+    <spring:url value="/resources/add2cart/addToCart.js" var="addToCart"/>
+    <spring:url value="/resources/onready/ready.js" var="whenDocReady"/>
 
+    <link href="${plpStyles}" rel="stylesheet"/>
+    <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -71,39 +75,40 @@
         phones:
     </div>
 </div>
-
+<script>
+    var data = ${data};
+</script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-auto">
-            <form method="post" name="orderByForm">
+            <form method="post" name="orderByForm" id="orderByForm">
                 <table class="table table-hover text-center ">
                     <thead>
                     <tr>
                         <th class="text-center">Image</th>
                         <th class="text-center">Brand
-                            <button onclick="handleClick(this)" id="brand" name="buttonOrder" style="background: none">
+                            <button id="brand" class="ordering">
                                 <a>
                                     <div class="fa fa-chevron-up rotate"></div>
                                 </a>
                             </button>
                         </th>
                         <th class="text-center">Model
-                            <button onclick="handleClick(this)" id="model" name="buttonOrder" style="background: none">
+                            <button id="model" class="ordering">
                                 <a>
                                     <div class="fa fa-chevron-up rotate"></div>
                                 </a>
                             </button>
                         </th>
                         <th class="text-center">OS
-                            <button onclick="handleClick(this)" id="os" name="buttonOrder" style="background: none">
+                            <button id="os" class="ordering">
                                 <a>
                                     <div class="fa fa-chevron-up rotate"></div>
                                 </a>
                             </button>
                         </th>
                         <th class="text-center">Display(inches)
-                            <button onclick="handleClick(this)" id="displaySizeInches" name="buttonOrder"
-                                    style="background: none">
+                            <button id="displaySizeInches" class="ordering">
                                 <a>
                                     <div class="fa fa-chevron-up rotate"></div>
                                 </a>
@@ -111,7 +116,7 @@
                         </th>
                         <th class="text-center">Colors</th>
                         <th class="text-center">Price
-                            <button onclick="handleClick(this)" id="price" name="buttonOrder" style="background: none">
+                            <button id="price" class="ordering">
                                 <a>
                                     <div class="fa fa-chevron-up rotate"></div>
                                 </a>
@@ -147,37 +152,9 @@
                                        aria-describedby="inputGroup-sizing-lg" placeholder="Enter quantity...">
                             </td>
                             <td>
-                                <button type="submit" id="add${phone.id}" class="btn btn-success btn-md ml-3">
+                                <button type="submit" id="add${phone.id}" class="addition btn btn-success btn-md ml-3">
                                     <i class="fa fa-plus-circle"></i> Add to Cart
                                 </button>
-                                <script>
-                                    $("#add${phone.id}").click(function (event) {
-                                        event.preventDefault();
-                                        var cartItem = {};
-                                        cartItem["phoneId"] = ${phone.id};
-                                        cartItem["quantity"] = $("#input${phone.id}").val();
-                                        $("#input${phone.id}").find("p").find("span").text("");
-                                        $.ajax({
-                                            type: "POST",
-                                            data: JSON.stringify(cartItem),
-                                            contentType: "application/json",
-                                            dataType: 'json',
-                                            url: "ajaxCart",
-                                            success: function (res) {
-                                                if (res.isValidated) {
-                                                    $("#input${phone.id}").after('<p><span class="success">' + res.successMessage + '</span></p>');
-                                                }
-                                                else {
-                                                    $.each(res.errorMessages, function (key, value) {
-                                                        $("#input${phone.id}").after('<p><span class="error">' + value + '</span></p>');
-                                                    });
-                                                }
-                                                $("#cartSize").text(res.cartSize);
-                                            }
-                                        })
-                                    });
-
-                                </script>
                             </td>
                         </tr>
                     </c:forEach>
@@ -191,10 +168,20 @@
     <div class="panel-heading bg-secondary text-center text-white font-italic">Page
         <c:out value="${currentPage}"/>/${totalPages}</div>
 </div>
-
-<jsp:include page="/WEB-INF/pages/pagination/paginator.jsp"/>
-
+<nav aria-label="Page navigation" id="show_paginator">
+    <form method="post" name="numberForm">
+        <input type="hidden" name="currentPage" id="currentPage" value="${currentPage}"/>
+        <ul class="pagination pagination-lg justify-content-end">
+        </ul>
+    </form>
+</nav>
 <footer class="container-fluid text-center">
+
+    <script src="${iconClickHandler}"></script>
+    <script src="${pagination}"></script>
+    <script src="${addToCart}"></script>
+    <script src="${whenDocReady}"></script>
+
     <p>Expert Soft feat. Ivan Alexeenko Spring Project</p>
 </footer>
 </body>
