@@ -5,6 +5,7 @@ import com.es.core.cart.CartItem;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -20,11 +21,23 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
+    public Optional<CartItem> get(Long id) {
+        return cart.getCartItems().stream().filter(item -> item.getPhoneId().equals(id)).findAny();
+    }
+
+    @Override
     public void addPhone(Long phoneId, Long quantity) {
         CartItem item = new CartItem();
         item.setPhoneId(phoneId);
         item.setQuantity(quantity);
-        cart.getCartItems().add(item);
+        Optional<CartItem> optional = this.get(phoneId);
+        if(!optional.isPresent()) {
+            cart.getCartItems().add(item);
+        }
+        else {
+            CartItem newCartItem = optional.get();
+            newCartItem.setQuantity(newCartItem.getQuantity() + item.getQuantity());
+        }
     }
 
     @Override

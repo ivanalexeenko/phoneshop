@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -45,12 +46,22 @@ public class AjaxCartController {
             return handleResponse(true, errors, null);
         }
         Stock stock = stockService.getStock(cartItem.getPhoneId());
-        if (cartItem.getQuantity() > stock.getStock()) {
+
+        Long quantityInCart = 0L;
+        Optional<CartItem> optional = cartService.get(cartItem.getPhoneId());
+        if (optional.isPresent()) {
+            quantityInCart = optional.get().getQuantity();
+        }
+
+        int actualStock = (stock.getStock() - stock.getReserved() - quantityInCart.intValue());
+
+        if (cartItem.getQuantity() > actualStock) {
             Map<String, String> errors = new HashMap<>();
             errors.put(QUANTITY_FIELD_NAME, NOT_ENOUGH_MESSAGE);
             return handleResponse(true, errors, null);
         }
         cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
+
         return handleResponse(false, null, cartItem);
     }
 
