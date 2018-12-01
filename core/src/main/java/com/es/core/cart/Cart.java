@@ -1,7 +1,5 @@
 package com.es.core.cart;
 
-import com.es.core.model.order.OrderItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +20,4 @@ public class Cart {
         }
         return cartItems;
     }
-
-
 }
