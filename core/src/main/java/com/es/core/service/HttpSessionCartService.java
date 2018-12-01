@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Service
 public class HttpSessionCartService implements CartService {
-
     private Cart cart;
 
     @Override
@@ -31,10 +30,9 @@ public class HttpSessionCartService implements CartService {
         item.setPhoneId(phoneId);
         item.setQuantity(quantity);
         Optional<CartItem> optional = this.get(phoneId);
-        if(!optional.isPresent()) {
+        if (!optional.isPresent()) {
             cart.getCartItems().add(item);
-        }
-        else {
+        } else {
             CartItem newCartItem = optional.get();
             newCartItem.setQuantity(newCartItem.getQuantity() + item.getQuantity());
         }

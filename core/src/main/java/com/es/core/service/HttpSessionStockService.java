@@ -2,18 +2,22 @@ package com.es.core.service;
 
 import com.es.core.model.phone.Stock;
 import com.es.core.dao.StockDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 @Service
 public class HttpSessionStockService implements StockService {
-    @Resource
-    private StockDao stockDao;
+    private final StockDao stockDao;
+
+    @Autowired
+    public HttpSessionStockService(StockDao stockDao) {
+        this.stockDao = stockDao;
+    }
 
     @Override
     public Stock getStock(Long phoneId) {
         return stockDao.getStock(phoneId);
     }
-
 }

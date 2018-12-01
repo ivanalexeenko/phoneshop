@@ -1,18 +1,20 @@
 package com.es.core.dao;
 
-import com.es.core.dao.PhoneDao;
 import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.rowmapper.ColorRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.*;
 
-@Component
+@Repository
 public class JdbcPhoneDao implements PhoneDao {
     private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
     private static final String SELECT_COLORS_QUERY = "select * from colors";
@@ -23,14 +25,12 @@ public class JdbcPhoneDao implements PhoneDao {
             " where pointOne.stock > 0)) pointThree" +
             " where (pointThree.brand like ? or pointThree.model like ? " +
             "or pointThree.os like ? or pointThree.displaySizeInches like ? or pointThree.price like ?)) pointFour";
-
     private static final String SELECT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_ORDERED_QUERY_FIRST = "select * from(select * from(select * from (select * from phones pointTwo" +
             " where pointTwo.id in " +
             "(select phoneId from stocks pointOne" +
             " where pointOne.stock > 0)) pointThree" +
             " where (pointThree.brand like ? or pointThree.model like ? " +
             "or pointThree.os like ? or pointThree.displaySizeInches like ? or pointThree.price like ?)) pointFour ";
-
     private static final String ORDERED_TABLE_NAME = " order by pointFour.";
     private static final String ASC_ORDERED_QUERY_PART = " asc";
     private static final String DESC_ORDERED_QUERY_PART = " desc";
@@ -46,8 +46,12 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String DELIMITER = "";
     private static final String ORDER_BY_PREFIX = "%";
 
-    @Resource
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public JdbcPhoneDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Optional<Phone> get(Long key) {
         List<Phone> phones = jdbcTemplate.query(SELECT_PHONE_BY_ID_QUERY, new Object[]{key}, new BeanPropertyRowMapper<Phone>(Phone.class));
@@ -59,7 +63,6 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     public void save(Phone phone) throws IllegalArgumentException {
-
         if (phone == null || get(phone.getId()).isPresent()) {
             throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
         }
@@ -67,7 +70,6 @@ public class JdbcPhoneDao implements PhoneDao {
         Object[] values = new Object[FIELD_NAMES.length];
         invokeGetters(values, phone);
         insert(FIELD_NAMES, values);
-
     }
 
     public List findAll(int offset, int limit, String search, String orderBy, Boolean isAscend) {
@@ -177,5 +179,4 @@ public class JdbcPhoneDao implements PhoneDao {
         return String.join(DELIMITER, SELECT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_ORDERED_QUERY_FIRST, ORDERED_TABLE_NAME
                 , order, criteria, SELECT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_ORDERED_QUERY_LAST);
     }
-
 }

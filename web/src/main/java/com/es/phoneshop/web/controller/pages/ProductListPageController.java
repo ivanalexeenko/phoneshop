@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.service.CartService;
 import com.es.core.service.PhoneService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -47,11 +48,15 @@ public class ProductListPageController {
     private Integer[] dataArray = {0, 0, 0, 0, 0};
     private List data;
 
-    @Resource
-    private PhoneService phoneService;
+    private final PhoneService phoneService;
 
-    @Resource
-    private CartService cartService;
+    private final CartService cartService;
+
+    @Autowired
+    public ProductListPageController(PhoneService phoneService, CartService cartService) {
+        this.phoneService = phoneService;
+        this.cartService = cartService;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String showProductList(Model model) {

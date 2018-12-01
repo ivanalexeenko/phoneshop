@@ -78,7 +78,7 @@
 
 <div class="panel panel-info">
     <div class="panel-heading bg-secondary text-center text-white font-italic"><spring:message
-            code="info.found.message"/><c:out value="${phoneAmount}"/>
+            code="info.found.message"/> <c:out value="${phoneAmount}"/>
         <spring:message code="info.phones.message"/>
     </div>
 </div>

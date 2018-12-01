@@ -3,6 +3,7 @@ package com.es.core.service;
 import com.es.core.exception.GetterInvokerException;
 import com.es.core.model.phone.Phone;
 import com.es.core.dao.PhoneDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,8 +12,12 @@ import java.util.Optional;
 
 @Service
 public class HttpSessionPhoneService implements PhoneService {
-    @Resource
-    private PhoneDao phoneDao;
+    private final PhoneDao phoneDao;
+
+    @Autowired
+    public HttpSessionPhoneService(PhoneDao phoneDao) {
+        this.phoneDao = phoneDao;
+    }
 
     @Override
     public Optional<Phone> get(Long key) {

@@ -16,7 +16,6 @@ window.onload = function (window) {
         }
         number++;
     });
-
 };
 
 function handleClick(button) {

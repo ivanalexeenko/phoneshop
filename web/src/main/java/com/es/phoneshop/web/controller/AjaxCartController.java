@@ -6,6 +6,7 @@ import com.es.core.service.CartService;
 import com.es.core.service.StockService;
 import com.es.core.model.phone.Stock;
 import com.es.core.message.ApplicationMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
@@ -24,13 +25,17 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
 
-    @Resource
-    private CartService cartService;
+    private final CartService cartService;
 
-    @Resource
-    private StockService stockService;
+    private final StockService stockService;
     private static final String QUANTITY_FIELD_NAME = "quantity";
     private static final String PHONE_ID_FIELD_NAME = "phoneId";
+
+    @Autowired
+    public AjaxCartController(CartService cartService, StockService stockService) {
+        this.cartService = cartService;
+        this.stockService = stockService;
+    }
 
     @PostMapping
     @ResponseBody

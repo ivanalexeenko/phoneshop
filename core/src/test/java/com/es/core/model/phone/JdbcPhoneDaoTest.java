@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -62,16 +63,16 @@ public class JdbcPhoneDaoTest {
     private static final String SEARCH_STRING = "Nokia";
     private static final String SEARCH_STRING_NO_MATCH = "No match string";
 
-
     private Phone phone, phone1;
     private List phones;
     private Optional<Phone> optionalPhone;
     private List<Phone> ascendPhones;
     private List<Phone> descendPhones;
-    @Resource
+
+    @Autowired
     private PhoneDao phoneDao;
 
-    @Resource
+    @Autowired
     private JdbcTemplate jdbcTemplateTest;
 
     @Before
@@ -271,7 +272,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void shouldAssertMatchesTwoPhonesFindAllSearch() throws GetterInvokerException {
+    public void shouldAssertMatchesTwoPhonesFindAllSearch() {
         phones = phoneDao.findAll(ALL_RANGE_START, ascendPhones.size(), SEARCH_STRING, STANDARD_ORDER, STANDARD_ASCEND);
 
         Assert.isTrue(phones.size() == 2, ERROR_PHONES_SEARCH);
@@ -279,7 +280,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void shouldAssertMatchesNoPhonesFindAllSearch() throws GetterInvokerException {
+    public void shouldAssertMatchesNoPhonesFindAllSearch() {
         phones = phoneDao.findAll(ALL_RANGE_START, ascendPhones.size(), SEARCH_STRING_NO_MATCH, STANDARD_ORDER, STANDARD_ASCEND);
 
         Assert.isTrue(phones.isEmpty(), ERROR_PHONES_SEARCH);
