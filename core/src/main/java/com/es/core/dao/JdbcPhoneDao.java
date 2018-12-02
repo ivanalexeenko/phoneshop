@@ -35,7 +35,6 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String ASC_ORDERED_QUERY_PART = " asc";
     private static final String DESC_ORDERED_QUERY_PART = " desc";
     private static final String SELECT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_ORDERED_QUERY_LAST = " ) pointFive limit ? offset ?";
-    private static final String ILLEGAL_ARGUMENT_MESSAGE = "Item with current ID already exists";
     private static final String DUPLICATE_ENTRY_MESSAGE = " Duplicate entry, such kind of item already exists";
     private static final String PHONES_TABLE_NAME = "phones";
     private static final String GENERATED_KEY_NAME = "id";
@@ -55,18 +54,15 @@ public class JdbcPhoneDao implements PhoneDao {
 
     public Optional<Phone> get(Long key) {
         List<Phone> phones = jdbcTemplate.query(SELECT_PHONE_BY_ID_QUERY, new Object[]{key}, new BeanPropertyRowMapper<Phone>(Phone.class));
-
         if (phones == null || phones.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(phones.get(0));
     }
 
-    public void save(Phone phone) throws IllegalArgumentException {
-        if (phone == null || get(phone.getId()).isPresent()) {
-            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
-        }
-
+    @Override
+    public <T> void save(T phoneParam) {
+        Phone phone = (Phone) phoneParam;
         Object[] values = new Object[FIELD_NAMES.length];
         invokeGetters(values, phone);
         insert(FIELD_NAMES, values);
@@ -79,7 +75,6 @@ public class JdbcPhoneDao implements PhoneDao {
                 new BeanPropertyRowMapper<Phone>(Phone.class));
 
         List colors = jdbcTemplate.query(SELECT_COLORS_QUERY, new BeanPropertyRowMapper<Color>(Color.class));
-
         setPhonesColors(phones, colors);
         return phones;
     }
@@ -146,8 +141,8 @@ public class JdbcPhoneDao implements PhoneDao {
     private void setPhoneColors(List<Long> colorIds, List<Color> colors, Phone phone) {
         Set<Color> colors2phones = new HashSet<>();
         for (Long colorId : colorIds) {
-            Optional<Color> any = colors.stream().filter(color -> color.getId().equals(colorId)).findAny();
-            any.ifPresent(colors2phones::add);
+            Optional<Color> optionalColor = colors.stream().filter(color -> color.getId().equals(colorId)).findAny();
+            optionalColor.ifPresent(colors2phones::add);
         }
         phone.setColors(colors2phones);
     }

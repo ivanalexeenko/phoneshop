@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface CartService {
-
     Cart getCart();
 
     Optional<CartItem> get(Long id);

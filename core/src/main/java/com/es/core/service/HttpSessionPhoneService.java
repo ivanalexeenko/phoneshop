@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @Service
 public class HttpSessionPhoneService implements PhoneService {
+    private static final String ILLEGAL_ARGUMENT_MESSAGE = "Item with current ID already exists";
+
     private final PhoneDao phoneDao;
 
     @Autowired
@@ -25,7 +27,10 @@ public class HttpSessionPhoneService implements PhoneService {
     }
 
     @Override
-    public void save(Phone phone) throws IllegalArgumentException, GetterInvokerException {
+    public void save(Phone phone) throws IllegalArgumentException {
+        if (phone == null || get(phone.getId()).isPresent()) {
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
+        }
         phoneDao.save(phone);
     }
 

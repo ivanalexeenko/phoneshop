@@ -11,10 +11,9 @@ import java.util.Optional;
 public interface PhoneDao {
     Optional<Phone> get(Long key);
 
-    void save(Phone phone) throws IllegalArgumentException, GetterInvokerException;
+    <T> void save(T phone);
 
     List findAll(int offset, int limit, String search, String orderBy, Boolean isAscend);
 
     Integer countPhonesStockBiggerZero(String search);
-
 }

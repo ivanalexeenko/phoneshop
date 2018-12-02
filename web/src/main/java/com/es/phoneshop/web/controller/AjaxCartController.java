@@ -46,23 +46,12 @@ public class AjaxCartController {
             );
             return handleResponse(true, errors, null);
         }
-
         Stock stock = stockService.getStock(cartItem.getPhoneId());
-        Long quantityInCart = 0L;
-        Optional<CartItem> optional = cartService.get(cartItem.getPhoneId());
-
-        if (optional.isPresent()) {
-            quantityInCart = optional.get().getQuantity();
-        }
-
-        int actualStock = (stock.getStock() - stock.getReserved() - quantityInCart.intValue());
-
-        if (cartItem.getQuantity() > actualStock) {
+        if (cartItem.getQuantity() > stock.getStock()) {
             Map<String, String> errors = new HashMap<>();
             errors.put(QUANTITY_FIELD_NAME, ApplicationMessage.NOT_ENOUGH);
             return handleResponse(true, errors, null);
         }
-
         cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
         return handleResponse(false, null, cartItem);
     }

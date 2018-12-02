@@ -21,7 +21,6 @@ import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/context/test-config.xml")
-
 public class JdbcPhoneDaoTest {
     private static final String SELECT_PHONES_COUNT_QUERY = "SELECT COUNT (*) FROM phones";
     private static final String SELECT_PHONES_QUERY = "SELECT * FROM phones";
@@ -62,7 +61,6 @@ public class JdbcPhoneDaoTest {
     private static final String ORDER_BY_OS = "os";
     private static final String SEARCH_STRING = "Nokia";
     private static final String SEARCH_STRING_NO_MATCH = "No match string";
-
     private Phone phone, phone1;
     private List phones;
     private Optional<Phone> optionalPhone;
@@ -122,7 +120,6 @@ public class JdbcPhoneDaoTest {
 
         Assert.isTrue(differenceAmount.equals(ADDED_PHONE_AMOUNT), ERROR_PHONE_SAVE + Arrays.toString(new Object[]{ADDED_PHONE_AMOUNT, differenceAmount}));
         Assert.isTrue(differenceId.equals(ADDED_PHONE_AMOUNT), ERROR_ID_GENERATE + Arrays.toString(new Object[]{maxIdStart + ADDED_PHONE_AMOUNT, maxIdFinish}));
-
     }
 
     @Test(expected = IllegalArgumentException.class)
