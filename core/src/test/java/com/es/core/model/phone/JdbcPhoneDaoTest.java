@@ -166,6 +166,7 @@ public class JdbcPhoneDaoTest {
     @DirtiesContext
     public void shouldAssertPhonesNotFoundWhenFindAllZeroLimit() {
         phones = phoneDao.findAll(EMPTY_LIMIT, EMPTY_LIMIT, STANDARD_SEARCH, STANDARD_ORDER, STANDARD_ASCEND);
+
         Assert.isTrue(phones.isEmpty(), ERROR_EMPTY_PHONELIST);
     }
 

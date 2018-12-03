@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping(value = "/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
 
@@ -38,7 +38,6 @@ public class AjaxCartController {
     }
 
     @PostMapping
-    @ResponseBody
     public CartItemJsonResponse addPhone(@RequestBody @Valid CartItem cartItem, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = result.getFieldErrors().stream().collect(
@@ -57,7 +56,6 @@ public class AjaxCartController {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseBody
     public CartItemJsonResponse handleException() {
         Map<String, String> errors = new HashMap<>();
         errors.put(QUANTITY_FIELD_NAME, ApplicationMessage.NOT_A_NUMBER);
