@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class HttpSessionCartService implements CartService {
+public class CartServiceImpl implements CartService {
     private Cart cart;
 
     @Override

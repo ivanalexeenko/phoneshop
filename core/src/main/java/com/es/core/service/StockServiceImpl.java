@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class HttpSessionStockService implements StockService {
+public class StockServiceImpl implements StockService {
     private final StockDao stockDao;
 
     @Autowired
-    public HttpSessionStockService(StockDao stockDao) {
+    public StockServiceImpl(StockDao stockDao) {
         this.stockDao = stockDao;
     }
 

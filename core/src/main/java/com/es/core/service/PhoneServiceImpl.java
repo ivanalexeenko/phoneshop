@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class HttpSessionPhoneService implements PhoneService {
+public class PhoneServiceImpl implements PhoneService {
     private static final String ILLEGAL_ARGUMENT_MESSAGE = "Item with current ID already exists";
 
     private final PhoneDao phoneDao;
 
     @Autowired
-    public HttpSessionPhoneService(PhoneDao phoneDao) {
+    public PhoneServiceImpl(PhoneDao phoneDao) {
         this.phoneDao = phoneDao;
     }
 
