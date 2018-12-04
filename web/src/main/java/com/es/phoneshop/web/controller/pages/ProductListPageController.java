@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.service.CartService;
 import com.es.core.service.PhoneService;
+import com.es.core.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class ProductListPageController {
     private static final String ORDER_DATA_STRING_PARAMETER = "orderDataString";
     private static final String REGEX = ",";
     private static final String CART_SIZE = "cartSize";
-
+    private static final String CART_PRICE_ATTRIBUTE_NAME = "cartPrice";
     private Integer currentPage = 1;
     private Integer totalPages;
     private Integer visiblePages = 7;
@@ -46,15 +47,15 @@ public class ProductListPageController {
     private Boolean isAscend = true;
     private Integer[] dataArray = {0, 0, 0, 0, 0};
     private List data;
-
     private final PhoneService phoneService;
-
     private final CartService cartService;
+    private final PriceService priceService;
 
     @Autowired
-    public ProductListPageController(PhoneService phoneService, CartService cartService) {
+    public ProductListPageController(PhoneService phoneService, CartService cartService, PriceService priceService) {
         this.phoneService = phoneService;
         this.cartService = cartService;
+        this.priceService = priceService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -117,7 +118,8 @@ public class ProductListPageController {
         model.addAttribute(ORDER_BY_ATTRIBUTE_NAME, orderBy);
         model.addAttribute(IS_ASCEND_ATTRIBUTE_NAME, isAscend);
         model.addAttribute(DATA_ATTRIBUTE_NAME, data);
-        model.addAttribute(CART_SIZE, cartService.getCart().getCartItems().size());
+        model.addAttribute(CART_SIZE, cartService.getCartSize());
+        model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
     }
 
     private void countPageParameters() {

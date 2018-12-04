@@ -2,20 +2,25 @@ package com.es.core.service;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
-    private Cart cart;
+
+    private final Cart cart;
+
+    @Autowired
+    public CartServiceImpl(Cart cart) {
+        this.cart = cart;
+    }
 
     @Override
     public Cart getCart() {
-        if (cart == null) {
-            cart = new Cart();
-        }
         return cart;
     }
 

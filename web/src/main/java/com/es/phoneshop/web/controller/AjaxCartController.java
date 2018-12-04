@@ -3,6 +3,7 @@ package com.es.phoneshop.web.controller;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.CartItemJsonResponse;
 import com.es.core.service.CartService;
+import com.es.core.service.PriceService;
 import com.es.core.service.StockService;
 import com.es.core.model.phone.Stock;
 import com.es.core.message.ApplicationMessage;
@@ -25,16 +26,17 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
 
-    private final CartService cartService;
-
-    private final StockService stockService;
     private static final String QUANTITY_FIELD_NAME = "quantity";
     private static final String PHONE_ID_FIELD_NAME = "phoneId";
+    private final CartService cartService;
+    private final StockService stockService;
+    private final PriceService priceService;
 
     @Autowired
-    public AjaxCartController(CartService cartService, StockService stockService) {
+    public AjaxCartController(CartService cartService, StockService stockService, PriceService priceService) {
         this.cartService = cartService;
         this.stockService = stockService;
+        this.priceService = priceService;
     }
 
     @PostMapping
@@ -67,13 +69,13 @@ public class AjaxCartController {
         if (hasErrors) {
             response.setIsValidated(false);
             response.setErrorMessages(errors);
-            response.setCartSize(cartService.getCartSize());
         } else {
             response.setIsValidated(true);
             response.setCartItem(cartItem);
             response.setSuccessMessage(ApplicationMessage.ADDED_TO_CART_SUCCESS);
-            response.setCartSize(cartService.getCart().getCartItems().size());
         }
+        response.setCartSize(cartService.getCartSize());
+        response.setTotalCartPrice(priceService.getCartPrice());
         return response;
     }
 }

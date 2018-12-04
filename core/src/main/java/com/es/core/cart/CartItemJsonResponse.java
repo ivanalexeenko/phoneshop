@@ -1,5 +1,6 @@
 package com.es.core.cart;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class CartItemJsonResponse {
@@ -8,6 +9,15 @@ public class CartItemJsonResponse {
     private Map<String, String> errorMessages;
     private int cartSize;
     private String successMessage;
+    private BigDecimal totalCartPrice;
+
+    public void setTotalCartPrice(BigDecimal totalCartPrice) {
+        this.totalCartPrice = totalCartPrice;
+    }
+
+    public BigDecimal getTotalCartPrice() {
+        return totalCartPrice;
+    }
 
     public void setCartItem(CartItem cartItem) {
         this.cartItem = cartItem;

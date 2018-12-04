@@ -18,10 +18,10 @@
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
 
     <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
-    <spring:url value="/resources/sorting/iconClickHandler.js" var="iconClickHandler"/>
-    <spring:url value="/resources/pagination/pagination.js" var="pagination"/>
-    <spring:url value="/resources/add2cart/addToCart.js" var="addToCart"/>
-    <spring:url value="/resources/onready/ready.js" var="whenDocReady"/>
+    <spring:url value="/resources/sorting/iconClickHandler.js?1" var="iconClickHandler"/>
+    <spring:url value="/resources/pagination/pagination.js?1" var="pagination"/>
+    <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
+    <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
 
     <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
     <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
@@ -66,11 +66,13 @@
                     <i class="fa fa-shopping-cart"></i> <spring:message code="link.cart.name"/>
                     <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
+                <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
+                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span> <i class="fa fa-dollar"></i>
+                </button>
             </form>
         </div>
     </div>
 </nav>
-
 <header class="jumbotron text-center ">
     <h1><spring:message code="header.welcome.message"/></h1>
     <p><spring:message code="header.welcome.message.after"/></p>

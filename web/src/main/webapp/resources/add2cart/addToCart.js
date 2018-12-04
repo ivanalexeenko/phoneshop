@@ -42,6 +42,7 @@ function addToCart(event, button) {
                 });
             }
             $("#cartSize").text(res.cartSize);
+            $("#cartPrice").text(res.totalCartPrice);
         }
     })
 }

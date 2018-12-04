@@ -8,10 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 @Repository
@@ -23,14 +21,14 @@ public class JdbcPhoneDao implements PhoneDao {
             " where pointTwo.id in " +
             "(select phoneId from stocks pointOne" +
             " where pointOne.stock > 0)) pointThree" +
-            " where (pointThree.brand like ? or pointThree.model like ? " +
-            "or pointThree.os like ? or pointThree.displaySizeInches like ? or pointThree.price like ?)) pointFour";
+            " where ((pointThree.brand like ? or pointThree.model like ? " +
+            "or pointThree.os like ? or pointThree.displaySizeInches like ? or pointThree.price like ?) and pointThree.price is not null )) pointFour";
     private static final String SELECT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_ORDERED_QUERY_FIRST = "select * from(select * from(select * from (select * from phones pointTwo" +
             " where pointTwo.id in " +
             "(select phoneId from stocks pointOne" +
             " where pointOne.stock > 0)) pointThree" +
-            " where (pointThree.brand like ? or pointThree.model like ? " +
-            "or pointThree.os like ? or pointThree.displaySizeInches like ? or pointThree.price like ?)) pointFour ";
+            " where ((pointThree.brand like ? or pointThree.model like ? " +
+            "or pointThree.os like ? or pointThree.displaySizeInches like ? or pointThree.price like ?) and pointThree.price is not null )) pointFour ";
     private static final String ORDERED_TABLE_NAME = " order by pointFour.";
     private static final String ASC_ORDERED_QUERY_PART = " asc";
     private static final String DESC_ORDERED_QUERY_PART = " desc";
@@ -132,7 +130,6 @@ public class JdbcPhoneDao implements PhoneDao {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
                 .withTableName(PHONES_TABLE_NAME)
                 .usingGeneratedKeyColumns(GENERATED_KEY_NAME);
-
         Map<String, Object> parameters = new HashMap<>();
         fillParameters(fieldNames, values, parameters);
         executeInsertion(simpleJdbcInsert, parameters);
