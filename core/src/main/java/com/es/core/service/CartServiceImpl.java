@@ -50,7 +50,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        Optional<CartItem> optionalCartItem = this.get(phoneId);
+        optionalCartItem.ifPresent(cartItem -> cart.getCartItems().remove(cartItem));
     }
 
     @Override

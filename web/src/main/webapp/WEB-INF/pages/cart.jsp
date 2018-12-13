@@ -25,13 +25,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="<c:url value="/productList"/>">Phoneshop Spring</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>">Product List<span class="sr-only"></span></a>
+                    <a class="nav-link" href="<c:url value="/productList"/>">Product List<span
+                            class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value="/cart"/>">Cart</a>
@@ -52,7 +54,7 @@
 </nav>
 <section class="jumbotron text-center">
     <div class="container">
-        <h1 class="jumbotron-heading">E-COMMERCE CART</h1>
+        <h1 class="jumbotron-heading">Your Personal Cart</h1>
     </div>
 </section>
 
@@ -60,84 +62,70 @@
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col"> </th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Available</th>
-                        <th scope="col" class="text-center">Quantity</th>
-                        <th scope="col" class="text-right">Price</th>
-                        <th> </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                        <td>Product Name Dada</td>
-                        <td>In stock</td>
-                        <td><input class="form-control" type="text" value="1" /></td>
-                        <td class="text-right">124,90 €</td>
-                        <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
-                    </tr>
-                    <tr>
-                        <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                        <td>Product Name Toto</td>
-                        <td>In stock</td>
-                        <td><input class="form-control" type="text" value="1" /></td>
-                        <td class="text-right">33,90 €</td>
-                        <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
-                    </tr>
-                    <tr>
-                        <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                        <td>Product Name Titi</td>
-                        <td>In stock</td>
-                        <td><input class="form-control" type="text" value="1" /></td>
-                        <td class="text-right">70,00 €</td>
-                        <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Sub-Total</td>
-                        <td class="text-right">255,90 €</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Shipping</td>
-                        <td class="text-right">6,90 €</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>Total</strong></td>
-                        <td class="text-right"><strong>346,90 €</strong></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <form method="post">
+                    <c:choose>
+                        <c:when test="${empty cartItems}">
+                            <section class="jumbotron text-center">
+                                <div class="container">
+                                    <h1 class="jumbotron-heading">Oops,no items added to cart =(</h1>
+                                </div>
+                            </section>
+                        </c:when>
+                        <c:otherwise>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">In Stock</th>
+                                    <th scope="col" class="text-center">Quantity</th>
+                                    <th scope="col" class="text-right">Price</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${phones}" var="phone" varStatus="i">
+                                    <tr>
+                                        <td><img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                                        </td>
+                                        <td>${phone.model}</td>
+                                        <td>${stocks[i.index].stock}</td>
+                                        <td><label>
+                                            <input class="form-control" type="text" value="${cartItems[i.index].quantity}"/>
+                                        </label></td>
+                                        <td class="text-right">${phone.price} <i class="fa fa-dollar"></i></td>
+                                        <td>
+                                            <button href="<c:url value="/productDetails/${phone.id}"/>" type="button" class="btn btn-primary">
+                                                <i class="fa fa-info-circle"></i> <spring:message code="button.details"/>
+                                            </button>
+                                            <button name="buttonDelete" value="${phone.id}" type="submit" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </c:otherwise>
+                    </c:choose>
+                </form>
             </div>
-        </div>
-        <div class="col mb-2">
-            <div class="row">
-                <div class="col-sm-12  col-md-6">
-                    <button class="btn btn-block btn-light">Continue Shopping</button>
-                </div>
-                <div class="col-sm-12 col-md-6 text-right">
-                    <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
-                </div>
+            <div class="btn-group col-6 float-right">
+                    <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" href="<c:url value="/productList"/>" type="button" style="color: black">
+                        <i class="fa fa-arrow-left"></i> Continue Shopping
+                    </a>
+                    <a class="btn btn-outline-primary btn-md ml-3 col-12 text-center" type="button">
+                        <i class="fa fa-repeat"></i> Update Cart
+                    </a>
+                    <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" type="button">
+                        Checkout <i class="fa fa-arrow-right"></i>
+                    </a>
             </div>
         </div>
     </div>
 </div>
-    <footer class="container-fluid text-center">
+<footer class="container-fluid text-center">
     <p><spring:message code="footer.message"/></p>
-    </footer>
+</footer>
 </body>
 </html>
