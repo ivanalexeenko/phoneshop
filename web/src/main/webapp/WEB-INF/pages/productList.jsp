@@ -13,7 +13,6 @@
     </script>
 
     <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/JavaScript" src="resources/i18n/scripts/jquery.i18n.properties.js"></script>
     <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
 
@@ -22,6 +21,7 @@
     <spring:url value="/resources/pagination/pagination.js?1" var="pagination"/>
     <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
     <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
+    <spring:url value="/resources/i18n/jquery.i18n.properties.js?1" var="i18nJS"/>
 
     <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
     <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
@@ -29,7 +29,6 @@
     <link href="${plpStyles}" rel="stylesheet"/>
     <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -39,7 +38,6 @@
                 aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item active">
@@ -67,7 +65,8 @@
                     <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
                 <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span> <i class="fa fa-dollar"></i>
+                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span>
+                    <i class="fa fa-dollar"></i>
                 </button>
             </form>
         </div>
@@ -132,7 +131,8 @@
                             </button>
                         </th>
                         <th class="text-center"><spring:message code="phones.field.quantity"/></th>
-                        <th class="text-center"></th>
+                        <th class="text-center"><spring:message code="phones.field.add"/></th>
+                        <th class="text-center"><spring:message code="phones.field.info"/></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -169,6 +169,11 @@
                                     <i class="fa fa-plus-circle"></i> <spring:message code="button.add"/>
                                 </button>
                             </td>
+                            <td>
+                                <a href="<c:url value="/productDetails/${phone.id}"/>" type="button" class="btn btn-primary btn-md ml-3">
+                                    <i class="fa fa-info-circle"></i> <spring:message code="button.details"/>
+                                </a>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -190,6 +195,7 @@
     </form>
 </nav>
 <footer class="container-fluid text-center">
+    <script src="${i18nJS}"></script>
     <script src="${iconClickHandler}"></script>
     <script src="${pagination}"></script>
     <script src="${addToCart}"></script>

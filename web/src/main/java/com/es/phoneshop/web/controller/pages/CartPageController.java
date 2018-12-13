@@ -2,6 +2,7 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.service.CartService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -13,8 +14,9 @@ public class CartPageController {
     private CartService cartService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public void getCart() {
-        cartService.getCart();
+    public String getCart(Model model) {
+        model.addAttribute("cartItems", cartService.getCart().getCartItems());
+        return "cart";
     }
 
     @RequestMapping(method = RequestMethod.PUT)

@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
     private static final String PHONES_ATTRIBUTE_NAME = "phones";
-    private static final String PRODUCT_LIST_ATTRIBUTE_NAME = "productList";
+    private static final String PRODUCT_LIST_VIEW_NAME = "productList";
     private static final String CURRENT_PAGE_ATTRIBUTE_NAME = "currentPage";
     private static final String TOTAL_PAGES_ATTRIBUTE_NAME = "totalPages";
     private static final String VISIBLE_PAGES_ATTRIBUTE_NAME = "visiblePages";
@@ -63,7 +63,7 @@ public class ProductListPageController {
         countPageParameters();
         data = Arrays.asList(dataArray);
         setModelAttributes(model);
-        return PRODUCT_LIST_ATTRIBUTE_NAME;
+        return PRODUCT_LIST_VIEW_NAME;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -85,7 +85,6 @@ public class ProductListPageController {
                 isAscend = Boolean.valueOf(tempAscend);
             }
         }
-
         data = recalculateData(dataString);
         dataArray = (Integer[]) data.toArray();
         setModelAttributes(model);

@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "**/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
 
     private static final String QUANTITY_FIELD_NAME = "quantity";
