@@ -211,27 +211,23 @@
             </div><!--/tab-pane-->
             <form method="post">
                 <div class="form-group">
-                    <div class="col-xs-4">
+                    <div class="col-sm-9">
                         <table class="table table-responsive-sm">
                             <tr>
                                 <td>
-                                    <div class="input-group col-6">
-                                        <input id="input${phone.id}" type="text"
-                                               class="addition form-control col-12 text-center"
-                                               aria-label="Small"
-                                               aria-describedby="inputGroup-sizing-lg"
-                                               placeholder="${inputPlaceholder}">
-                                        <p><span class="success" id="messageSuccess${phone.id}">
-                                </span></p>
-                                        <p><span class="error" id="messageError${phone.id}"></span></p>
-
-                                        <div class="input-group-append">
-                                            <button type="submit" id="add${phone.id}"
-                                                    class="addition btn btn-success btn-md ml-3 col-12 text-right"><i
-                                                    class="fa fa-plus-circle"></i><spring:message code="button.add"/>
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <input id="input${phone.id}" type="text"
+                                           class="addition form-control col-12 text-right"
+                                           aria-label="Small"
+                                           aria-describedby="inputGroup-sizing-lg"
+                                           placeholder="${inputPlaceholder}">
+                                    <p class="text-center"><span class="success" id="messageSuccess${phone.id}"></span></p>
+                                    <p class="text-center"><span class="error" id="messageError${phone.id}"></span></p>
+                                </td>
+                                <td>
+                                    <button type="submit" id="add${phone.id}"
+                                            class="addition btn btn-success btn-md ml-3 col-12 text-center"><i
+                                            class="fa fa-plus-circle"></i><spring:message code="button.add"/>
+                                    </button>
                                 </td>
                             </tr>
                         </table>

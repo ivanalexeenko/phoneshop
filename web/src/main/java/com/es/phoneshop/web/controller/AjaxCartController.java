@@ -8,18 +8,19 @@ import com.es.core.service.StockService;
 import com.es.core.model.phone.Stock;
 import com.es.core.message.ApplicationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
-import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 public class AjaxCartController {
 
     private static final String QUANTITY_FIELD_NAME = "quantity";
-    private static final String PHONE_ID_FIELD_NAME = "phoneId";
     private final CartService cartService;
     private final StockService stockService;
     private final PriceService priceService;
@@ -40,13 +40,14 @@ public class AjaxCartController {
     }
 
     @PostMapping
-    public CartItemJsonResponse addPhone(@RequestBody @Valid CartItem cartItem, BindingResult result) {
+    public CartItemJsonResponse addPhone(@RequestBody @Valid CartItem cartItem, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             Map<String, String> errors = result.getFieldErrors().stream().collect(
                     Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
             );
             return handleResponse(true, errors, null);
         }
+
         Stock stock = stockService.getStock(cartItem.getPhoneId());
         if (cartItem.getQuantity() > stock.getStock()) {
             Map<String, String> errors = new HashMap<>();

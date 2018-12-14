@@ -21,7 +21,6 @@
     <spring:url value="/resources/pagination/pagination.js?1" var="pagination"/>
     <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
     <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
-    <spring:url value="/resources/i18n/jquery.i18n.properties.js?1" var="i18nJS"/>
 
     <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
     <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
@@ -200,7 +199,6 @@
     </form>
 </nav>
 <footer class="container-fluid text-center">
-    <script src="${i18nJS}"></script>
     <script src="${iconClickHandler}"></script>
     <script src="${pagination}"></script>
     <script src="${addToCart}"></script>
