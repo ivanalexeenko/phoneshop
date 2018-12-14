@@ -117,16 +117,49 @@
 
             <dependency>
                 <groupId>org.webjars</groupId>
-                <artifactId>bootstrap</artifactId>
-                <version>4.1.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.webjars</groupId>
-                        <artifactId>jquery</artifactId>
-                    </exclusion>
-                </exclusions>
+                <artifactId>font-awesome</artifactId>
+                <version>4.7.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.5.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>1.1.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>5.4.1.Final</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery-i18n-properties</artifactId>
+                <version>1.10.2</version>
+            </dependency>
+            
         </dependencies>
     </dependencyManagement>
     <build>

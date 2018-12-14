@@ -1,20 +1,81 @@
 package com.es.phoneshop.web.controller;
 
-import com.es.core.cart.CartService;
+import com.es.core.cart.CartItem;
+import com.es.core.cart.CartItemJsonResponse;
+import com.es.core.service.CartService;
+import com.es.core.service.PriceService;
+import com.es.core.service.StockService;
+import com.es.core.model.phone.Stock;
+import com.es.core.message.ApplicationMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping(value = "/ajaxCart")
+@RestController
+@RequestMapping(value = "/ajaxCart", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AjaxCartController {
-    @Resource
-    private CartService cartService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void addPhone(Long phoneId, Long quantity) {
-        cartService.addPhone(phoneId, quantity);
+    private static final String QUANTITY_FIELD_NAME = "quantity";
+    private static final String PHONE_ID_FIELD_NAME = "phoneId";
+    private final CartService cartService;
+    private final StockService stockService;
+    private final PriceService priceService;
+
+    @Autowired
+    public AjaxCartController(CartService cartService, StockService stockService, PriceService priceService) {
+        this.cartService = cartService;
+        this.stockService = stockService;
+        this.priceService = priceService;
+    }
+
+    @PostMapping
+    public CartItemJsonResponse addPhone(@RequestBody @Valid CartItem cartItem, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> errors = result.getFieldErrors().stream().collect(
+                    Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
+            );
+            return handleResponse(true, errors, null);
+        }
+        Stock stock = stockService.getStock(cartItem.getPhoneId());
+        if (cartItem.getQuantity() > stock.getStock()) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put(QUANTITY_FIELD_NAME, ApplicationMessage.NOT_ENOUGH);
+            return handleResponse(true, errors, null);
+        }
+        cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
+        return handleResponse(false, null, cartItem);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public CartItemJsonResponse handleException() {
+        Map<String, String> errors = new HashMap<>();
+        errors.put(QUANTITY_FIELD_NAME, ApplicationMessage.NOT_A_NUMBER);
+        return handleResponse(true, errors, null);
+    }
+
+    private CartItemJsonResponse handleResponse(boolean hasErrors, Map<String, String> errors, CartItem cartItem) {
+        CartItemJsonResponse response = new CartItemJsonResponse();
+        if (hasErrors) {
+            response.setIsValidated(false);
+            response.setErrorMessages(errors);
+        } else {
+            response.setIsValidated(true);
+            response.setCartItem(cartItem);
+            response.setSuccessMessage(ApplicationMessage.ADDED_TO_CART_SUCCESS);
+        }
+        response.setCartSize(cartService.getCartSize());
+        response.setTotalCartPrice(priceService.getCartPrice());
+        return response;
     }
 }
