@@ -1,8 +1,9 @@
-package com.es.core.model.phone;
+package com.es.core.model.dao;
 
 import com.es.core.dao.PhoneDao;
 import com.es.core.exception.GetterInvokerException;
 
+import com.es.core.model.phone.Phone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

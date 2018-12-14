@@ -36,7 +36,7 @@
                             class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/cart"/>">Cart</a>
+                    <a class="nav-link active" href="<c:url value="/cart"/>">Cart</a>
                 </li>
             </ul>
             <div class="inline my-2 my-lg-0">
@@ -45,7 +45,8 @@
                     <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
                 <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span>
+                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice"
+                                                                                                    class="badge badge-light">${cartPrice}</span>
                     <i class="fa fa-dollar"></i>
                 </button>
             </div>
@@ -86,19 +87,24 @@
                                 <tbody>
                                 <c:forEach items="${phones}" var="phone" varStatus="i">
                                     <tr>
-                                        <td><img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                                        <td><img
+                                                src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                                         </td>
                                         <td>${phone.model}</td>
                                         <td>${stocks[i.index].stock}</td>
                                         <td><label>
-                                            <input class="form-control" type="text" value="${cartItems[i.index].quantity}"/>
+                                            <input class="form-control text-right" type="text"
+                                                   value="${cartItems[i.index].quantity}"/>
                                         </label></td>
                                         <td class="text-right">${phone.price} <i class="fa fa-dollar"></i></td>
                                         <td>
-                                            <button href="<c:url value="/productDetails/${phone.id}"/>" type="button" class="btn btn-primary">
-                                                <i class="fa fa-info-circle"></i> <spring:message code="button.details"/>
+                                            <button href="<c:url value="/productDetails/${phone.id}"/>" type="button"
+                                                    class="btn btn-primary">
+                                                <i class="fa fa-info-circle"></i> <spring:message
+                                                    code="button.details"/>
                                             </button>
-                                            <button name="buttonDelete" value="${phone.id}" type="submit" class="btn btn-danger">
+                                            <button name="buttonDelete" value="${phone.id}" type="submit"
+                                                    class="btn btn-danger">
                                                 <i class="fa fa-trash"></i> Delete
                                             </button>
                                         </td>
@@ -110,17 +116,20 @@
                     </c:choose>
                 </form>
             </div>
-            <div class="btn-group col-6 float-right">
-                    <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" href="<c:url value="/productList"/>" type="button" style="color: black">
+            <form id="updateForm">
+                <div class="btn-group col-6 float-right">
+                    <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center"
+                       href="<c:url value="/productList"/>" type="button" style="color: black">
                         <i class="fa fa-arrow-left"></i> Continue Shopping
                     </a>
-                    <a class="btn btn-outline-primary btn-md ml-3 col-12 text-center" type="button">
+                    <a class="btn btn-outline-primary btn-md ml-3 col-12 text-center" type="submit">
                         <i class="fa fa-repeat"></i> Update Cart
                     </a>
                     <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" type="button">
                         Checkout <i class="fa fa-arrow-right"></i>
                     </a>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

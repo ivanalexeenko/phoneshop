@@ -7,36 +7,31 @@
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
     <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
-
     <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
     <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
     <spring:url value="resources/i18n/appMessages.properties" var="property"/>
     <spring:url value="/resources/i18n/jquery.i18n.properties.js?1" var="i18nJS"/>
-
-
     <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
     <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
 
     <link href="${plpStyles}" rel="stylesheet"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-
-
-
-
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="<c:url value="/productList"/>">Phoneshop Spring</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07" aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>">Product List<span class="sr-only"></span></a>
+                    <a class="nav-link" href="<c:url value="/productList"/>">Product List<span
+                            class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<c:url value="/cart"/>">Cart</a>
@@ -48,7 +43,8 @@
                     <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
                 <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span>
+                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice"
+                                                                                                    class="badge badge-light">${cartPrice}</span>
                     <i class="fa fa-dollar"></i>
                 </button>
             </div>
@@ -122,7 +118,8 @@
                             <td class="text-center">${phone.internalStorageGb} GB</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Price:</th><td class="text-center">${phone.price} <a class="fa fa-dollar"></a></td>
+                            <th class="text-center">Price:</th>
+                            <td class="text-center">${phone.price} <a class="fa fa-dollar"></a></td>
                         </tr>
                     </table>
                 </div><!--/tab-pane-->
@@ -214,30 +211,33 @@
 
             </div><!--/tab-pane-->
             <form method="post">
-            <div class="form-group">
-                <div class="col-xs-4">
-                    <table class="table table-responsive-sm">
-                        <tr>
-                            <td>
-                                <div class="input-group col-6">
-                                    <input id="input${phone.id}" type="text" class="addition form-control col-12 text-center"
-                                           aria-label="Small"
-                                           aria-describedby="inputGroup-sizing-lg" placeholder="${inputPlaceholder}">
-                                    <p><span class="success" id="messageSuccess${phone.id}">
+                <div class="form-group">
+                    <div class="col-xs-4">
+                        <table class="table table-responsive-sm">
+                            <tr>
+                                <td>
+                                    <div class="input-group col-6">
+                                        <input id="input${phone.id}" type="text"
+                                               class="addition form-control col-12 text-center"
+                                               aria-label="Small"
+                                               aria-describedby="inputGroup-sizing-lg"
+                                               placeholder="${inputPlaceholder}">
+                                        <p><span class="success" id="messageSuccess${phone.id}">
                                 </span></p>
-                                    <p><span class="error" id="messageError${phone.id}"></span></p>
+                                        <p><span class="error" id="messageError${phone.id}"></span></p>
 
-                                    <div class="input-group-append">
-                                        <button type="submit" id="add${phone.id}" class="addition btn btn-success btn-md ml-3 col-12 text-center">
-                                            <i class="fa fa-plus-circle"></i> <spring:message code="button.add"/>
-                                        </button>
+                                        <div class="input-group-append">
+                                            <button type="submit" id="add${phone.id}"
+                                                    class="addition btn btn-success btn-md ml-3 col-12 text-right"><i
+                                                    class="fa fa-plus-circle"></i><spring:message code="button.add"/>
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-            </div>
             </form>
         </div><!--/tab-content-->
 
