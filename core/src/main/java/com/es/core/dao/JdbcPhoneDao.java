@@ -15,7 +15,6 @@ import java.util.*;
 @Repository
 public class JdbcPhoneDao implements PhoneDao {
     private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
-    private static final String SELECT_COLORS_QUERY = "select * from colors";
     private static final String SELECT_PHONE2COLOR_BY_ID_QUERY = "select * from phone2color where phoneId = ?";
     private static final String COUNT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_QUERY = "select count(pointFour.id) from (select * from (select * from phones pointTwo" +
             " where pointTwo.id in " +
@@ -44,10 +43,12 @@ public class JdbcPhoneDao implements PhoneDao {
     private static final String ORDER_BY_PREFIX = "%";
 
     private final JdbcTemplate jdbcTemplate;
+    private final ColorDao colorDao;
 
     @Autowired
-    public JdbcPhoneDao(JdbcTemplate jdbcTemplate) {
+    public JdbcPhoneDao(JdbcTemplate jdbcTemplate, ColorDao colorDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.colorDao = colorDao;
     }
 
     public Optional<Phone> get(Long key) {
@@ -144,7 +145,7 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     private void setPhonesColors(List<Phone> phones) {
-        List<Color> colors = jdbcTemplate.query(SELECT_COLORS_QUERY, new BeanPropertyRowMapper<Color>(Color.class));
+        List<Color> colors = colorDao.getColors();
         for (Phone phone : phones) {
             List<Long> colorIds = jdbcTemplate.query(SELECT_PHONE2COLOR_BY_ID_QUERY, new Object[]{phone.getId()}, new ColorRowMapper());
             if (colorIds != null) {
