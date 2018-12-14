@@ -9,7 +9,6 @@
     <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
     <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
     <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
-    <spring:url value="resources/i18n/appMessages.properties" var="property"/>
     <spring:url value="/resources/i18n/jquery.i18n.properties.js?1" var="i18nJS"/>
     <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
     <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
