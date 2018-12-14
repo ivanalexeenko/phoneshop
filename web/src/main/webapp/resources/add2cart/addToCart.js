@@ -18,7 +18,7 @@ function addToCart(event, button) {
             $('span.error').empty();
             $('span.success').empty();
             if (res.isValidated) {
-                $("#messageSuccess" + id).text(res.successMessage, cartItem.phoneId, cartItem.quantity);
+                $("#messageSuccess" + id).text(res.successMessage);
             }
             else {
                 var message = "";

@@ -1,7 +1,6 @@
 package com.es.core.model.dao;
 
 import com.es.core.dao.PhoneDao;
-import com.es.core.exception.GetterInvokerException;
 
 import com.es.core.model.phone.Phone;
 import org.junit.After;
@@ -16,7 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -92,7 +90,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhones() throws GetterInvokerException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhones() throws IllegalArgumentException {
         phone.setModel(REPEAT_MODEL);
         phone.setBrand(REPEAT_BRAND);
 
@@ -105,7 +103,7 @@ public class JdbcPhoneDaoTest {
 
     @Test
     @DirtiesContext
-    public void shouldAssertOnePhoneAddedNextIdGeneratedSuccess() throws GetterInvokerException {
+    public void shouldAssertOnePhoneAddedNextIdGeneratedSuccess() {
         Long amountStart = jdbcTemplateTest.queryForObject(SELECT_PHONES_COUNT_QUERY, Long.class);
         Long maxIdStart = jdbcTemplateTest.queryForObject(SELECT_MAX_PHONE_ID_QUERY, Long.class);
 
@@ -125,7 +123,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveNullBrand() throws GetterInvokerException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveNullBrand() {
         phone.setBrand(null);
 
         phoneDao.save(phone);
@@ -133,7 +131,7 @@ public class JdbcPhoneDaoTest {
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveNullModel() throws GetterInvokerException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveNullModel() {
         phone.setModel(null);
 
         phoneDao.save(phone);

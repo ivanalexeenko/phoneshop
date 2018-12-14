@@ -41,7 +41,6 @@ public class JdbcPhoneDao implements PhoneDao {
             "positioning", "imageUrl", "description"};
     private static final String DELIMITER = "";
     private static final String ORDER_BY_PREFIX = "%";
-
     private final JdbcTemplate jdbcTemplate;
     private final ColorDao colorDao;
 
