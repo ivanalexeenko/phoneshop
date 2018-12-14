@@ -15,7 +15,6 @@ import java.util.*;
 @Repository
 public class JdbcPhoneDao implements PhoneDao {
     private static final String SELECT_PHONE_BY_ID_QUERY = "select * from phones where id = ?";
-    private static final String SELECT_COLORS_QUERY = "select * from colors";
     private static final String SELECT_PHONE2COLOR_BY_ID_QUERY = "select * from phone2color where phoneId = ?";
     private static final String COUNT_PHONES_STOCK_BIGGER_ZERO_BY_LIMIT_AND_OFFSET_QUERY = "select count(pointFour.id) from (select * from (select * from phones pointTwo" +
             " where pointTwo.id in " +
@@ -42,12 +41,13 @@ public class JdbcPhoneDao implements PhoneDao {
             "positioning", "imageUrl", "description"};
     private static final String DELIMITER = "";
     private static final String ORDER_BY_PREFIX = "%";
-
     private final JdbcTemplate jdbcTemplate;
+    private final ColorDao colorDao;
 
     @Autowired
-    public JdbcPhoneDao(JdbcTemplate jdbcTemplate) {
+    public JdbcPhoneDao(JdbcTemplate jdbcTemplate,ColorDao colorDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.colorDao = colorDao;
     }
 
     public Optional<Phone> get(Long key) {
@@ -72,7 +72,7 @@ public class JdbcPhoneDao implements PhoneDao {
                 new Object[]{partSearch, partSearch, partSearch, partSearch, partSearch, limit, offset},
                 new BeanPropertyRowMapper<Phone>(Phone.class));
 
-        List colors = jdbcTemplate.query(SELECT_COLORS_QUERY, new BeanPropertyRowMapper<Color>(Color.class));
+        List<Color> colors = colorDao.getColors();
         setPhonesColors(phones, colors);
         return phones;
     }
