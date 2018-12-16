@@ -7,4 +7,5 @@ public class ApplicationMessage {
     public static final String NOT_A_NUMBER = "error.not.number";
     public static final String NOT_ENOUGH = "error.not.enough";
     public static final String ADDED_TO_CART_SUCCESS = "add.to.cart.success";
+    public static final String UPDATE_SUCCESS = "update.success";
 }

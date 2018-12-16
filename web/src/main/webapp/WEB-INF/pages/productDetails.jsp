@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-    <title>Product Details Page</title>
+    <title><spring:message code="title.pdp"/></title>
     <script src="${pageContext.request.contextPath}/webjars/jquery/3.1.0/jquery.min.js"></script>
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 

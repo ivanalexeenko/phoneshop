@@ -54,7 +54,7 @@ public class AjaxCartController {
         Stock stock = stockService.getStock(cartItem.getPhoneId());
         if (cartItem.getQuantity() > stock.getStock()) {
             Map<String, String> errors = new HashMap<>();
-            errors.put(QUANTITY_FIELD_NAME,ApplicationMessage.NOT_ENOUGH);
+            errors.put(QUANTITY_FIELD_NAME, ApplicationMessage.NOT_ENOUGH);
             return handleResponse(true, errors, null);
         }
         cartService.addPhone(cartItem.getPhoneId(), cartItem.getQuantity());
@@ -64,7 +64,7 @@ public class AjaxCartController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public CartItemJsonResponse handleException() {
         Map<String, String> errors = new HashMap<>();
-        errors.put(QUANTITY_FIELD_NAME,ApplicationMessage.NOT_A_NUMBER);
+        errors.put(QUANTITY_FIELD_NAME, ApplicationMessage.NOT_A_NUMBER);
         return handleResponse(true, errors, null);
     }
 
@@ -72,11 +72,11 @@ public class AjaxCartController {
         CartItemJsonResponse response = new CartItemJsonResponse();
         if (hasErrors) {
             response.setIsValidated(false);
-            errors.replaceAll((key, value) -> messageSource.getMessage(value,null,LocaleContextHolder.getLocale()));
+            errors.replaceAll((key, value) -> messageSource.getMessage(value, null, LocaleContextHolder.getLocale()));
             response.setErrorMessages(errors);
         } else {
             response.setIsValidated(true);
-            response.setSuccessMessage(messageSource.getMessage(ApplicationMessage.ADDED_TO_CART_SUCCESS,new Object[]{cartItem.getPhoneId(),cartItem.getQuantity()}, LocaleContextHolder.getLocale()));
+            response.setSuccessMessage(messageSource.getMessage(ApplicationMessage.ADDED_TO_CART_SUCCESS, new Object[]{cartItem.getPhoneId(), cartItem.getQuantity()}, LocaleContextHolder.getLocale()));
         }
         response.setCartSize(cartService.getCartSize());
         response.setTotalCartPrice(priceService.getCartPrice());

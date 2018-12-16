@@ -31,9 +31,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-        CartItem item = new CartItem();
-        item.setPhoneId(phoneId);
-        item.setQuantity(quantity);
+        CartItem item = new CartItem(phoneId,quantity);
         Optional<CartItem> optional = this.get(phoneId);
         if (!optional.isPresent()) {
             cart.getCartItems().add(item);
@@ -45,7 +43,11 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        int index = 0;
+        for(Map.Entry<Long,Long> entry : items.entrySet()) {
+            cart.getCartItems().get(index).setQuantity(entry.getValue());
+            index++;
+        }
     }
 
     @Override
