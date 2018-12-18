@@ -9,8 +9,8 @@
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
 
     <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
-    <spring:url value="/resources/updateCart/updateCart.js" var="updateCart"/>
-    <spring:url value="/resources/cartReady/cartReady.js" var="cartReady"/>
+    <spring:url value="/resources/updateCart/updateCart.js?1" var="updateCart"/>
+    <spring:url value="/resources/cartReady/cartReady.js?1" var="cartReady"/>
     <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
     <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
 
@@ -96,14 +96,7 @@
                                         <td class="text-center">
                                             <label>
                                                 <input name="inputQuantity" class="form-control  text-right" type="text"
-                                                        <c:choose>
-                                                            <c:when test="${not empty quantityStrings[i.index]}">
-                                                                value="${quantityStrings[i.index]}"
-                                                            </c:when>
-                                                        <c:otherwise>
-                                                            value="${cartItems[i.index].quantity}"
-                                                        </c:otherwise>
-                                                        </c:choose>
+                                                       value="${quantityStrings[i.index]}"
                                                 />
                                             </label>
                                             <p class="text-center text-info">${messages[i.index]}</p>

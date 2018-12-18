@@ -44,6 +44,7 @@ public class CartPageController {
     private static final String MESSAGES_ATTRIBUTE_NAME = "messages";
     private static final String HIDDEN_QUANTITY_PARAMETER_NAME = "hiddenQuantity";
     private static final String HIDDEN_PHONE_ID_PATAMETER_NAME = "hiddenPhoneId";
+    private static final String EMPTY_MESSAGE = "";
     private final CartService cartService;
     private final PriceService priceService;
     private final PhoneService phoneService;
@@ -52,7 +53,7 @@ public class CartPageController {
     private final MessageSource messageSource;
     private List<String> quantityStrings;
     private List<String> messages;
-    private Map<Long,Long> cartItemMap;
+    private Map<Long, Long> cartItemMap;
 
     @Autowired
     public CartPageController(CartService cartService, PriceService priceService, PhoneService phoneService, StockService stockService, StringifiedCartItemValidator validator, MessageSource messageSource) {
@@ -78,34 +79,8 @@ public class CartPageController {
         String[] quantities = request.getParameterValues(HIDDEN_QUANTITY_PARAMETER_NAME);
         String[] phoneIds = request.getParameterValues(HIDDEN_PHONE_ID_PATAMETER_NAME);
         if (quantities != null && phoneIds != null) {
-            messages.clear();
-            quantityStrings.clear();
-            cartItemMap.clear();
-            for (int i = 0; i < quantities.length; i++) {
-                CartItem oldItem = cartService.getCart().getCartItems().get(i);
-                cartItemMap.put(oldItem.getPhoneId(),oldItem.getQuantity());
-
-                String tempPhoneId = phoneIds[i];
-                String tempQuantity = quantities[i];
-                StringifiedCartItem stringifiedCartItem = new StringifiedCartItem(tempPhoneId, tempQuantity);
-
-                final DataBinder dataBinder = new DataBinder(stringifiedCartItem);
-                dataBinder.addValidators(validator);
-                dataBinder.validate();
-                BindingResult result = dataBinder.getBindingResult();
-                if(result.hasErrors()) {
-                    String error = result.getAllErrors().get(0).getCode();
-                    String message = messageSource.getMessage(error,null, LocaleContextHolder.getLocale());
-                    messages.add(message);
-                }
-                else {
-                    long phoneId = Long.parseLong(tempPhoneId);
-                    long quantity = Long.parseLong(tempQuantity);
-                    cartItemMap.put(phoneId,quantity);
-                    messages.add(messageSource.getMessage(ApplicationMessage.UPDATE_SUCCESS,null,LocaleContextHolder.getLocale()));
-                }
-                quantityStrings.add(tempQuantity);
-            }
+            clearContainers();
+            checkQuantityFields(phoneIds, quantities);
             cartService.update(cartItemMap);
         }
         setModelAttributes(model);
@@ -122,15 +97,7 @@ public class CartPageController {
         } catch (NumberFormatException e) {
             deleteId = null;
         }
-        if(!messages.isEmpty()) {
-            int newSize = messages.size() - 1;
-            messages = new ArrayList<>(newSize);
-            messages.replaceAll(s -> "");
-            quantityStrings.clear();
-            for (int i = 0;i < messages.size();i++) {
-                quantityStrings.add(cartService.getCart().getCartItems().get(i).getQuantity().toString());
-            }
-        }
+        updateMessagesAndQuantityStringsAfterDelete();
         setModelAttributes(model);
         response.sendRedirect(request.getRequestURI());
     }
@@ -152,6 +119,65 @@ public class CartPageController {
         model.addAttribute(STOCKS_ATTRIBUTE_NAME, stocks);
         model.addAttribute(PHONE_IDS_ATTRIBUTE_NAME, phoneIds);
         model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
-        model.addAttribute(MESSAGES_ATTRIBUTE_NAME,messages);
+        model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
+    }
+
+    private void clearContainers() {
+        messages.clear();
+        quantityStrings.clear();
+        cartItemMap.clear();
+    }
+
+    private BindingResult validateItemFields(String tempPhoneId, String tempQuantity) {
+        StringifiedCartItem stringifiedCartItem = new StringifiedCartItem(tempPhoneId, tempQuantity);
+        final DataBinder dataBinder = new DataBinder(stringifiedCartItem);
+        dataBinder.addValidators(validator);
+        dataBinder.validate();
+        return dataBinder.getBindingResult();
+    }
+
+    private void addLocalizedMessage(Long phoneId, Long quantity, CartItem oldItem, BindingResult result) {
+        if (result.hasErrors()) {
+            String error = result.getAllErrors().get(0).getCode();
+            messages.add(messageSource.getMessage(error, null, LocaleContextHolder.getLocale()));
+        } else {
+            if (phoneId.equals(oldItem.getPhoneId()) && quantity.equals(oldItem.getQuantity())) {
+                messages.add(EMPTY_MESSAGE);
+            } else {
+                messages.add(messageSource.getMessage(ApplicationMessage.UPDATE_SUCCESS, null, LocaleContextHolder.getLocale()));
+            }
+        }
+    }
+
+    private void updateMessagesAndQuantityStringsAfterDelete() {
+        if (!messages.isEmpty()) {
+            int newSize = messages.size() - 1;
+            messages = new ArrayList<>(newSize);
+            messages.replaceAll(s -> "");
+            quantityStrings.clear();
+            for (int i = 0; i < messages.size(); i++) {
+                quantityStrings.add(cartService.getCart().getCartItems().get(i).getQuantity().toString());
+            }
+        }
+    }
+
+    private void checkQuantityFields(String[] phoneIds, String[] quantities) {
+        for (int i = 0; i < quantities.length; i++) {
+            CartItem oldItem = cartService.getCart().getCartItems().get(i);
+            String tempPhoneId = phoneIds[i];
+            String tempQuantity = quantities[i];
+            BindingResult result = validateItemFields(tempPhoneId, tempQuantity);
+
+            if (result.hasErrors()) {
+                addLocalizedMessage(null, null, null, result);
+                cartItemMap.put(oldItem.getPhoneId(), oldItem.getQuantity());
+            } else {
+                Long phoneId = Long.parseLong(tempPhoneId);
+                Long quantity = Long.parseLong(tempQuantity);
+                cartItemMap.put(phoneId, quantity);
+                addLocalizedMessage(phoneId, quantity, oldItem, result);
+            }
+            quantityStrings.add(tempQuantity);
+        }
     }
 }

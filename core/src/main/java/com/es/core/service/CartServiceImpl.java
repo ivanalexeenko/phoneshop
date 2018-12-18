@@ -43,10 +43,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        int index = 0;
         for(Map.Entry<Long,Long> entry : items.entrySet()) {
-            cart.getCartItems().get(index).setQuantity(entry.getValue());
-            index++;
+            Optional<CartItem> optionalCartItem = get(entry.getKey());
+            if(optionalCartItem.isPresent()) {
+                CartItem item = optionalCartItem.get();
+                item.setQuantity(entry.getValue());
+            }
         }
     }
 

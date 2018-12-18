@@ -5,6 +5,7 @@ import com.es.core.dao.StockDao;
 import com.es.core.message.ApplicationMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -27,10 +28,10 @@ public class StringifiedCartItemValidator implements Validator {
     @Override
     public void validate(Object item, Errors errors) {
         StringifiedCartItem stringifiedCartItem = (StringifiedCartItem) item;
-        if (stringifiedCartItem.getQuantityString() == null) {
+        if (StringUtils.isEmpty(stringifiedCartItem.getQuantityString())) {
             errors.rejectValue(QUANTITY_FIELD_NAME, ApplicationMessage.INPUT_IS_NULL);
         }
-        if (stringifiedCartItem.getPhoneIdString() == null) {
+        if (StringUtils.isEmpty(stringifiedCartItem.getPhoneIdString())) {
             errors.rejectValue(PHONE_ID_FIELD_NAME, ApplicationMessage.PHONE_ID_IS_NULL);
         }
 
