@@ -1,6 +1,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="style" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 <head>
@@ -32,7 +34,8 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message code="link.productlist.name"/><span
+                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message
+                            code="link.productlist.name"/><span
                             class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
@@ -71,16 +74,21 @@
             <div class="row">
                 <div class="col-sm-auto">
                     <div class="table-responsive">
-                        <form method="post">
+                        <form:form method="post" modelAttribute="deleteId">
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th class="text-center" scope="col"></th>
-                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.product"/></th>
-                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.stock"/></th>
-                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.actual.quantity"/></th>
-                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.quantity"/></th>
-                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.price"/></th>
+                                    <th class="text-center" scope="col"><spring:message
+                                            code="column.cart.page.product"/></th>
+                                    <th class="text-center" scope="col"><spring:message
+                                            code="column.cart.page.stock"/></th>
+                                    <th class="text-center" scope="col"><spring:message
+                                            code="column.cart.page.actual.quantity"/></th>
+                                    <th class="text-center" scope="col"><spring:message
+                                            code="column.cart.page.quantity"/></th>
+                                    <th class="text-center" scope="col"><spring:message
+                                            code="column.cart.page.price"/></th>
                                     <th class="text-center"></th>
                                 </tr>
                                 </thead>
@@ -104,26 +112,27 @@
                                         <td class="text-right">${phone.price} <i class="fa fa-dollar"></i></td>
                                         <td>
                                             <a href="<c:url value="/productDetails/${phone.id}"/>" type="button"
-                                                    class="btn btn-primary">
+                                               class="btn btn-primary">
                                                 <i class="fa fa-info-circle"></i> <spring:message
                                                     code="button.details"/>
                                             </a>
-                                            <button name="buttonDelete" value="${phone.id}" type="submit"
+                                            <button name="buttonDelete" type="submit"
                                                     class="btn btn-danger">
                                                 <i class="fa fa-trash"></i> <spring:message code="button.delete.text"/>
                                             </button>
+                                        <form:input type="hidden" value="${phone.id}" path="id"/>
                                         </td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
                             </table>
-                        </form>
+                        </form:form>
                     </div>
                     <form id="updateForm" method="post">
                         <input type="hidden" name="_method" value="put">
                         <div class="btn-group col-6 float-right">
                             <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center"
-                                    href="<c:url value="/productList"/>" type="button" style="color: black">
+                               href="<c:url value="/productList"/>" type="button" style="color: black">
                                 <i class="fa fa-arrow-left"></i> <spring:message code="back.to.plp.text"/>
                             </a>
                             <button id="submitUpdate" class="btn btn-outline-primary btn-md ml-3 col-12 text-center"
@@ -131,8 +140,8 @@
                                 <i class="fa fa-repeat"></i> <spring:message code="button.update"/>
                             </button>
                             <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" type="button"
-                                    style="color: black">
-                                Checkout <i class="fa fa-arrow-right"></i>
+                               style="color: black">
+                                <spring:message code="link.order.name"/><i class="fa fa-arrow-right"></i>
                             </a>
                         </div>
                         <c:forEach items="${phones}" var="phone">

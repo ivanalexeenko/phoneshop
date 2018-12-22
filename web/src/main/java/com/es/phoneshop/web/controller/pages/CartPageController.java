@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.core.IdWrapper;
 import com.es.core.cart.CartItem;
 import com.es.core.cart.StringifiedCartItem;
 import com.es.core.message.ApplicationMessage;
@@ -17,11 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class CartPageController {
     private static final String HIDDEN_QUANTITY_PARAMETER_NAME = "hiddenQuantity";
     private static final String HIDDEN_PHONE_ID_PARAMETER_NAME = "hiddenPhoneId";
     private static final String EMPTY_MESSAGE = "";
+    private static final String DELETE_ID_ATTRIBUTE_NAME = "deleteId";
     private final CartService cartService;
     private final PriceService priceService;
     private final PhoneService phoneService;
@@ -67,14 +69,14 @@ public class CartPageController {
         cartItemMap = new HashMap<>();
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getCart(Model model) {
         setModelAttributes(model);
         return CART_PAGE_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public String updateCart(HttpServletRequest request, Model model) throws IOException {
+    @PutMapping
+    public String updateCart(HttpServletRequest request, Model model) {
         String[] quantities = request.getParameterValues(HIDDEN_QUANTITY_PARAMETER_NAME);
         String[] phoneIds = request.getParameterValues(HIDDEN_PHONE_ID_PARAMETER_NAME);
         if (quantities != null && phoneIds != null) {
@@ -86,16 +88,9 @@ public class CartPageController {
         return CART_PAGE_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String deleteItem(HttpServletRequest request, Model model) throws IOException {
-        String deleteParameter = request.getParameter(BUTTON_DELETE_PARAMETER_NAME);
-        Long deleteId;
-        try {
-            deleteId = Long.parseLong(deleteParameter);
-            cartService.remove(deleteId);
-        } catch (NumberFormatException e) {
-            deleteId = null;
-        }
+    @PostMapping
+    public String deleteItem(@Valid @ModelAttribute(DELETE_ID_ATTRIBUTE_NAME) IdWrapper deleteId, BindingResult result, Model model) {
+        cartService.remove(deleteId.getId());
         updateMessagesAndQuantityStringsAfterDelete();
         setModelAttributes(model);
         return CART_PAGE_NAME;
@@ -107,6 +102,7 @@ public class CartPageController {
         model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
         model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
         model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
+        model.addAttribute(DELETE_ID_ATTRIBUTE_NAME, new IdWrapper());
     }
 
     private void setListModelAttributes(Model model) {
@@ -114,7 +110,7 @@ public class CartPageController {
         List<Phone> phones = new ArrayList<>();
         List<Stock> stocks = new ArrayList<>();
         List<Long> phoneIds = new ArrayList<>();
-        cartItemList.forEach(cartItem ->  {
+        cartItemList.forEach(cartItem -> {
             phones.add(phoneService.get(cartItem.getPhoneId()).orElse(null));
             stocks.add(stockService.getStock(cartItem.getPhoneId()));
             phoneIds.add(cartItem.getPhoneId());
