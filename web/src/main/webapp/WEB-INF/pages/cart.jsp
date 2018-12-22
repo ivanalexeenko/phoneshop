@@ -24,7 +24,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="<c:url value="/productList"/>">Phoneshop Spring</a>
+        <a class="navbar-brand" href="<c:url value="/productList"/>"><spring:message code="head.app.name"/></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
                 aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,11 +32,11 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>">Product List<span
+                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message code="link.productlist.name"/><span
                             class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="<c:url value="/cart"/>">Cart</a>
+                    <a class="nav-link active" href="<c:url value="/cart"/>"><spring:message code="link.cart.name"/></a>
                 </li>
             </ul>
             <div class="inline my-2 my-lg-0">
@@ -55,14 +55,14 @@
 </nav>
 <section class="jumbotron text-center">
     <div class="container">
-        <h1 class="jumbotron-heading">Your Personal Cart</h1>
+        <h1 class="jumbotron-heading"><spring:message code="header.cart.page"/></h1>
     </div>
 </section>
 <c:choose>
     <c:when test="${empty cartItems}">
         <section class="jumbotron text-center">
             <div class="container text-center">
-                <h1 class="jumbotron-heading text-center">Oops,no items added to cart =(</h1>
+                <h1 class="jumbotron-heading text-center"><spring:message code="head.cart.page.items.empty"/></h1>
             </div>
         </section>
     </c:when>
@@ -76,11 +76,11 @@
                                 <thead>
                                 <tr>
                                     <th class="text-center" scope="col"></th>
-                                    <th class="text-center" scope="col">Product</th>
-                                    <th class="text-center" scope="col">In Stock</th>
-                                    <th class="text-center" scope="col">Actual Quantity</th>
-                                    <th class="text-center" scope="col">Quantity</th>
-                                    <th class="text-center" scope="col">Price</th>
+                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.product"/></th>
+                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.stock"/></th>
+                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.actual.quantity"/></th>
+                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.quantity"/></th>
+                                    <th class="text-center" scope="col"><spring:message code="column.cart.page.price"/></th>
                                     <th class="text-center"></th>
                                 </tr>
                                 </thead>
@@ -103,14 +103,14 @@
                                         </td>
                                         <td class="text-right">${phone.price} <i class="fa fa-dollar"></i></td>
                                         <td>
-                                            <button href="<c:url value="/productDetails/${phone.id}"/>" type="button"
+                                            <a href="<c:url value="/productDetails/${phone.id}"/>" type="button"
                                                     class="btn btn-primary">
                                                 <i class="fa fa-info-circle"></i> <spring:message
                                                     code="button.details"/>
-                                            </button>
+                                            </a>
                                             <button name="buttonDelete" value="${phone.id}" type="submit"
                                                     class="btn btn-danger">
-                                                <i class="fa fa-trash"></i> Delete
+                                                <i class="fa fa-trash"></i> <spring:message code="button.delete.text"/>
                                             </button>
                                         </td>
                                     </tr>
@@ -124,11 +124,11 @@
                         <div class="btn-group col-6 float-right">
                             <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center"
                                     href="<c:url value="/productList"/>" type="button" style="color: black">
-                                <i class="fa fa-arrow-left"></i> Continue Shopping
+                                <i class="fa fa-arrow-left"></i> <spring:message code="back.to.plp.text"/>
                             </a>
                             <button id="submitUpdate" class="btn btn-outline-primary btn-md ml-3 col-12 text-center"
                                     type="submit">
-                                <i class="fa fa-repeat"></i> Update Cart
+                                <i class="fa fa-repeat"></i> <spring:message code="button.update"/>
                             </button>
                             <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" type="button"
                                     style="color: black">

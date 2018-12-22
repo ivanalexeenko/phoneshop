@@ -46,7 +46,7 @@ public class ProductDetailsPageController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void getRequest(HttpServletResponse response,HttpServletRequest request) throws IOException {
-        response.sendRedirect(request.getRequestURI());
+    public String getRequest(HttpServletRequest request) throws IOException {
+        return PRODUCT_DETAILS_VIEW_NAME;
     }
 }

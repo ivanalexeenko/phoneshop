@@ -67,7 +67,7 @@ public class ProductListPageController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void getFormParam(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+    public String getFormParam(HttpServletRequest request, Model model) throws IOException {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);
@@ -88,7 +88,7 @@ public class ProductListPageController {
         data = recalculateData(dataString);
         dataArray = (Integer[]) data.toArray();
         setModelAttributes(model);
-        response.sendRedirect(request.getRequestURI());
+        return PRODUCT_LIST_VIEW_NAME;
     }
 
     private List recalculateData(String dataString) {

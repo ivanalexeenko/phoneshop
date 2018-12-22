@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.UnaryOperator;
 
 @Controller
 @RequestMapping(value = "/cart")
@@ -43,7 +42,7 @@ public class CartPageController {
     private static final String QUANTITY_STRINGS_ATTRIBUTE_NAME = "quantityStrings";
     private static final String MESSAGES_ATTRIBUTE_NAME = "messages";
     private static final String HIDDEN_QUANTITY_PARAMETER_NAME = "hiddenQuantity";
-    private static final String HIDDEN_PHONE_ID_PATAMETER_NAME = "hiddenPhoneId";
+    private static final String HIDDEN_PHONE_ID_PARAMETER_NAME = "hiddenPhoneId";
     private static final String EMPTY_MESSAGE = "";
     private final CartService cartService;
     private final PriceService priceService;
@@ -75,20 +74,20 @@ public class CartPageController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateCart(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+    public String updateCart(HttpServletRequest request, Model model) throws IOException {
         String[] quantities = request.getParameterValues(HIDDEN_QUANTITY_PARAMETER_NAME);
-        String[] phoneIds = request.getParameterValues(HIDDEN_PHONE_ID_PATAMETER_NAME);
+        String[] phoneIds = request.getParameterValues(HIDDEN_PHONE_ID_PARAMETER_NAME);
         if (quantities != null && phoneIds != null) {
             clearContainers();
             checkQuantityFields(phoneIds, quantities);
             cartService.update(cartItemMap);
         }
         setModelAttributes(model);
-        response.sendRedirect(request.getRequestURI());
+        return CART_PAGE_NAME;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void deleteItem(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+    public String deleteItem(HttpServletRequest request, Model model) throws IOException {
         String deleteParameter = request.getParameter(BUTTON_DELETE_PARAMETER_NAME);
         Long deleteId;
         try {
@@ -99,27 +98,31 @@ public class CartPageController {
         }
         updateMessagesAndQuantityStringsAfterDelete();
         setModelAttributes(model);
-        response.sendRedirect(request.getRequestURI());
+        return CART_PAGE_NAME;
     }
 
     private void setModelAttributes(Model model) {
+        setListModelAttributes(model);
+        model.addAttribute(CART_SIZE_ATTRIBUTE_NAME, cartService.getCartSize());
+        model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
+        model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
+        model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
+    }
+
+    private void setListModelAttributes(Model model) {
         List<CartItem> cartItemList = cartService.getCart().getCartItems();
         List<Phone> phones = new ArrayList<>();
         List<Stock> stocks = new ArrayList<>();
         List<Long> phoneIds = new ArrayList<>();
-        for (CartItem cartItem : cartItemList) {
+        cartItemList.forEach(cartItem ->  {
             phones.add(phoneService.get(cartItem.getPhoneId()).orElse(null));
             stocks.add(stockService.getStock(cartItem.getPhoneId()));
             phoneIds.add(cartItem.getPhoneId());
-        }
-        model.addAttribute(PHONES_ATTRIBUTE_NAME, phones);
-        model.addAttribute(CART_ITEMS_ATTRIBUTE_NAME, cartItemList);
-        model.addAttribute(CART_SIZE_ATTRIBUTE_NAME, cartService.getCartSize());
-        model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
+        });
         model.addAttribute(STOCKS_ATTRIBUTE_NAME, stocks);
         model.addAttribute(PHONE_IDS_ATTRIBUTE_NAME, phoneIds);
-        model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
-        model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
+        model.addAttribute(PHONES_ATTRIBUTE_NAME, phones);
+        model.addAttribute(CART_ITEMS_ATTRIBUTE_NAME, cartItemList);
     }
 
     private void clearContainers() {
@@ -130,7 +133,7 @@ public class CartPageController {
 
     private BindingResult validateItemFields(String tempPhoneId, String tempQuantity) {
         StringifiedCartItem stringifiedCartItem = new StringifiedCartItem(tempPhoneId, tempQuantity);
-        final DataBinder dataBinder = new DataBinder(stringifiedCartItem);
+        DataBinder dataBinder = new DataBinder(stringifiedCartItem);
         dataBinder.addValidators(validator);
         dataBinder.validate();
         return dataBinder.getBindingResult();

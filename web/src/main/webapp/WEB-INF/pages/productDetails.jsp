@@ -21,7 +21,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="<c:url value="/productList"/>">Phoneshop Spring</a>
+        <a class="navbar-brand" href="<c:url value="/productList"/>"><spring:message code="head.app.name"/></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
                 aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -29,11 +29,11 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>">Product List<span
+                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message code="link.productlist.name"/><span
                             class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/cart"/>">Cart</a>
+                    <a class="nav-link" href="<c:url value="/cart"/>"><spring:message code="link.cart.name"/></a>
                 </li>
             </ul>
             <div class="inline my-2 my-lg-0">
@@ -63,7 +63,7 @@
                      class="avatar img-rounded img-thumbnail" alt="Device#${phone.id}">
             </div>
             <div class="card">
-                <div class="card-header text-center">Description:</div>
+                <div class="card-header text-center"><spring:message code="phone.description.head"/></div>
                 <div class="card-body">
                     ${phone.description}
                 </div>
@@ -71,53 +71,53 @@
         </div><!--/col-3-->
         <div class="col-sm-9">
             <ul class="nav nav-pills nav-justified">
-                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#common">Common</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#colors">Colors</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#display">Display</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physical">Physical</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#additional">Additional</a></li>
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#common"><spring:message code="tab.name.common"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#colors"><spring:message code="tab.name.colors"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#display"><spring:message code="tab.name.display"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physical"><spring:message code="tab.name.physical"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#additional"><spring:message code="tab.name.additional"/></a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="common">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
-                            <th class="text-center">Announcement</th>
+                            <th class="text-center"><spring:message code="tab.name.common.announce"/></th>
                             <td class="text-center">${phone.announced}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Brand</th>
+                            <th class="text-center"><spring:message code="tab.name.common.brand"/></th>
                             <td class="text-center">${phone.brand}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Model</th>
+                            <th class="text-center"><spring:message code="tab.name.common.model"/></th>
                             <td class="text-center">${phone.model}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Type</th>
+                            <th class="text-center"><spring:message code="tab.name.common.type"/></th>
                             <td class="text-center">${phone.deviceType}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Operating System</th>
+                            <th class="text-center"><spring:message code="tab.name.common.os"/></th>
                             <td class="text-center">${phone.os}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Back Camera</th>
-                            <td class="text-center">${phone.backCameraMegapixels} MP</td>
+                            <th class="text-center"><spring:message code="tab.name.common.camera.back"/></th>
+                            <td class="text-center">${phone.backCameraMegapixels} <spring:message code="tab.name.common.camera.back.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Front Camera</th>
-                            <td class="text-center">${phone.frontCameraMegapixels} MP</td>
+                            <th class="text-center"><spring:message code="tab.name.common.camera.front"/></th>
+                            <td class="text-center">${phone.frontCameraMegapixels} <spring:message code="tab.name.common.camera.front.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">RAM</th>
-                            <td class="text-center">${phone.ramGb} GB</td>
+                            <th class="text-center"><spring:message code="tab.name.common.ram"/></th>
+                            <td class="text-center">${phone.ramGb} <spring:message code="tab.name.common.ram.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Internal Storage</th>
-                            <td class="text-center">${phone.internalStorageGb} GB</td>
+                            <th class="text-center"><spring:message code="tab.name.common.storage"/></th>
+                            <td class="text-center">${phone.internalStorageGb} <spring:message code="tab.name.common.storage.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Price:</th>
+                            <th class="text-center"><spring:message code="tab.name.common.price"/></th>
                             <td class="text-center">${phone.price} <a class="fa fa-dollar"></a></td>
                         </tr>
                     </table>
@@ -127,12 +127,12 @@
                         <c:choose>
                             <c:when test="${empty phone.colors}">
                                 <tr>
-                                    <th class="text-center">No Available Colors</th>
+                                    <th class="text-center"><spring:message code="tab.name.colors.not.available"/></th>
                                 </tr>
                             </c:when>
                             <c:otherwise>
                                 <tr>
-                                    <th class="text-center">Available Colors</th>
+                                    <th class="text-center"><spring:message code="tab.name.colors.available"/></th>
                                 </tr>
                                 <c:forEach var="color" items="${phone.colors}">
                                     <tr>
@@ -146,19 +146,19 @@
                 <div class="tab-pane" id="display">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
-                            <th class="text-center">Display Size</th>
-                            <td class="text-center">${phone.displaySizeInches}''</td>
+                            <th class="text-center"><spring:message code="tab.name.display.size"/></th>
+                            <td class="text-center">${phone.displaySizeInches}<spring:message code="tab.name.display.size.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Display Resolution</th>
+                            <th class="text-center"><spring:message code="tab.name.display.resolution"/></th>
                             <td class="text-center">${phone.displayResolution}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Pixel Density</th>
+                            <th class="text-center"><spring:message code="tab.name.display.density"/></th>
                             <td class="text-center">${phone.pixelDensity}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Display Technology</th>
+                            <th class="text-center"><spring:message code="tab.name.display.tech"/></th>
                             <td class="text-center">${phone.displayTechnology}</td>
                         </tr>
                     </table>
@@ -166,43 +166,43 @@
                 <div class="tab-pane" id="physical">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
-                            <th class="text-center">Weight</th>
-                            <td class="text-center">${phone.weightGr} Gr</td>
+                            <th class="text-center"><spring:message code="tab.name.physical.weight"/></th>
+                            <td class="text-center">${phone.weightGr} <spring:message code="tab.name.physical.weight.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Length</th>
-                            <td class="text-center">${phone.lengthMm} Mm</td>
+                            <th class="text-center"><spring:message code="tab.name.physical.length"/></th>
+                            <td class="text-center">${phone.lengthMm} <spring:message code="tab.name.physical.length.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Width</th>
-                            <td class="text-center">${phone.widthMm} Mm</td>
+                            <th class="text-center"><spring:message code="tab.name.physical.width"/></th>
+                            <td class="text-center">${phone.widthMm} <spring:message code="tab.name.physical.width.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Height</th>
-                            <td class="text-center">${phone.heightMm} Mm</td>
+                            <th class="text-center"><spring:message code="tab.name.physical.height"/></th>
+                            <td class="text-center">${phone.heightMm} <spring:message code="tab.name.physical.height.measure"/></td>
                         </tr>
                     </table>
                 </div><!--/tab-pane-->
                 <div class="tab-pane" id="additional">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
-                            <th class="text-center">Battery Capacity</th>
-                            <td class="text-center">${phone.batteryCapacityMah} Mah</td>
+                            <th class="text-center"><spring:message code="tab.name.additional.battery.capacity"/></th>
+                            <td class="text-center">${phone.batteryCapacityMah} <spring:message code="tab.name.additional.battery.capacity.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Talk Time</th>
-                            <td class="text-center">${phone.talkTimeHours} h</td>
+                            <th class="text-center"><spring:message code="tab.name.additional.talk.time"/></th>
+                            <td class="text-center">${phone.talkTimeHours} <spring:message code="tab.name.additional.talk.time.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Stand By Time</th>
-                            <td class="text-center">${phone.standByTimeHours} h</td>
+                            <th class="text-center"><spring:message code="tab.name.additional.standby.time"/></th>
+                            <td class="text-center">${phone.standByTimeHours} <spring:message code="tab.name.additional.standby.time.measure"/></td>
                         </tr>
                         <tr>
-                            <th class="text-center">Bluetooth</th>
+                            <th class="text-center"><spring:message code="tab.name.additional.bluetooth"/></th>
                             <td class="text-center">${phone.bluetooth}</td>
                         </tr>
                         <tr>
-                            <th class="text-center">Positioning</th>
+                            <th class="text-center"><spring:message code="tab.name.additional.positioning"/></th>
                             <td class="text-center">${phone.positioning}</td>
                         </tr>
                     </table>
