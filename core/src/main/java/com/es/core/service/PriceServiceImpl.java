@@ -22,10 +22,10 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public BigDecimal getCartPrice() {
         BigDecimal totalPrice = BigDecimal.ZERO;
-        for(CartItem cartItem : cart.getCartItems()) {
+        for (CartItem cartItem : cart.getCartItems()) {
             BigDecimal tempPrice = BigDecimal.ZERO;
-            if(phoneDao.get(cartItem.getPhoneId()).isPresent()) {
-                tempPrice  = phoneDao.get(cartItem.getPhoneId()).get().getPrice();
+            if (phoneDao.get(cartItem.getPhoneId()).isPresent()) {
+                tempPrice = phoneDao.get(cartItem.getPhoneId()).get().getPrice();
             }
             tempPrice = tempPrice.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             totalPrice = totalPrice.add(tempPrice);

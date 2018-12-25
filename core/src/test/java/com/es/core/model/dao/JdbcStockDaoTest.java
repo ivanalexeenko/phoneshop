@@ -5,13 +5,12 @@ import com.es.core.model.phone.Stock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
-
-import javax.validation.constraints.AssertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/context/test-config.xml")
@@ -23,15 +22,32 @@ public class JdbcStockDaoTest {
     private Integer inStock = 11;
     private Integer reserved = 0;
 
+    @Qualifier("jdbcStockDao")
     @Autowired
-    private StockDao stockDao;
+    private final StockDao stockDao;
+
+    public JdbcStockDaoTest(StockDao stockDao) {
+        this.stockDao = stockDao;
+    }
 
     @Test
     @DirtiesContext
     public void shouldAssertRightStockForPhoneWithIdFoundWhenGetStock() {
         Stock stock = stockDao.getStock(existedPhoneId);
 
-        Assert.isTrue(stock.getStock().equals(inStock),NOT_EQUAL_STOCKS_MESSAGE);
-        Assert.isTrue(stock.getReserved().equals(reserved),NOT_EQUAL_RESERVED_MESSAGE);
+        Assert.isTrue(stock.getStock().equals(inStock), NOT_EQUAL_STOCKS_MESSAGE);
+        Assert.isTrue(stock.getReserved().equals(reserved), NOT_EQUAL_RESERVED_MESSAGE);
+    }
+
+    @Test(expected = EmptyResultDataAccessException.class)
+    @DirtiesContext
+    public void shouldThrowEmptyResultDataAccessExceptionWhenGetStockWithNotExistedPhoneId() {
+        Stock stock = stockDao.getStock(notExistedPhoneId);
+    }
+
+    @Test(expected = EmptyResultDataAccessException.class)
+    @DirtiesContext
+    public void shouldThrowEmptyResultDataAccessExceptionWhenGetStockNull() {
+        Stock stock = stockDao.getStock(null);
     }
 }
