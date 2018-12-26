@@ -8,7 +8,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,17 +22,19 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(MockitoJUnitRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class CartServiceTest {
-    private static Long[] cartItemIds = {1001L,1002L,1004L};
-    private static Long[] cartItemQuantities = {10L,1L,77L};
-    private static Long[] cartItemNewQuantities = {1012L,133L,31L};
+    private static Long[] cartItemIds = {1001L, 1002L, 1004L};
+    private static Long[] cartItemQuantities = {10L, 1L, 77L};
+    private static Long[] cartItemNewQuantities = {1012L, 133L, 31L};
     private List<CartItem> cartItems;
     private static Integer existingItemIndex = 0;
     private static Long nonExistingItemId = 231049L;
     private static Long addQuantity = 8L;
     private static Integer cartSize = 3;
+
 
     @Configuration
     static class CartServiceTestContextConfiguration {
@@ -38,6 +42,7 @@ public class CartServiceTest {
         public Cart getCart() {
             return Mockito.mock(Cart.class);
         }
+
         @Bean
         public CartService getCartService() {
             return new CartServiceImpl(getCart());
@@ -47,13 +52,13 @@ public class CartServiceTest {
     @Autowired
     private CartService cartService;
 
-    @Autowired
+    @Mock
     private Cart cart;
 
     @Before
     public void init() {
         cartItems = new ArrayList<>();
-        for(int i = 0;i < cartItemIds.length;i++) {
+        for (int i = 0; i < cartItemIds.length; i++) {
             CartItem cartItem = Mockito.mock(CartItem.class);
             Mockito.when(cartItem.getQuantity()).thenCallRealMethod();
             Mockito.doCallRealMethod().when(cartItem).setQuantity(Mockito.any(Long.class));
@@ -72,7 +77,7 @@ public class CartServiceTest {
     public void shouldAssertCartReturnedSuccessfullyWhenGetCart() {
         Cart testCart = cartService.getCart();
 
-        assertEquals(testCart,cart);
+        assertEquals(testCart, cart);
     }
 
     @Test
@@ -81,7 +86,7 @@ public class CartServiceTest {
         Optional optionalItem = cartService.get(cartItemIds[existingItemIndex]);
 
         assertTrue(optionalItem.isPresent());
-        assertEquals(optionalItem.get(),cartItems.get(existingItemIndex));
+        assertEquals(optionalItem.get(), cartItems.get(existingItemIndex));
     }
 
     @Test
@@ -95,40 +100,40 @@ public class CartServiceTest {
     @Test
     @DirtiesContext
     public void shouldAssertQuantityAddedAndSameCartSizeWhenAddPhoneExistingId() {
-        cartService.addPhone(cartItemIds[existingItemIndex],addQuantity);
+        cartService.addPhone(cartItemIds[existingItemIndex], addQuantity);
 
-        Long newQuantity =  cartItemQuantities[existingItemIndex] + addQuantity;
+        Long newQuantity = cartItemQuantities[existingItemIndex] + addQuantity;
         Long actualQuantity = cartItems.get(existingItemIndex).getQuantity();
         Integer newSize = cartItems.size();
 
-        assertEquals(newQuantity,actualQuantity);
-        assertEquals(cartSize,newSize);
+        assertEquals(newQuantity, actualQuantity);
+        assertEquals(cartSize, newSize);
     }
 
     @Test
     @DirtiesContext
     public void shouldAssertNewPhoneAddedAndSizeChangedWhenAddPhoneNonExistingId() {
-        cartService.addPhone(nonExistingItemId,addQuantity);
+        cartService.addPhone(nonExistingItemId, addQuantity);
 
         Integer newSize = cartItems.size();
         Integer actualSize = cartSize + 1;
 
-        assertEquals(cartItems.get(actualSize - 1).getQuantity(),addQuantity);
-        assertEquals(actualSize,newSize);
+        assertEquals(cartItems.get(actualSize - 1).getQuantity(), addQuantity);
+        assertEquals(actualSize, newSize);
     }
 
     @Test
     @DirtiesContext
     public void shouldAssertOldQuantitiesReplacedByNewWhenUpdate() {
-        Map<Long,Long> updateMap = new HashMap<>();
-        for(int i = 0;i < cartItems.size();i++) {
-            updateMap.put(cartItemIds[i],cartItemNewQuantities[i]);
+        Map<Long, Long> updateMap = new HashMap<>();
+        for (int i = 0; i < cartItems.size(); i++) {
+            updateMap.put(cartItemIds[i], cartItemNewQuantities[i]);
         }
 
         cartService.update(updateMap);
 
-        for(int i = 0;i < cartItems.size();i++) {
-            assertEquals(cartItems.get(i).getQuantity(),cartItemNewQuantities[i]);
+        for (int i = 0; i < cartItems.size(); i++) {
+            assertEquals(cartItems.get(i).getQuantity(), cartItemNewQuantities[i]);
         }
     }
 
@@ -139,7 +144,7 @@ public class CartServiceTest {
 
         Integer actualSize = cartItems.size();
 
-        assertEquals(cartSize,actualSize);
+        assertEquals(cartSize, actualSize);
     }
 
     @Test
@@ -150,7 +155,7 @@ public class CartServiceTest {
         Integer newSize = cartItems.size();
         Integer actualSize = cartSize - 1;
 
-        assertEquals(newSize,actualSize);
+        assertEquals(newSize, actualSize);
     }
 
     @Test
@@ -158,7 +163,6 @@ public class CartServiceTest {
     public void shouldAssertActualCartSizeReturnedWhenGetCartSize() {
         Integer size = cartService.getCartSize();
 
-        assertEquals(cartSize,size);
+        assertEquals(cartSize, size);
     }
-
 }
