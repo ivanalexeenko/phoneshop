@@ -1,4 +1,4 @@
-package com.es.core;
+package com.es.core.wrapper;
 
 public class IdWrapper {
     private Long id;

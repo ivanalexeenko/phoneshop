@@ -120,7 +120,7 @@
                                                     class="btn btn-danger">
                                                 <i class="fa fa-trash"></i> <spring:message code="button.delete.text"/>
                                             </button>
-                                        <form:input type="hidden" value="${phone.id}" path="id"/>
+                                            <form:input type="hidden" value="${phone.id}" path="id"/>
                                         </td>
                                     </tr>
                                 </c:forEach>
