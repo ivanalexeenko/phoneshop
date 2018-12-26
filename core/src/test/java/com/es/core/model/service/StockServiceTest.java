@@ -9,7 +9,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +24,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
 public class StockServiceTest {
     private static final Integer GET_STOCK_INVOCATION_TIMES = 1;
     private static final Long existedPhoneId = 1007L, notExistedPhoneId = 12312L;
@@ -32,27 +33,15 @@ public class StockServiceTest {
     private Stock existedStockItem;
     private Phone existedPhone;
 
-    @Configuration
-    static class StockServiceTestContextConfiguration {
-        @Bean
-        public StockDao getStockDao() {
-            return Mockito.mock(StockDao.class);
-        }
+    @InjectMocks
+    private StockServiceImpl stockService;
 
-        @Bean
-        public StockService getStockService() {
-            return new StockServiceImpl(getStockDao());
-        }
-    }
-
-    @Autowired
-    private StockService stockService;
-
-    @Autowired
+    @Mock
     private StockDao stockDao;
 
     @Before
     public void init() {
+        MockitoAnnotations.initMocks(this);
         initAndMock();
         setMockitoBehaviour();
     }
