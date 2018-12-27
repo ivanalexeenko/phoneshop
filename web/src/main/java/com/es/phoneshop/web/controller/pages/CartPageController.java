@@ -2,7 +2,6 @@ package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.CartItem;
 import com.es.core.cart.StringifiedCartItem;
-import com.es.core.message.ApplicationMessage;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import com.es.core.service.CartService;
@@ -12,6 +11,7 @@ import com.es.core.service.StockService;
 import com.es.core.wrapper.IdWrapper;
 import com.es.phoneshop.web.validator.StringifiedCartItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,6 @@ public class CartPageController {
     private static final String CART_PRICE_ATTRIBUTE_NAME = "cartPrice";
     private static final String PHONES_ATTRIBUTE_NAME = "phones";
     private static final String STOCKS_ATTRIBUTE_NAME = "stocks";
-    private static final String BUTTON_DELETE_PARAMETER_NAME = "buttonDelete";
     private static final String PHONE_IDS_ATTRIBUTE_NAME = "phoneIds";
     private static final String QUANTITY_STRINGS_ATTRIBUTE_NAME = "quantityStrings";
     private static final String MESSAGES_ATTRIBUTE_NAME = "messages";
@@ -53,6 +52,9 @@ public class CartPageController {
     private List<String> quantityStrings;
     private List<String> messages;
     private Map<Long, Long> cartItemMap;
+
+    @Value("update.success")
+    private String updateSuccessMessage;
 
     @Autowired
     public CartPageController(CartService cartService, PriceService priceService, PhoneService phoneService, StockService stockService, StringifiedCartItemValidator validator, MessageSource messageSource) {
@@ -141,7 +143,7 @@ public class CartPageController {
             if (phoneId.equals(oldItem.getPhoneId()) && quantity.equals(oldItem.getQuantity())) {
                 messages.add(EMPTY_MESSAGE);
             } else {
-                messages.add(messageSource.getMessage(ApplicationMessage.UPDATE_SUCCESS, null, LocaleContextHolder.getLocale()));
+                messages.add(messageSource.getMessage(updateSuccessMessage, null, LocaleContextHolder.getLocale()));
             }
         }
     }
