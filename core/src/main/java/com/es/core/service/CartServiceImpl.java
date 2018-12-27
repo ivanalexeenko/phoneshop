@@ -5,7 +5,6 @@ import com.es.core.cart.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-        CartItem item = new CartItem(phoneId,quantity);
+        CartItem item = new CartItem(phoneId, quantity);
         Optional<CartItem> optional = this.get(phoneId);
         if (!optional.isPresent()) {
             cart.getCartItems().add(item);
@@ -43,13 +42,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        for(Map.Entry<Long,Long> entry : items.entrySet()) {
-            Optional<CartItem> optionalCartItem = get(entry.getKey());
-            if(optionalCartItem.isPresent()) {
+        items.forEach((key, value) -> {
+            Optional<CartItem> optionalCartItem = get(key);
+            if (optionalCartItem.isPresent()) {
                 CartItem item = optionalCartItem.get();
-                item.setQuantity(entry.getValue());
+                item.setQuantity(value);
             }
-        }
+        });
     }
 
     @Override

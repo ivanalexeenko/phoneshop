@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class StockServiceTest {
     private static final Integer GET_STOCK_INVOCATION_TIMES = 1;
@@ -34,13 +34,12 @@ public class StockServiceTest {
 
     @Before
     public void init() {
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
         initAndMock();
         setMockitoBehaviour();
     }
 
     @Test
-    @DirtiesContext
     public void shouldAssertStockFoundSuccessfullyWhenGetStockWithExistedId() {
         Stock stock = stockService.getStock(existedPhoneId);
 
@@ -50,21 +49,19 @@ public class StockServiceTest {
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
-    @DirtiesContext
     public void shouldThrowEmptyResultDataAccessExceptionWhenGetStockWithNotExistedId() {
         stockService.getStock(notExistedPhoneId);
     }
 
     @Test(expected = EmptyResultDataAccessException.class)
-    @DirtiesContext
     public void shouldThrowEmptyResultDataAccessExceptionWhenGetStockWithNullId() {
         stockService.getStock(nullId);
     }
 
     @After
-    public void verify() {
-        Mockito.verify(stockDao, VerificationModeFactory.times(GET_STOCK_INVOCATION_TIMES)).getStock(Mockito.any());
-        Mockito.reset(stockDao, existedPhone, existedStockItem);
+    public void verifyMock() {
+        verify(stockDao, VerificationModeFactory.times(GET_STOCK_INVOCATION_TIMES)).getStock(Mockito.any());
+        reset(stockDao, existedPhone, existedStockItem);
     }
 
     private void initAndMock() {
@@ -75,12 +72,12 @@ public class StockServiceTest {
     }
 
     private void setMockitoBehaviour() {
-        Mockito.when(existedStockItem.getPhone()).thenReturn(existedPhone);
-        Mockito.when(existedPhone.getId()).thenReturn(existedPhoneId);
-        Mockito.when(existedStockItem.getReserved()).thenReturn(existedReserved);
-        Mockito.when(existedStockItem.getStock()).thenReturn(existedStock);
-        Mockito.when(stockDao.getStock(existedPhoneId)).thenReturn(existedStockItem);
-        Mockito.when(stockDao.getStock(notExistedPhoneId)).thenThrow(EmptyResultDataAccessException.class);
-        Mockito.when(stockDao.getStock(nullId)).thenThrow(EmptyResultDataAccessException.class);
+        when(existedStockItem.getPhone()).thenReturn(existedPhone);
+        when(existedPhone.getId()).thenReturn(existedPhoneId);
+        when(existedStockItem.getReserved()).thenReturn(existedReserved);
+        when(existedStockItem.getStock()).thenReturn(existedStock);
+        when(stockDao.getStock(existedPhoneId)).thenReturn(existedStockItem);
+        when(stockDao.getStock(notExistedPhoneId)).thenThrow(EmptyResultDataAccessException.class);
+        when(stockDao.getStock(nullId)).thenThrow(EmptyResultDataAccessException.class);
     }
 }

@@ -6,6 +6,11 @@ public class StringifiedCartItem {
 
     public StringifiedCartItem() {}
 
+    public StringifiedCartItem(String phoneIdString, String quantityString) {
+        this.phoneIdString = phoneIdString;
+        this.quantityString = quantityString;
+    }
+
     public void setPhoneIdString(String phoneIdString) {
         this.phoneIdString = phoneIdString;
     }
@@ -20,10 +25,5 @@ public class StringifiedCartItem {
 
     public String getQuantityString() {
         return quantityString;
-    }
-
-    public StringifiedCartItem(String phoneIdString, String quantityString) {
-        this.phoneIdString = phoneIdString;
-        this.quantityString = quantityString;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.function.Consumer;
 
 @Service
 public class PriceServiceImpl implements PriceService {
@@ -21,15 +22,16 @@ public class PriceServiceImpl implements PriceService {
 
     @Override
     public BigDecimal getCartPrice() {
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        for (CartItem cartItem : cart.getCartItems()) {
+        final BigDecimal[] totalPrice = new BigDecimal[1];
+        totalPrice[0] = BigDecimal.ZERO;
+        cart.getCartItems().forEach(cartItem -> {
             BigDecimal tempPrice = BigDecimal.ZERO;
             if (phoneDao.get(cartItem.getPhoneId()).isPresent()) {
                 tempPrice = phoneDao.get(cartItem.getPhoneId()).get().getPrice();
             }
             tempPrice = tempPrice.multiply(BigDecimal.valueOf(cartItem.getQuantity()));
-            totalPrice = totalPrice.add(tempPrice);
-        }
-        return totalPrice;
+            totalPrice[0] = totalPrice[0].add(tempPrice);
+        });
+        return totalPrice[0];
     }
 }
