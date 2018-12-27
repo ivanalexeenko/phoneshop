@@ -7,20 +7,22 @@ public class Order
 {
     private Long id;
     private List<OrderItem> orderItems;
-    /**
-     *  A sum of order item prices;
-     */
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
-    /**
-     * <code>subtotal</code> + <code>deliveryPrice</code>
-     */
     private BigDecimal totalPrice;
-
     private String firstName;
     private String lastName;
     private String deliveryAddress;
     private String contactPhoneNo;
+    private String description;
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     private OrderStatus status;
 

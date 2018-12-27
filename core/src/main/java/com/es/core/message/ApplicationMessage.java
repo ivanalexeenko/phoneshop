@@ -8,4 +8,6 @@ public class ApplicationMessage {
     public static final String NOT_ENOUGH = "error.not.enough";
     public static final String ADDED_TO_CART_SUCCESS = "add.to.cart.success";
     public static final String UPDATE_SUCCESS = "update.success";
+    public static final String OUT_OF_STOCK_MESSAGE_CODE = "exception.out.of.stock";
+    public static final String QUANTITY_OK_MESSAGE  = "quantity.ok.message";
 }
