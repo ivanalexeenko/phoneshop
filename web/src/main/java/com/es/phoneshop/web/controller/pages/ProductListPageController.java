@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -58,7 +60,7 @@ public class ProductListPageController {
         this.priceService = priceService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String showProductList(Model model) {
         countPageParameters();
         data = Arrays.asList(dataArray);
@@ -66,8 +68,8 @@ public class ProductListPageController {
         return PRODUCT_LIST_VIEW_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String getFormParam(HttpServletRequest request, Model model) throws IOException {
+    @PostMapping
+    public String getFormParam(HttpServletRequest request, Model model) {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);

@@ -43,24 +43,31 @@ public class StringifiedCartItemValidator implements Validator {
     @Override
     public void validate(Object item, Errors errors) {
         StringifiedCartItem stringifiedCartItem = (StringifiedCartItem) item;
+        validateIfFieldsEmpty(stringifiedCartItem, errors);
+        try {
+            long quantity = Long.parseLong(stringifiedCartItem.getQuantityString());
+            long phoneId = Long.parseLong(stringifiedCartItem.getPhoneIdString());
+            validateQuantity(quantity, phoneId, errors);
+        } catch (NumberFormatException exception) {
+            errors.rejectValue(QUANTITY_FIELD_NAME, notNumberMessage);
+        }
+    }
+
+    private void validateIfFieldsEmpty(StringifiedCartItem stringifiedCartItem, Errors errors) {
         if (StringUtils.isEmpty(stringifiedCartItem.getQuantityString())) {
             errors.rejectValue(QUANTITY_FIELD_NAME, inputNullMessage);
         }
         if (StringUtils.isEmpty(stringifiedCartItem.getPhoneIdString())) {
             errors.rejectValue(PHONE_ID_FIELD_NAME, phoneIdNullMessage);
         }
+    }
 
-        try {
-            long quantity = Long.parseLong(stringifiedCartItem.getQuantityString());
-            long phoneId = Long.parseLong(stringifiedCartItem.getPhoneIdString());
-            if (quantity <= 0) {
-                errors.rejectValue(QUANTITY_FIELD_NAME, quantityLessEqualZeroMessage);
-            }
-            if (stockDao.getStock(phoneId).getStock() < quantity) {
-                errors.rejectValue(QUANTITY_FIELD_NAME, notEnoughMessage);
-            }
-        } catch (NumberFormatException exception) {
-            errors.rejectValue(QUANTITY_FIELD_NAME, notNumberMessage);
+    private void validateQuantity(Long quantity, Long phoneId, Errors errors) {
+        if (quantity <= 0) {
+            errors.rejectValue(QUANTITY_FIELD_NAME, quantityLessEqualZeroMessage);
+        }
+        if (stockDao.getStock(phoneId).getStock() < quantity) {
+            errors.rejectValue(QUANTITY_FIELD_NAME, notEnoughMessage);
         }
     }
 }

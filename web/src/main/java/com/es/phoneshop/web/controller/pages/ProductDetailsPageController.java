@@ -34,18 +34,18 @@ public class ProductDetailsPageController {
         this.priceService = priceService;
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/{phoneId}")
+    @GetMapping(value = "/{phoneId}")
     public String showProductList(@PathVariable Long phoneId, Model model) {
         Optional<Phone> optionalPhone = phoneService.get(phoneId);
         Optional<CartItem> optionalCartItem = cartService.get(phoneId);
-        model.addAttribute(PHONE_ATTRIBUTE_NAME,optionalPhone.orElse(null));
-        model.addAttribute(CART_ITEM_ATTRIBUTE_NAME,optionalCartItem.orElse(null));
-        model.addAttribute(CART_SIZE_ATTRIBUTE_NAME,cartService.getCartSize());
-        model.addAttribute(CART_PRICE_ATTRIBUTE_NAME,priceService.getCartPrice());
+        model.addAttribute(PHONE_ATTRIBUTE_NAME, optionalPhone.orElse(null));
+        model.addAttribute(CART_ITEM_ATTRIBUTE_NAME, optionalCartItem.orElse(null));
+        model.addAttribute(CART_SIZE_ATTRIBUTE_NAME, cartService.getCartSize());
+        model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
         return PRODUCT_DETAILS_VIEW_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public String getRequest(HttpServletRequest request) throws IOException {
         return PRODUCT_DETAILS_VIEW_NAME;
     }

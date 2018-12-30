@@ -49,9 +49,6 @@ public class CartPageController {
     private final StockService stockService;
     private final StringifiedCartItemValidator validator;
     private final MessageSource messageSource;
-    private List<String> quantityStrings;
-    private List<String> messages;
-    private Map<Long, Long> cartItemMap;
 
     @Value("update.success")
     private String updateSuccessMessage;
@@ -64,14 +61,11 @@ public class CartPageController {
         this.stockService = stockService;
         this.validator = validator;
         this.messageSource = messageSource;
-        quantityStrings = new ArrayList<>();
-        messages = new ArrayList<>();
-        cartItemMap = new HashMap<>();
     }
 
     @GetMapping
     public String getCart(Model model) {
-        setModelAttributes(model);
+        addModelAttributes(model);
         return CART_PAGE_NAME;
     }
 
@@ -80,32 +74,39 @@ public class CartPageController {
         String[] quantities = request.getParameterValues(HIDDEN_QUANTITY_PARAMETER_NAME);
         String[] phoneIds = request.getParameterValues(HIDDEN_PHONE_ID_PARAMETER_NAME);
         if (quantities != null && phoneIds != null) {
-            clearContainers();
-            checkQuantityFields(phoneIds, quantities);
+            model.addAttribute(MESSAGES_ATTRIBUTE_NAME, new ArrayList<String>());
+            model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, new ArrayList<String>());
+            Map<Long, Long> cartItemMap = checkQuantityFields(phoneIds, quantities, model);
             cartService.update(cartItemMap);
         }
-        setModelAttributes(model);
+        addModelAttributes(model);
         return CART_PAGE_NAME;
     }
 
     @PostMapping
     public String deleteItem(@Valid @ModelAttribute(DELETE_ID_ATTRIBUTE_NAME) IdWrapper deleteId, BindingResult result, Model model) {
         cartService.remove(deleteId.getId());
-        updateMessagesAndQuantityStringsAfterDelete();
-        setModelAttributes(model);
+        updateMessagesAndQuantityStringsAfterDelete(model);
+        addModelAttributes(model);
         return CART_PAGE_NAME;
     }
 
-    private void setModelAttributes(Model model) {
-        setListModelAttributes(model);
+    private void addModelAttributes(Model model) {
+        addListedCartItemModelAttributes(model);
         model.addAttribute(CART_SIZE_ATTRIBUTE_NAME, cartService.getCartSize());
         model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
-        model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
-        model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
         model.addAttribute(DELETE_ID_ATTRIBUTE_NAME, new IdWrapper());
     }
 
-    private void setListModelAttributes(Model model) {
+    private void addListedCartItemModelAttributes(Model model) {
+        List<String> messages = (List<String>) model.asMap().get(MESSAGES_ATTRIBUTE_NAME);
+        if (messages == null) {
+            model.addAttribute(MESSAGES_ATTRIBUTE_NAME, new ArrayList<String>());
+        }
+        List<String> quantityStrings = (List<String>) model.asMap().get(QUANTITY_STRINGS_ATTRIBUTE_NAME);
+        if (quantityStrings == null) {
+            model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, new ArrayList<String>());
+        }
         List<CartItem> cartItemList = cartService.getCart().getCartItems();
         List<Phone> phones = new ArrayList<>();
         List<Stock> stocks = new ArrayList<>();
@@ -121,12 +122,6 @@ public class CartPageController {
         model.addAttribute(CART_ITEMS_ATTRIBUTE_NAME, cartItemList);
     }
 
-    private void clearContainers() {
-        messages.clear();
-        quantityStrings.clear();
-        cartItemMap.clear();
-    }
-
     private BindingResult validateItemFields(String tempPhoneId, String tempQuantity) {
         StringifiedCartItem stringifiedCartItem = new StringifiedCartItem(tempPhoneId, tempQuantity);
         DataBinder dataBinder = new DataBinder(stringifiedCartItem);
@@ -135,7 +130,7 @@ public class CartPageController {
         return dataBinder.getBindingResult();
     }
 
-    private void addLocalizedMessage(Long phoneId, Long quantity, CartItem oldItem, BindingResult result) {
+    private void addLocalizedMessage(Long phoneId, Long quantity, CartItem oldItem, BindingResult result, List<String> messages) {
         if (result.hasErrors()) {
             String error = result.getAllErrors().get(0).getCode();
             messages.add(messageSource.getMessage(error, null, LocaleContextHolder.getLocale()));
@@ -148,35 +143,48 @@ public class CartPageController {
         }
     }
 
-    private void updateMessagesAndQuantityStringsAfterDelete() {
-        if (!messages.isEmpty()) {
+    private void updateMessagesAndQuantityStringsAfterDelete(Model model) {
+        List<String> messages = (List<String>) model.asMap().get(MESSAGES_ATTRIBUTE_NAME);
+        List<String> quantityStrings = (List<String>) model.asMap().get(QUANTITY_STRINGS_ATTRIBUTE_NAME);
+        if (messages != null && !messages.isEmpty()) {
             int newSize = messages.size() - 1;
             messages = new ArrayList<>(newSize);
             messages.replaceAll(s -> "");
-            quantityStrings.clear();
+            if (quantityStrings != null) {
+                quantityStrings.clear();
+            } else {
+                quantityStrings = new ArrayList<>();
+            }
             for (int i = 0; i < messages.size(); i++) {
                 quantityStrings.add(cartService.getCart().getCartItems().get(i).getQuantity().toString());
             }
         }
+        model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
+        model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
     }
 
-    private void checkQuantityFields(String[] phoneIds, String[] quantities) {
+    private Map<Long, Long> checkQuantityFields(String[] phoneIds, String[] quantities, Model model) {
+        Map<Long, Long> cartItemMap = new HashMap<>();
+        List<String> quantityStrings = new ArrayList<>();
+        List<String> messages = new ArrayList<>();
         for (int i = 0; i < quantities.length; i++) {
             CartItem oldItem = cartService.getCart().getCartItems().get(i);
             String tempPhoneId = phoneIds[i];
             String tempQuantity = quantities[i];
             BindingResult result = validateItemFields(tempPhoneId, tempQuantity);
-
             if (result.hasErrors()) {
-                addLocalizedMessage(null, null, null, result);
+                addLocalizedMessage(null, null, null, result, messages);
                 cartItemMap.put(oldItem.getPhoneId(), oldItem.getQuantity());
             } else {
                 Long phoneId = Long.parseLong(tempPhoneId);
                 Long quantity = Long.parseLong(tempQuantity);
                 cartItemMap.put(phoneId, quantity);
-                addLocalizedMessage(phoneId, quantity, oldItem, result);
+                addLocalizedMessage(phoneId, quantity, oldItem, result, messages);
             }
             quantityStrings.add(tempQuantity);
         }
+        model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, quantityStrings);
+        model.addAttribute(MESSAGES_ATTRIBUTE_NAME, messages);
+        return cartItemMap;
     }
 }
