@@ -162,10 +162,13 @@ public class CartPageController {
     }
 
     private Map<Long, Long> checkQuantityFields(String[] phoneIds, String[] quantities, Model model) {
+        if(quantities.length == 0) {
+            quantities = new String[1];
+        }
         Map<Long, Long> cartItemMap = new HashMap<>();
         List<String> quantityStrings = new ArrayList<>();
         List<String> messages = new ArrayList<>();
-        for (int i = 0; i < quantities.length; i++) {
+        for (int i = 0; i < phoneIds.length; i++) {
             CartItem oldItem = cartService.getCart().getCartItems().get(i);
             String tempPhoneId = phoneIds[i];
             String tempQuantity = quantities[i];
