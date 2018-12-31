@@ -68,10 +68,11 @@ public class CartPageController {
     }
 
     @PutMapping
-    public String updateCart(HttpServletRequest request, Model model) {
-        String[] quantities = request.getParameterValues(HIDDEN_QUANTITY_PARAMETER_NAME);
-        String[] phoneIds = request.getParameterValues(HIDDEN_PHONE_ID_PARAMETER_NAME);
-        if (quantities != null && phoneIds != null) {
+    public String updateCart(@RequestParam(value = "hiddenQuantity") List<String> quantityList,
+                             @RequestParam(value = "hiddenPhoneId") List<String> phoneIdList, Model model) {
+        if (quantityList != null  && phoneIdList != null) {
+            String[] quantities = quantityList.toArray(new String[0]);
+            String[] phoneIds = phoneIdList.toArray(new String[0]);
             model.addAttribute(MESSAGES_ATTRIBUTE_NAME, new ArrayList<String>());
             model.addAttribute(QUANTITY_STRINGS_ATTRIBUTE_NAME, new ArrayList<String>());
             Map<Long, Long> cartItemMap = checkQuantityFields(phoneIds, quantities, model);
