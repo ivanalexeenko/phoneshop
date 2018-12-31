@@ -1,9 +1,7 @@
 package com.es.core.model.dao;
 
 import com.es.core.dao.PhoneDao;
-
 import com.es.core.model.phone.Phone;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +14,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/context/test-config.xml")
@@ -76,21 +76,13 @@ public class JdbcPhoneDaoTest {
     public void init() {
         phone = new Phone();
         phone1 = new Phone();
-        ascendPhones = (List<Phone>) jdbcTemplateTest.query(SELECT_PHONES_QUERY, new BeanPropertyRowMapper<>(Phone.class));
-        descendPhones = (List<Phone>) jdbcTemplateTest.query(SELECT_PHONES_QUERY, new BeanPropertyRowMapper<>(Phone.class));
-    }
-
-    @After
-    public void destroy() {
-        phone = null;
-        phone1 = null;
-        ascendPhones = null;
-        descendPhones = null;
+        ascendPhones = jdbcTemplateTest.query(SELECT_PHONES_QUERY, new BeanPropertyRowMapper<>(Phone.class));
+        descendPhones = jdbcTemplateTest.query(SELECT_PHONES_QUERY, new BeanPropertyRowMapper<>(Phone.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
     @DirtiesContext
-    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhones() throws IllegalArgumentException {
+    public void shouldThrowIllegalArgumentExceptionWhenSaveSameModelBrandPhones() {
         phone.setModel(REPEAT_MODEL);
         phone.setBrand(REPEAT_BRAND);
 

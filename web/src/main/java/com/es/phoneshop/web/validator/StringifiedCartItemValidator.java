@@ -1,19 +1,19 @@
 package com.es.phoneshop.web.validator;
 
 import com.es.core.cart.StringifiedCartItem;
-import com.es.core.dao.StockDao;
+import com.es.core.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-@Service
+@Component
 public class StringifiedCartItemValidator implements Validator {
     private static final String QUANTITY_FIELD_NAME = "quantityString";
     private static final String PHONE_ID_FIELD_NAME = "phoneIdString";
-    private final StockDao stockDao;
+    private final StockService stockService;
 
     @Value("error.input.empty")
     private String inputNullMessage;
@@ -31,8 +31,8 @@ public class StringifiedCartItemValidator implements Validator {
     private String notNumberMessage;
 
     @Autowired
-    public StringifiedCartItemValidator(StockDao stockDao) {
-        this.stockDao = stockDao;
+    public StringifiedCartItemValidator(StockService stockService) {
+        this.stockService = stockService;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class StringifiedCartItemValidator implements Validator {
         if (quantity <= 0) {
             errors.rejectValue(QUANTITY_FIELD_NAME, quantityLessEqualZeroMessage);
         }
-        if (stockDao.getStock(phoneId).getStock() < quantity) {
+        if (stockService.getStock(phoneId).getStock() < quantity) {
             errors.rejectValue(QUANTITY_FIELD_NAME, notEnoughMessage);
         }
     }

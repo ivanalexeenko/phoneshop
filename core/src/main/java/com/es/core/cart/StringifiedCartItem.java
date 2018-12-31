@@ -4,7 +4,8 @@ public class StringifiedCartItem {
     private String phoneIdString;
     private String quantityString;
 
-    public StringifiedCartItem() {}
+    public StringifiedCartItem() {
+    }
 
     public StringifiedCartItem(String phoneIdString, String quantityString) {
         this.phoneIdString = phoneIdString;

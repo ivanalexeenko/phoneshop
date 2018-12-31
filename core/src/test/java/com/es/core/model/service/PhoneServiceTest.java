@@ -132,9 +132,9 @@ public class PhoneServiceTest {
         when(phoneDao.get(phones.get(ordinaryPhoneIndex).getId())).thenReturn(Optional.empty());
 
         when(phoneDao.findAll((int) validFindAllArgs[0], (int) validFindAllArgs[1],
-        (String) validFindAllArgs[2], (String) validFindAllArgs[3], (Boolean) validFindAllArgs[4])).thenReturn(phones);
+                (String) validFindAllArgs[2], (String) validFindAllArgs[3], (Boolean) validFindAllArgs[4])).thenReturn(phones);
         when(phoneDao.findAll((int) notValidFindAllArgs[0], (int) notValidFindAllArgs[1],
-        (String) notValidFindAllArgs[2], (String) notValidFindAllArgs[3], (Boolean) notValidFindAllArgs[4])).thenReturn(new ArrayList());
+                (String) notValidFindAllArgs[2], (String) notValidFindAllArgs[3], (Boolean) notValidFindAllArgs[4])).thenReturn(new ArrayList());
         when(phoneDao.countPhonesStockBiggerZero((String) validFindAllArgs[3])).thenReturn(phones.size());
         when(phoneDao.countPhonesStockBiggerZero((String) notValidFindAllArgs[3])).thenReturn(EMPTY_COUNT);
     }

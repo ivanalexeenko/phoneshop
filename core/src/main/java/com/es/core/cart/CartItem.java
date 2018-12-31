@@ -11,7 +11,8 @@ public class CartItem {
     @Min(value = 1L, message = "error.quantity.less.equal.zero")
     private Long quantity;
 
-    public CartItem() {}
+    public CartItem() {
+    }
 
     public CartItem(Long phoneId, Long quantity) {
         this.phoneId = phoneId;

@@ -1,6 +1,7 @@
 package com.es.core.model.phone;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Color implements Serializable {
     private Long id;
@@ -16,22 +17,19 @@ public class Color implements Serializable {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(this.id, this.code);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !obj.getClass().equals(Color.class)) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Color)) {
             return false;
         }
         Color color = (Color) obj;
-        if (color.getId() != null && color.getCode() != null && this.getCode() != null && color.getCode() != null) {
-            return color.getId().equals(this.id) && color.getCode().equals(this.code);
-        }
-        return (color.getId() == null || this.getId() != null)
-                && (color.getId() != null || this.getId() == null)
-                && (color.getCode() == null || this.getCode() != null)
-                && (color.getCode() != null || this.getCode() == null);
+        return Objects.equals(this.id, color.id) && Objects.equals(this.code, color.code);
     }
 
     public Long getId() {

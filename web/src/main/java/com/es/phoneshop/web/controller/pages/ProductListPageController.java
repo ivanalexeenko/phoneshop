@@ -26,7 +26,6 @@ public class ProductListPageController {
     private static final String CURRENT_PAGE_ATTRIBUTE_NAME = "currentPage";
     private static final String TOTAL_PAGES_ATTRIBUTE_NAME = "totalPages";
     private static final String VISIBLE_PAGES_ATTRIBUTE_NAME = "visiblePages";
-    private static final String AMOUNT_PER_PAGE_ATTRIBUTE_NAME = "amountPerPage";
     private static final String PHONE_AMOUNT_ATTRIBUTE_NAME = "phoneAmount";
     private static final String SEARCH_FIELD_ATTRIBUTE_NAME = "searchField";
     private static final Integer DEFAULT_CURRENT_PAGE = 1;

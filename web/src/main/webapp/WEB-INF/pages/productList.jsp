@@ -64,7 +64,8 @@
                     <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
                 <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span>
+                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice"
+                                                                                                    class="badge badge-light">${cartPrice}</span>
                     <i class="fa fa-dollar"></i>
                 </button>
             </form>
@@ -160,18 +161,21 @@
                                     <td>
                                         <input id="input${phone.id}" type="text" class="addition form-control"
                                                aria-label="Small"
-                                               aria-describedby="inputGroup-sizing-lg" placeholder="${inputPlaceholder}">
+                                               aria-describedby="inputGroup-sizing-lg"
+                                               placeholder="${inputPlaceholder}">
                                         <p><span class="success" id="messageSuccess${phone.id}">
                                 </span></p>
                                         <p><span class="error" id="messageError${phone.id}"></span></p>
                                     </td>
                                     <td>
-                                        <button type="submit" id="add${phone.id}" class="addition btn btn-success btn-md ml-3">
+                                        <button type="submit" id="add${phone.id}"
+                                                class="addition btn btn-success btn-md ml-3">
                                             <i class="fa fa-plus-circle"></i> <spring:message code="button.add"/>
                                         </button>
                                     </td>
                                     <td>
-                                        <a href="<c:url value="/productDetails/${phone.id}"/>" type="button" class="btn btn-primary btn-md ml-3">
+                                        <a href="<c:url value="/productDetails/${phone.id}"/>" type="button"
+                                           class="btn btn-primary btn-md ml-3">
                                             <i class="fa fa-info-circle"></i> <spring:message code="button.details"/>
                                         </a>
                                     </td>
@@ -198,12 +202,10 @@
         </ul>
     </form>
 </nav>
-<footer class="container-fluid text-center">
-    <script src="${iconClickHandler}"></script>
-    <script src="${pagination}"></script>
-    <script src="${addToCart}"></script>
-    <script src="${whenDocReady}"></script>
-    <p><spring:message code="footer.message"/></p>
-</footer>
+<script src="${iconClickHandler}"></script>
+<script src="${pagination}"></script>
+<script src="${addToCart}"></script>
+<script src="${whenDocReady}"></script>
+<jsp:include page="/resources/common/footer.jsp"/>
 </body>
 </html>
