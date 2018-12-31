@@ -1,15 +1,14 @@
 package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.cart.CartItem;
-import com.es.core.cart.StringifiedCartItem;
+import com.es.core.cart.StringCartItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import com.es.core.service.CartService;
 import com.es.core.service.PhoneService;
 import com.es.core.service.PriceService;
 import com.es.core.service.StockService;
-import com.es.core.wrapper.IdWrapper;
-import com.es.phoneshop.web.validator.StringifiedCartItemValidator;
+import com.es.phoneshop.web.validator.StringCartItemValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -21,7 +20,6 @@ import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,14 +45,14 @@ public class CartPageController {
     private final PriceService priceService;
     private final PhoneService phoneService;
     private final StockService stockService;
-    private final StringifiedCartItemValidator validator;
+    private final StringCartItemValidator validator;
     private final MessageSource messageSource;
 
     @Value("update.success")
     private String updateSuccessMessage;
 
     @Autowired
-    public CartPageController(CartService cartService, PriceService priceService, PhoneService phoneService, StockService stockService, StringifiedCartItemValidator validator, MessageSource messageSource) {
+    public CartPageController(CartService cartService, PriceService priceService, PhoneService phoneService, StockService stockService, StringCartItemValidator validator, MessageSource messageSource) {
         this.cartService = cartService;
         this.priceService = priceService;
         this.phoneService = phoneService;
@@ -84,8 +82,8 @@ public class CartPageController {
     }
 
     @PostMapping
-    public String deleteItem(@Valid @ModelAttribute(DELETE_ID_ATTRIBUTE_NAME) IdWrapper deleteId, BindingResult result, Model model) {
-        cartService.remove(deleteId.getId());
+    public String deleteItem(@RequestParam(value = "deleteId") Long deleteId, Model model) {
+        cartService.remove(deleteId);
         updateMessagesAndQuantityStringsAfterDelete(model);
         addModelAttributes(model);
         return CART_PAGE_NAME;
@@ -95,7 +93,6 @@ public class CartPageController {
         addListedCartItemModelAttributes(model);
         model.addAttribute(CART_SIZE_ATTRIBUTE_NAME, cartService.getCartSize());
         model.addAttribute(CART_PRICE_ATTRIBUTE_NAME, priceService.getCartPrice());
-        model.addAttribute(DELETE_ID_ATTRIBUTE_NAME, new IdWrapper());
     }
 
     private void addListedCartItemModelAttributes(Model model) {
@@ -123,14 +120,14 @@ public class CartPageController {
     }
 
     private BindingResult validateItemFields(String tempPhoneId, String tempQuantity) {
-        StringifiedCartItem stringifiedCartItem = new StringifiedCartItem(tempPhoneId, tempQuantity);
-        DataBinder dataBinder = new DataBinder(stringifiedCartItem);
+        StringCartItem stringCartItem = new StringCartItem(tempPhoneId, tempQuantity);
+        DataBinder dataBinder = new DataBinder(stringCartItem);
         dataBinder.addValidators(validator);
         dataBinder.validate();
         return dataBinder.getBindingResult();
     }
 
-    private void addLocalizedMessage(Long phoneId, Long quantity, CartItem oldItem, BindingResult result, List<String> messages) {
+    private void addLocalizedMessages(Long phoneId, Long quantity, CartItem oldItem, BindingResult result, List<String> messages) {
         if (result.hasErrors()) {
             String error = result.getAllErrors().get(0).getCode();
             messages.add(messageSource.getMessage(error, null, LocaleContextHolder.getLocale()));
@@ -173,13 +170,13 @@ public class CartPageController {
             String tempQuantity = quantities[i];
             BindingResult result = validateItemFields(tempPhoneId, tempQuantity);
             if (result.hasErrors()) {
-                addLocalizedMessage(null, null, null, result, messages);
+                addLocalizedMessages(null, null, null, result, messages);
                 cartItemMap.put(oldItem.getPhoneId(), oldItem.getQuantity());
             } else {
                 Long phoneId = Long.parseLong(tempPhoneId);
                 Long quantity = Long.parseLong(tempQuantity);
                 cartItemMap.put(phoneId, quantity);
-                addLocalizedMessage(phoneId, quantity, oldItem, result, messages);
+                addLocalizedMessages(phoneId, quantity, oldItem, result, messages);
             }
             quantityStrings.add(tempQuantity);
         }

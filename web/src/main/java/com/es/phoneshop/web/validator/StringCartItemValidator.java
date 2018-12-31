@@ -1,6 +1,6 @@
 package com.es.phoneshop.web.validator;
 
-import com.es.core.cart.StringifiedCartItem;
+import com.es.core.cart.StringCartItem;
 import com.es.core.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class StringifiedCartItemValidator implements Validator {
+public class StringCartItemValidator implements Validator {
     private static final String QUANTITY_FIELD_NAME = "quantityString";
     private static final String PHONE_ID_FIELD_NAME = "phoneIdString";
     private final StockService stockService;
@@ -31,33 +31,33 @@ public class StringifiedCartItemValidator implements Validator {
     private String notNumberMessage;
 
     @Autowired
-    public StringifiedCartItemValidator(StockService stockService) {
+    public StringCartItemValidator(StockService stockService) {
         this.stockService = stockService;
     }
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return StringifiedCartItem.class.isAssignableFrom(aClass);
+        return StringCartItem.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void validate(Object item, Errors errors) {
-        StringifiedCartItem stringifiedCartItem = (StringifiedCartItem) item;
-        validateIfFieldsEmpty(stringifiedCartItem, errors);
+        StringCartItem stringCartItem = (StringCartItem) item;
+        validateIfFieldsEmpty(stringCartItem, errors);
         try {
-            long quantity = Long.parseLong(stringifiedCartItem.getQuantityString());
-            long phoneId = Long.parseLong(stringifiedCartItem.getPhoneIdString());
+            long quantity = Long.parseLong(stringCartItem.getQuantityString());
+            long phoneId = Long.parseLong(stringCartItem.getPhoneIdString());
             validateQuantity(quantity, phoneId, errors);
         } catch (NumberFormatException exception) {
             errors.rejectValue(QUANTITY_FIELD_NAME, notNumberMessage);
         }
     }
 
-    private void validateIfFieldsEmpty(StringifiedCartItem stringifiedCartItem, Errors errors) {
-        if (StringUtils.isEmpty(stringifiedCartItem.getQuantityString())) {
+    private void validateIfFieldsEmpty(StringCartItem stringCartItem, Errors errors) {
+        if (StringUtils.isEmpty(stringCartItem.getQuantityString())) {
             errors.rejectValue(QUANTITY_FIELD_NAME, inputNullMessage);
         }
-        if (StringUtils.isEmpty(stringifiedCartItem.getPhoneIdString())) {
+        if (StringUtils.isEmpty(stringCartItem.getPhoneIdString())) {
             errors.rejectValue(PHONE_ID_FIELD_NAME, phoneIdNullMessage);
         }
     }

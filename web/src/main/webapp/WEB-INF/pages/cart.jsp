@@ -43,7 +43,7 @@
             <div class="row">
                 <div class="col-sm-auto">
                     <div class="table-responsive">
-                        <form:form method="post" modelAttribute="deleteId">
+                        <form method="post">
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
@@ -85,17 +85,16 @@
                                                 <i class="fa fa-info-circle"></i> <spring:message
                                                     code="button.details"/>
                                             </a>
-                                            <button name="buttonDelete" type="submit"
+                                            <button name="deleteId" value="${phone.id}" type="submit"
                                                     class="btn btn-danger">
                                                 <i class="fa fa-trash"></i> <spring:message code="button.delete.text"/>
                                             </button>
-                                            <form:input type="hidden" value="${phone.id}" path="id"/>
                                         </td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>
                             </table>
-                        </form:form>
+                        </form>
                     </div>
                     <form id="updateForm" method="post">
                         <input type="hidden" name="_method" value="put">

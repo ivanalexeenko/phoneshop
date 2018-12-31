@@ -2,10 +2,9 @@ package com.es.core.model.service;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
-import com.es.core.dao.PhoneDao;
 import com.es.core.model.phone.Phone;
+import com.es.core.service.PhoneService;
 import com.es.core.service.PriceServiceImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,11 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PriceServiceTest {
-    private static final Integer INVOCATION_MULTIPLIER = 2;
     private static Long[][] cartItemsInfo = {{1001L, 12L}, {1231L, 1L}, {9131L, 4L}, {3113L, 3L}};
     private static Double[] phonePricesInfo = {199.99, 666.66, 400.0, 1000.0};
     private List<CartItem> cartItems;
@@ -34,7 +32,7 @@ public class PriceServiceTest {
     private PriceServiceImpl priceService;
 
     @Mock
-    private PhoneDao phoneDao;
+    private PhoneService phoneService;
 
     @Mock
     private Cart cart;
@@ -66,18 +64,6 @@ public class PriceServiceTest {
         assertEquals(totalPrice, totalPriceEmpty);
     }
 
-    @After
-    public void verifyMock() {
-        verify(phoneDao, times(cartItems.size() * INVOCATION_MULTIPLIER)).get(anyLong());
-        reset(phoneDao, cart);
-        for (Phone phone : phones) {
-            reset(phone);
-        }
-        for (CartItem cartItem : cartItems) {
-            reset(cartItem);
-        }
-    }
-
     private void countPrice() {
         int index = 0;
         for (Long[] cartItemInfo : cartItemsInfo) {
@@ -99,7 +85,7 @@ public class PriceServiceTest {
         index = 0;
         for (Phone phone : phones) {
             when(phone.getPrice()).thenReturn(BigDecimal.valueOf(phonePricesInfo[index]));
-            when(phoneDao.get(cartItemsInfo[index][0])).thenReturn(Optional.of(phones.get(index)));
+            when(phoneService.get(cartItemsInfo[index][0])).thenReturn(Optional.of(phones.get(index)));
             index++;
         }
     }
