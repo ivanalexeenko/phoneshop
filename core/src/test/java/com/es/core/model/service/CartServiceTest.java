@@ -4,7 +4,6 @@ import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
 import com.es.core.service.CartService;
 import com.es.core.service.CartServiceImpl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,14 +15,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-//@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class CartServiceTest {
     private static Long[] cartItemIds = {1001L, 1002L, 1004L};
@@ -83,7 +80,7 @@ public class CartServiceTest {
     @Test
     @DirtiesContext
     public void shouldAssertCartItemFoundSuccessfullyWhenGetExistingId() {
-        Optional optionalItem = cartService.get(cartItemIds[existingItemIndex]);
+        Optional optionalItem = cartService.getCartItem(cartItemIds[existingItemIndex]);
 
         assertTrue(optionalItem.isPresent());
         assertEquals(optionalItem.get(), cartItems.get(existingItemIndex));
@@ -92,7 +89,7 @@ public class CartServiceTest {
     @Test
     @DirtiesContext
     public void shouldAssertCartItemNotFoundWhenGetNonExistingId() {
-        Optional optionalItem = cartService.get(nonExistingItemId);
+        Optional optionalItem = cartService.getCartItem(nonExistingItemId);
 
         assertTrue(!optionalItem.isPresent());
     }

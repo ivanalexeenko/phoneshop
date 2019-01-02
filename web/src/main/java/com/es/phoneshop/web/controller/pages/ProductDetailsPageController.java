@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class ProductDetailsPageController {
     @RequestMapping(method = RequestMethod.GET,value = "/{phoneId}")
     public String showProductList(@PathVariable Long phoneId, Model model) {
         Optional<Phone> optionalPhone = phoneService.get(phoneId);
-        Optional<CartItem> optionalCartItem = cartService.get(phoneId);
+        Optional<CartItem> optionalCartItem = cartService.getCartItem(phoneId);
         model.addAttribute(PHONE_ATTRIBUTE_NAME,optionalPhone.orElse(null));
         model.addAttribute(CART_ITEM_ATTRIBUTE_NAME,optionalCartItem.orElse(null));
         model.addAttribute(CART_SIZE_ATTRIBUTE_NAME,cartService.getCartSize());
