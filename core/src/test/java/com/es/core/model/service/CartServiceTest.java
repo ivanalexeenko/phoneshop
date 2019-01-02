@@ -60,7 +60,7 @@ public class CartServiceTest {
 
     @Test
     public void shouldAssertCartItemFoundSuccessfullyWhenGetExistingId() {
-        Optional optionalItem = cartService.get(cartItemIds[existingItemIndex]);
+        Optional optionalItem = cartService.getCartItem(cartItemIds[existingItemIndex]);
 
         assertTrue(optionalItem.isPresent());
         assertEquals(optionalItem.get(), cartItems.get(existingItemIndex));
@@ -68,7 +68,7 @@ public class CartServiceTest {
 
     @Test
     public void shouldAssertCartItemNotFoundWhenGetNonExistingId() {
-        Optional optionalItem = cartService.get(nonExistingItemId);
+        Optional optionalItem = cartService.getCartItem(nonExistingItemId);
 
         assertFalse(optionalItem.isPresent());
     }
