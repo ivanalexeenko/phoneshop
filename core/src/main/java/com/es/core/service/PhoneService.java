@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface PhoneService {
     public Optional<Phone> get(Long key);
 
-    public void save(Phone phone) throws IllegalArgumentException;
+    public void save(Phone phone);
 
     public List findAll(int offset, int limit, String search, String orderBy, Boolean isAscend);
 

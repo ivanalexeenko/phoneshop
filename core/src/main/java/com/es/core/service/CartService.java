@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CartService {
     Cart getCart();
 
-    Optional<CartItem> get(Long id);
+    Optional<CartItem> getCartItem(Long id);
 
     void addPhone(Long phoneId, Long quantity);
 
