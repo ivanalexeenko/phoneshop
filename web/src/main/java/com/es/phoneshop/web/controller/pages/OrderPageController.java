@@ -1,16 +1,11 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.cart.CartItem;
-import com.es.core.model.order.Order;
-import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
-import com.es.core.service.*;
 import com.es.core.exception.OutOfStockException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.es.core.service.OrderService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +66,7 @@ public class OrderPageController {
         return ORDER_PAGE_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public void placeOrder() throws OutOfStockException {
         orderService.placeOrder(null);
     }

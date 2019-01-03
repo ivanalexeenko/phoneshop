@@ -2,35 +2,25 @@ package com.es.core.model.service;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
-import com.es.core.dao.PhoneDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.service.PriceService;
+import com.es.core.service.PhoneService;
 import com.es.core.service.PriceServiceImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.verification.VerificationModeFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 public class PriceServiceTest {
-    private static final Integer GET_CART_PRICE_CALL_TIMES_MAX = 1;
-    private static final Integer INVOCATION_MULTIPLIER = 2;
     private static Long[][] cartItemsInfo = {{1001L, 12L}, {1231L, 1L}, {9131L, 4L}, {3113L, 3L}};
     private static Double[] phonePricesInfo = {199.99, 666.66, 400.0, 1000.0};
     private List<CartItem> cartItems;
@@ -38,35 +28,18 @@ public class PriceServiceTest {
     private BigDecimal actualTotalPrice;
     private BigDecimal totalPriceEmpty = BigDecimal.ZERO;
 
-    @Configuration
-    static class PriceServiceTestContextConfiguration {
-        @Bean
-        public Cart getCart() {
-            return Mockito.mock(Cart.class);
-        }
+    @InjectMocks
+    private PriceServiceImpl priceService;
 
-        @Bean
-        public PhoneDao getPhoneDao() {
-            return Mockito.mock(PhoneDao.class);
-        }
+    @Mock
+    private PhoneService phoneService;
 
-        @Bean
-        public PriceService getPriceService() {
-            return new PriceServiceImpl(getCart(), getPhoneDao());
-        }
-    }
-
-    @Autowired
-    private PriceService priceService;
-
-    @Autowired
-    private PhoneDao phoneDao;
-
-    @Autowired
+    @Mock
     private Cart cart;
 
     @Before
     public void init() {
+        initMocks(this);
         cartItems = new ArrayList<CartItem>();
         phones = new ArrayList<Phone>();
         mockLists();
@@ -76,7 +49,6 @@ public class PriceServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void shouldAssertTotalPriceCountedCorrectlyWhenGetCartPriceFullCart() {
         BigDecimal totalPrice = priceService.getCartPrice();
 
@@ -84,7 +56,6 @@ public class PriceServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void shouldAssertTotalPriceCountedCorrectlyWhenGetCartPriceEmptyCart() {
         cartItems.clear();
 
@@ -92,19 +63,6 @@ public class PriceServiceTest {
 
         assertEquals(totalPrice, totalPriceEmpty);
     }
-
-    @After
-    public void verify() {
-        Mockito.verify(phoneDao, VerificationModeFactory.times(cartItems.size() * INVOCATION_MULTIPLIER)).get(Mockito.anyLong());
-        Mockito.reset(phoneDao, cart);
-        for (Phone phone : phones) {
-            Mockito.reset(phone);
-        }
-        for (CartItem cartItem : cartItems) {
-            Mockito.reset(cartItem);
-        }
-    }
-
 
     private void countPrice() {
         int index = 0;
@@ -119,15 +77,15 @@ public class PriceServiceTest {
     private void setMockBehaviour() {
         int index = 0;
         for (CartItem cartItem : cartItems) {
-            Mockito.when(cartItem.getPhoneId()).thenReturn(cartItemsInfo[index][0]);
-            Mockito.when(cartItem.getQuantity()).thenReturn(cartItemsInfo[index][1]);
+            when(cartItem.getPhoneId()).thenReturn(cartItemsInfo[index][0]);
+            when(cartItem.getQuantity()).thenReturn(cartItemsInfo[index][1]);
             index++;
         }
-        Mockito.when(cart.getCartItems()).thenReturn(cartItems);
+        when(cart.getCartItems()).thenReturn(cartItems);
         index = 0;
         for (Phone phone : phones) {
-            Mockito.when(phone.getPrice()).thenReturn(BigDecimal.valueOf(phonePricesInfo[index]));
-            Mockito.when(phoneDao.get(cartItemsInfo[index][0])).thenReturn(Optional.of(phones.get(index)));
+            when(phone.getPrice()).thenReturn(BigDecimal.valueOf(phonePricesInfo[index]));
+            when(phoneService.get(cartItemsInfo[index][0])).thenReturn(Optional.of(phones.get(index)));
             index++;
         }
     }

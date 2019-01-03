@@ -22,13 +22,8 @@ public class JdbcStockDaoTest {
     private Integer inStock = 11;
     private Integer reserved = 0;
 
-    @Qualifier("jdbcStockDao")
     @Autowired
-    private final StockDao stockDao;
-
-    public JdbcStockDaoTest(StockDao stockDao) {
-        this.stockDao = stockDao;
-    }
+    private StockDao stockDao;
 
     @Test
     @DirtiesContext

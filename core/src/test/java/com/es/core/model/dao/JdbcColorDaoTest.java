@@ -36,7 +36,7 @@ public class JdbcColorDaoTest {
     public void init() {
         colorList = new ArrayList<Color>();
         for (Object[] colorInfo : colorsInfo) {
-            Long id = (Long)(colorInfo[0]);
+            Long id = (Long) (colorInfo[0]);
             String code = (String) colorInfo[1];
             colorList.add(new Color(id, code));
         }
@@ -46,14 +46,7 @@ public class JdbcColorDaoTest {
     @DirtiesContext
     public void shouldVerifyAllColorsFoundCorrectlyWhenGetColors() {
         List<Color> colorDaoList = colorDao.getColors();
-        boolean verified = colorList.containsAll(colorDaoList);
 
-        Assert.isTrue(verified,COLORS_DO_NOT_MATCH_MESSAGE);
-    }
-
-    @After
-    public void destroy() {
-        colorList = null;
-        colorDao = null;
+        Assert.isTrue(colorList.containsAll(colorDaoList), COLORS_DO_NOT_MATCH_MESSAGE);
     }
 }

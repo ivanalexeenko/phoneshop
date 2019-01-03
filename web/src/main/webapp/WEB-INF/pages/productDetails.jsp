@@ -19,37 +19,7 @@
           href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="<c:url value="/productList"/>"><spring:message code="head.app.name"/></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
-                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
-            <ul class="navbar-nav m-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message code="link.productlist.name"/><span
-                            class="sr-only"></span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/cart"/>"><spring:message code="link.cart.name"/></a>
-                </li>
-            </ul>
-            <div class="inline my-2 my-lg-0">
-                <a class="btn btn-success btn-md ml-3" href="<c:url value="/cart"/>">
-                    <i class="fa fa-shopping-cart"></i> <spring:message code="link.cart.name"/>
-                    <span id="cartSize" class="badge badge-light">${cartSize}</span>
-                </a>
-                <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice"
-                                                                                                    class="badge badge-light">${cartPrice}</span>
-                    <i class="fa fa-dollar"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</nav>
+<jsp:include page="/resources/common/header.jsp"/>
 <div class="container">
     <div class="row">
         <div class="col-sm-10">
@@ -57,7 +27,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-3"><!--left col-->
+        <div class="col-sm-3">
             <div class="text-center">
                 <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}"
                      class="avatar img-rounded img-thumbnail" alt="Device#${phone.id}">
@@ -68,14 +38,19 @@
                     ${phone.description}
                 </div>
             </div>
-        </div><!--/col-3-->
+        </div>
         <div class="col-sm-9">
             <ul class="nav nav-pills nav-justified">
-                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#common"><spring:message code="tab.name.common"/></a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#colors"><spring:message code="tab.name.colors"/></a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#display"><spring:message code="tab.name.display"/></a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physical"><spring:message code="tab.name.physical"/></a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#additional"><spring:message code="tab.name.additional"/></a></li>
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#common"><spring:message
+                        code="tab.name.common"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#colors"><spring:message
+                        code="tab.name.colors"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#display"><spring:message
+                        code="tab.name.display"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#physical"><spring:message
+                        code="tab.name.physical"/></a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#additional"><spring:message
+                        code="tab.name.additional"/></a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="common">
@@ -102,26 +77,30 @@
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.common.camera.back"/></th>
-                            <td class="text-center">${phone.backCameraMegapixels} <spring:message code="tab.name.common.camera.back.measure"/></td>
+                            <td class="text-center">${phone.backCameraMegapixels} <spring:message
+                                    code="tab.name.common.camera.back.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.common.camera.front"/></th>
-                            <td class="text-center">${phone.frontCameraMegapixels} <spring:message code="tab.name.common.camera.front.measure"/></td>
+                            <td class="text-center">${phone.frontCameraMegapixels} <spring:message
+                                    code="tab.name.common.camera.front.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.common.ram"/></th>
-                            <td class="text-center">${phone.ramGb} <spring:message code="tab.name.common.ram.measure"/></td>
+                            <td class="text-center">${phone.ramGb} <spring:message
+                                    code="tab.name.common.ram.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.common.storage"/></th>
-                            <td class="text-center">${phone.internalStorageGb} <spring:message code="tab.name.common.storage.measure"/></td>
+                            <td class="text-center">${phone.internalStorageGb} <spring:message
+                                    code="tab.name.common.storage.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.common.price"/></th>
                             <td class="text-center">${phone.price} <a class="fa fa-dollar"></a></td>
                         </tr>
                     </table>
-                </div><!--/tab-pane-->
+                </div>
                 <div class="tab-pane" id="colors">
                     <table class="table table-responsive-sm table-bordered">
                         <c:choose>
@@ -142,12 +121,13 @@
                             </c:otherwise>
                         </c:choose>
                     </table>
-                </div><!--/tab-pane-->
+                </div>
                 <div class="tab-pane" id="display">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.display.size"/></th>
-                            <td class="text-center">${phone.displaySizeInches}<spring:message code="tab.name.display.size.measure"/></td>
+                            <td class="text-center">${phone.displaySizeInches}<spring:message
+                                    code="tab.name.display.size.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.display.resolution"/></th>
@@ -162,40 +142,47 @@
                             <td class="text-center">${phone.displayTechnology}</td>
                         </tr>
                     </table>
-                </div><!--/tab-pane-->
+                </div>
                 <div class="tab-pane" id="physical">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.physical.weight"/></th>
-                            <td class="text-center">${phone.weightGr} <spring:message code="tab.name.physical.weight.measure"/></td>
+                            <td class="text-center">${phone.weightGr} <spring:message
+                                    code="tab.name.physical.weight.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.physical.length"/></th>
-                            <td class="text-center">${phone.lengthMm} <spring:message code="tab.name.physical.length.measure"/></td>
+                            <td class="text-center">${phone.lengthMm} <spring:message
+                                    code="tab.name.physical.length.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.physical.width"/></th>
-                            <td class="text-center">${phone.widthMm} <spring:message code="tab.name.physical.width.measure"/></td>
+                            <td class="text-center">${phone.widthMm} <spring:message
+                                    code="tab.name.physical.width.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.physical.height"/></th>
-                            <td class="text-center">${phone.heightMm} <spring:message code="tab.name.physical.height.measure"/></td>
+                            <td class="text-center">${phone.heightMm} <spring:message
+                                    code="tab.name.physical.height.measure"/></td>
                         </tr>
                     </table>
-                </div><!--/tab-pane-->
+                </div>
                 <div class="tab-pane" id="additional">
                     <table class="table table-responsive-sm table-bordered">
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.additional.battery.capacity"/></th>
-                            <td class="text-center">${phone.batteryCapacityMah} <spring:message code="tab.name.additional.battery.capacity.measure"/></td>
+                            <td class="text-center">${phone.batteryCapacityMah} <spring:message
+                                    code="tab.name.additional.battery.capacity.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.additional.talk.time"/></th>
-                            <td class="text-center">${phone.talkTimeHours} <spring:message code="tab.name.additional.talk.time.measure"/></td>
+                            <td class="text-center">${phone.talkTimeHours} <spring:message
+                                    code="tab.name.additional.talk.time.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.additional.standby.time"/></th>
-                            <td class="text-center">${phone.standByTimeHours} <spring:message code="tab.name.additional.standby.time.measure"/></td>
+                            <td class="text-center">${phone.standByTimeHours} <spring:message
+                                    code="tab.name.additional.standby.time.measure"/></td>
                         </tr>
                         <tr>
                             <th class="text-center"><spring:message code="tab.name.additional.bluetooth"/></th>
@@ -206,9 +193,8 @@
                             <td class="text-center">${phone.positioning}</td>
                         </tr>
                     </table>
-                </div><!--/tab-pane-->
-
-            </div><!--/tab-pane-->
+                </div>
+            </div>
             <form method="post">
                 <div class="form-group">
                     <div class="col-sm-9">
@@ -220,7 +206,8 @@
                                            aria-label="Small"
                                            aria-describedby="inputGroup-sizing-lg"
                                            placeholder="${inputPlaceholder}">
-                                    <p class="text-center"><span class="success" id="messageSuccess${phone.id}"></span></p>
+                                    <p class="text-center"><span class="success" id="messageSuccess${phone.id}"></span>
+                                    </p>
                                     <p class="text-center"><span class="error" id="messageError${phone.id}"></span></p>
                                 </td>
                                 <td>
@@ -234,17 +221,12 @@
                     </div>
                 </div>
             </form>
-        </div><!--/tab-content-->
-
-    </div><!--/col-9-->
+        </div>
+    </div>
 </div>
-<!--/row-->
-<footer class="container-fluid text-center">
-
-    <script src="${i18nJS}"></script>
-    <script src="${addToCart}"></script>
-    <script src="${whenDocReady}"></script>
-    <p><spring:message code="footer.message"/></p>
-</footer>
+<script src="${i18nJS}"></script>
+<script src="${addToCart}"></script>
+<script src="${whenDocReady}"></script>
+<jsp:include page="/resources/common/footer.jsp"/>
 </body>
 </html>

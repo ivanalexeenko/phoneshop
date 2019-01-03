@@ -4,7 +4,13 @@ public class StringCartItem {
     private String phoneIdString;
     private String quantityString;
 
-    public StringCartItem() {}
+    public StringCartItem() {
+    }
+
+    public StringCartItem(String phoneIdString, String quantityString) {
+        this.phoneIdString = phoneIdString;
+        this.quantityString = quantityString;
+    }
 
     public void setPhoneIdString(String phoneIdString) {
         this.phoneIdString = phoneIdString;
@@ -20,10 +26,5 @@ public class StringCartItem {
 
     public String getQuantityString() {
         return quantityString;
-    }
-
-    public StringCartItem(String phoneIdString, String quantityString) {
-        this.phoneIdString = phoneIdString;
-        this.quantityString = quantityString;
     }
 }
