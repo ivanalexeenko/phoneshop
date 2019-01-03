@@ -2,9 +2,8 @@ package com.es.core.service;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
-import com.es.core.message.ApplicationMessage;
-import com.es.core.model.order.Order;
 import com.es.core.exception.OutOfStockException;
+import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
@@ -24,7 +23,13 @@ public class OrderServiceImpl implements OrderService {
     private final StockService stockService;
     private final PriceService priceService;
 
-    @Value("${delivery.price}")
+    @Value("exception.out.of.stock")
+    private String outOfStockMessage;
+
+    @Value("quantity.ok.message")
+    private String quantityOkMessage;
+
+    @Value("5")
     private BigDecimal deliveryPrice;
 
     @Autowired
@@ -74,17 +79,17 @@ public class OrderServiceImpl implements OrderService {
         String message;
         try {
             finalQuantity = checkStockQuantityCoherence(stock,cartItem);
-            message = ApplicationMessage.QUANTITY_OK_MESSAGE;
+            message = quantityOkMessage;
         } catch (OutOfStockException e) {
             finalQuantity = Long.valueOf(stock.getStock());
-            message = ApplicationMessage.OUT_OF_STOCK_MESSAGE_CODE;
+            message = outOfStockMessage;
         }
         return new Pair<>(finalQuantity,message);
     }
 
     private Long checkStockQuantityCoherence(Stock stock,CartItem cartItem) throws OutOfStockException {
         if(stock.getStock() < cartItem.getQuantity()) {
-            throw new OutOfStockException(ApplicationMessage.OUT_OF_STOCK_MESSAGE_CODE);
+            throw new OutOfStockException(outOfStockMessage);
         }
         return cartItem.getQuantity();
     }

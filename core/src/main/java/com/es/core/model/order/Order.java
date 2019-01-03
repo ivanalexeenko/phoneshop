@@ -6,12 +6,6 @@ import java.util.List;
 public class Order {
     private Long id;
     private List<OrderItem> orderItems;
-<<<<<<< HEAD
-=======
-    /**
-     * A sum of order item prices;
-     */
->>>>>>> Task__3
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
     private BigDecimal totalPrice;

@@ -45,7 +45,7 @@ public class ProductDetailsPageController {
     }
 
     @PostMapping
-    public String getRequest(HttpServletRequest request) throws IOException {
+    public String getRequest() {
         return PRODUCT_DETAILS_VIEW_NAME;
     }
 }

@@ -30,11 +30,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-<<<<<<< HEAD
-        CartItem item = new CartItem(phoneId,quantity);
-=======
         CartItem item = new CartItem(phoneId, quantity);
->>>>>>> Task__3
         Optional<CartItem> optional = this.getCartItem(phoneId);
         if (!optional.isPresent()) {
             cart.getCartItems().add(item);
@@ -46,15 +42,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-<<<<<<< HEAD
-        for(Map.Entry<Long,Long> entry : items.entrySet()) {
-            Optional<CartItem> optionalCartItem = getCartItem(entry.getKey());
-            if(optionalCartItem.isPresent()) {
-=======
         items.forEach((key, value) -> {
             Optional<CartItem> optionalCartItem = getCartItem(key);
             if (optionalCartItem.isPresent()) {
->>>>>>> Task__3
                 CartItem item = optionalCartItem.get();
                 item.setQuantity(value);
             }
