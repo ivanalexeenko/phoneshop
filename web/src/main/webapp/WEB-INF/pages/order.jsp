@@ -53,14 +53,14 @@
 </nav>
 <section class="jumbotron text-center">
     <div class="container">
-        <h1 class="jumbotron-heading">Your Order</h1>
+        <h1 class="jumbotron-heading"><spring:message code="order.page.header"/></h1>
     </div>
 </section>
 <c:choose>
     <c:when test="${empty cartItems}">
         <section class="jumbotron text-center">
             <div class="container text-center">
-                <h1 class="jumbotron-heading text-center">Oops,Your Order is Empty</h1>
+                <h1 class="jumbotron-heading text-center"><spring:message code="order.page.empty"/></h1>
             </div>
         </section>
     </c:when>
@@ -72,6 +72,7 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
+                                <th class="text-center" scope="col"><spring:message code="order.item.number"/></th>
                                 <th class="text-center" scope="col"><spring:message
                                         code="phones.field.model"/></th>
                                 <th class="text-center" scope="col"><spring:message
@@ -83,23 +84,24 @@
                                 <th class="text-center" scope="col"><spring:message
                                         code="column.cart.page.price"/></th>
                                 <th class="text-center"></th>
-                                <th>Message</th>
-                                <th></th>
+                                <th class="text-center"><spring:message code="order.item.message"/></th>
+                                <th class="text-center"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <c:forEach items="${phones}" var="phone" varStatus="i">
                                 <tr>
+                                    <td class="text-center">${i.index+1}</td>
                                     <td class="text-center">${phone.model}</td>
-                                    <td>
+                                    <td class="text-center">
                                         <c:forEach var="color" items="${phone.colors}">
                                             <p>${color.code}</p>
                                         </c:forEach>
                                     </td>
                                     <td class="text-center">${stocks[i.index].stock}</td>
                                     <td class="text-center">${cartItems[i.index].quantity}</td>
-                                    <td class="text-right">${phone.price} <i class="fa fa-dollar"></i></td>
-                                    <td>
+                                    <td class="text-center">${phone.price} <i class="fa fa-dollar"></i></td>
+                                    <td class="text-center">
                                         <a href="<c:url value="/productDetails/${phone.id}"/>" type="button"
                                            class="btn btn-primary">
                                             <i class="fa fa-info-circle"></i> <spring:message
@@ -107,9 +109,44 @@
                                         </a>
                                     </td>
                                     <td class="text-center text-info">${messages[i.index]}</td>
-                                    <td></td>
+                                    <td class="text-center"></td>
                                 </tr>
                             </c:forEach>
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center"><strong><spring:message code="order.subtotal"/></strong></td>
+                                <td class="text-center"><strong>${subtotalPrice} <i class="fa fa-dollar"></i></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center"><strong><spring:message code="order.delivery"/></strong></td>
+                                <td class="text-center"><strong>${deliveryPrice} <i class="fa fa-dollar"></i></strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td></td>
+                                <td class="text-center"><strong><spring:message code="order.total"/></strong></td>
+                                <td class="text-center"><strong>${totalPrice} <i class="fa fa-dollar"></i></strong></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -124,13 +161,14 @@
                             <thead>
                             <tr>
                                 <td colspan="2">
-                                    <h3 class="text-center"><strong>Customer and Order Information:</strong></h3>
+                                    <h3 class="text-center"><strong><spring:message
+                                            code="order.confirm.header"/></strong></h3>
                                 </td>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <th>First Name:</th>
+                                <th><spring:message code="order.confirm.first.name"/></th>
                                 <td class="text-center">
                                     <label>
                                         <input name="firstName" class="form-control text-left" type="text"/>
@@ -139,7 +177,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Last Name:</th>
+                                <th><spring:message code="order.confirm.last.name"/></th>
                                 <td class="text-center">
                                     <label>
                                         <input name="lastName" class="form-control text-left" type="text"/>
@@ -148,7 +186,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Address:</th>
+                                <th><spring:message code="order.confirm.address"/></th>
                                 <td class="text-center">
                                     <label>
                                         <input name="address" class="form-control text-left" type="text"/>
@@ -157,7 +195,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Phone:</th>
+                                <th><spring:message code="order.confirm.phone"/></th>
                                 <td class="text-center">
                                     <label>
                                         <input name="phone" class="form-control text-left" type="text"/>
@@ -168,7 +206,7 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="form-group">
-                                        <label for="comment">Description:</label>
+                                        <label for="comment"><spring:message code="order.confirm.description"/></label>
                                         <textarea class="form-control" rows="5" id="comment"></textarea>
                                     </div>
                                 </td>
@@ -177,7 +215,7 @@
                                 <td>
                                     <a type="button"
                                        class="btn btn-primary text-white">
-                                        <i class="fa fa-hand-grab-o"></i> I'll take it!
+                                        <i class="fa fa-hand-grab-o"></i> <spring:message code="order.submit"/>
                                     </a>
                                 </td>
                             </tr>

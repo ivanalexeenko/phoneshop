@@ -10,18 +10,22 @@ import com.es.core.model.phone.Stock;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private final PhoneService phoneService;
     private final StockService stockService;
     private final PriceService priceService;
+    private final MessageSource messageSource;
 
     @Value("exception.out.of.stock")
     private String outOfStockMessage;
@@ -33,10 +37,11 @@ public class OrderServiceImpl implements OrderService {
     private BigDecimal deliveryPrice;
 
     @Autowired
-    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService) {
+    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService, MessageSource messageSource) {
         this.phoneService = phoneService;
         this.stockService = stockService;
         this.priceService = priceService;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -48,21 +53,19 @@ public class OrderServiceImpl implements OrderService {
             if(optionalPhone.isPresent()) {
                 Phone phone = optionalPhone.get();
                 Long id = cartItem.getPhoneId();
-                Pair quantityMessagePair = getFinalQuantityAndMessage(cartItem);
+                Pair quantityMessagePair = getLocalizedFinalQuantityAndMessage(cartItem);
                 Long quantity = Long.valueOf(quantityMessagePair.getKey().toString());
                 String message = quantityMessagePair.getValue().toString();
                 OrderItem orderItem = createOrderItem(phone,id,quantity,message);
                 orderItems.add(orderItem);
             }
         });
-        order.setSubtotal(priceService.getCartPrice());
+        order.setSubtotal(priceService.countOrderSubtotalPrice(orderItems));
         order.setTotalPrice(getTotalOrderPrice(order));
         order.setDeliveryPrice(deliveryPrice);
         order.setOrderItems(orderItems);
         return order;
     }
-
-
 
     private OrderItem createOrderItem(Phone phone,Long id,Long quantity,String message) {
         OrderItem orderItem = new OrderItem();
@@ -73,16 +76,16 @@ public class OrderServiceImpl implements OrderService {
         return orderItem;
     }
 
-    private Pair<Long,String> getFinalQuantityAndMessage(CartItem cartItem) {
+    private Pair<Long,String> getLocalizedFinalQuantityAndMessage(CartItem cartItem) {
         Stock stock = stockService.getStock(cartItem.getPhoneId());
         Long finalQuantity;
         String message;
         try {
             finalQuantity = checkStockQuantityCoherence(stock,cartItem);
-            message = quantityOkMessage;
+            message = messageSource.getMessage(quantityOkMessage,null, LocaleContextHolder.getLocale());
         } catch (OutOfStockException e) {
             finalQuantity = Long.valueOf(stock.getStock());
-            message = outOfStockMessage;
+            message = messageSource.getMessage(outOfStockMessage,new Object[]{cartItem.getQuantity(),stock.getStock()},LocaleContextHolder.getLocale());
         }
         return new Pair<>(finalQuantity,message);
     }
@@ -103,5 +106,10 @@ public class OrderServiceImpl implements OrderService {
     public BigDecimal getTotalOrderPrice(Order order) {
         BigDecimal subtotal = order.getSubtotal();
         return subtotal.add(deliveryPrice);
+    }
+
+    @Override
+    public List<String> getOrderMessages(Order order) {
+        return order.getOrderItems().stream().map(OrderItem::getMessage).collect(Collectors.toList());
     }
 }
