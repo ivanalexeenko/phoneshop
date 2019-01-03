@@ -45,7 +45,7 @@ public class JdbcPhoneDao implements PhoneDao {
     private final ColorDao colorDao;
 
     @Autowired
-    public JdbcPhoneDao(JdbcTemplate jdbcTemplate,ColorDao colorDao) {
+    public JdbcPhoneDao(JdbcTemplate jdbcTemplate, ColorDao colorDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.colorDao = colorDao;
     }
@@ -55,6 +55,7 @@ public class JdbcPhoneDao implements PhoneDao {
         if (phones == null || phones.isEmpty()) {
             return Optional.empty();
         }
+        setPhonesColors(phones);
         return Optional.of(phones.get(0));
     }
 
@@ -71,9 +72,7 @@ public class JdbcPhoneDao implements PhoneDao {
         List<Phone> phones = jdbcTemplate.query(prepareOrderedQuery(orderBy, isAscend),
                 new Object[]{partSearch, partSearch, partSearch, partSearch, partSearch, limit, offset},
                 new BeanPropertyRowMapper<Phone>(Phone.class));
-
-        List<Color> colors = colorDao.getColors();
-        setPhonesColors(phones, colors);
+        setPhonesColors(phones);
         return phones;
     }
 
@@ -144,7 +143,8 @@ public class JdbcPhoneDao implements PhoneDao {
         phone.setColors(colors2phones);
     }
 
-    private void setPhonesColors(List<Phone> phones, List<Color> colors) {
+    private void setPhonesColors(List<Phone> phones) {
+        List<Color> colors = colorDao.getColors();
         for (Phone phone : phones) {
             List<Long> colorIds = jdbcTemplate.query(SELECT_PHONE2COLOR_BY_ID_QUERY, new Object[]{phone.getId()}, new ColorRowMapper());
             if (colorIds != null) {

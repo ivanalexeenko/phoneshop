@@ -6,5 +6,6 @@ import com.es.core.exception.OutOfStockException;
 
 public interface OrderService {
     Order createOrder(Cart cart);
+
     void placeOrder(Order order) throws OutOfStockException;
 }

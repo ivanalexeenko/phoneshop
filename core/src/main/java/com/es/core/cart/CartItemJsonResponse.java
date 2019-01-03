@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public class CartItemJsonResponse {
-    private CartItem cartItem;
     private Boolean isValidated;
     private Map<String, String> errorMessages;
     private int cartSize;
@@ -19,10 +18,6 @@ public class CartItemJsonResponse {
         return totalCartPrice;
     }
 
-    public void setCartItem(CartItem cartItem) {
-        this.cartItem = cartItem;
-    }
-
     public void setErrorMessages(Map<String, String> errorMessages) {
         this.errorMessages = errorMessages;
     }
@@ -33,10 +28,6 @@ public class CartItemJsonResponse {
 
     public String getSuccessMessage() {
         return successMessage;
-    }
-
-    public CartItem getCartItem() {
-        return cartItem;
     }
 
     public Boolean getIsValidated() {

@@ -1,10 +1,24 @@
 package com.es.core.cart;
 
-import com.es.core.message.ApplicationMessage;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class CartItem {
+    @NotNull(message = "error.phoneid.empty")
+    private Long phoneId;
+
+    @NotNull(message = "error.input.empty")
+    @Min(value = 1L, message = "error.quantity.less.equal.zero")
+    private Long quantity;
+
+    public CartItem() {
+    }
+
+    public CartItem(Long phoneId, Long quantity) {
+        this.phoneId = phoneId;
+        this.quantity = quantity;
+    }
+
     public void setPhoneId(Long phoneId) {
         this.phoneId = phoneId;
     }
@@ -20,11 +34,4 @@ public class CartItem {
     public Long getPhoneId() {
         return phoneId;
     }
-
-    @NotNull(message = ApplicationMessage.PHONE_ID_IS_NULL)
-    private Long phoneId;
-
-    @NotNull(message = ApplicationMessage.INPUT_IS_NULL)
-    @Min(value = 1L, message = ApplicationMessage.QUANTITY_BIGGER_ZERO)
-    private Long quantity;
 }

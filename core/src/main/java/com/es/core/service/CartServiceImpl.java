@@ -5,7 +5,6 @@ import com.es.core.cart.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,16 +24,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Optional<CartItem> get(Long id) {
+    public Optional<CartItem> getCartItem(Long id) {
         return cart.getCartItems().stream().filter(item -> item.getPhoneId().equals(id)).findAny();
     }
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
-        CartItem item = new CartItem();
-        item.setPhoneId(phoneId);
-        item.setQuantity(quantity);
-        Optional<CartItem> optional = this.get(phoneId);
+        CartItem item = new CartItem(phoneId, quantity);
+        Optional<CartItem> optional = this.getCartItem(phoneId);
         if (!optional.isPresent()) {
             cart.getCartItems().add(item);
         } else {
@@ -45,12 +42,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException("TODO");
+        items.forEach((key, value) -> {
+            Optional<CartItem> optionalCartItem = getCartItem(key);
+            if (optionalCartItem.isPresent()) {
+                CartItem item = optionalCartItem.get();
+                item.setQuantity(value);
+            }
+        });
     }
 
     @Override
     public void remove(Long phoneId) {
-        throw new UnsupportedOperationException("TODO");
+        Optional<CartItem> optionalCartItem = this.getCartItem(phoneId);
+        optionalCartItem.ifPresent(cartItem -> cart.getCartItems().remove(cartItem));
     }
 
     @Override

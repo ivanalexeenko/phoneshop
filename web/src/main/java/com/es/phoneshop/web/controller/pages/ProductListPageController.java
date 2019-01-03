@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,11 +22,10 @@ import java.util.List;
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
     private static final String PHONES_ATTRIBUTE_NAME = "phones";
-    private static final String PRODUCT_LIST_ATTRIBUTE_NAME = "productList";
+    private static final String PRODUCT_LIST_VIEW_NAME = "productList";
     private static final String CURRENT_PAGE_ATTRIBUTE_NAME = "currentPage";
     private static final String TOTAL_PAGES_ATTRIBUTE_NAME = "totalPages";
     private static final String VISIBLE_PAGES_ATTRIBUTE_NAME = "visiblePages";
-    private static final String AMOUNT_PER_PAGE_ATTRIBUTE_NAME = "amountPerPage";
     private static final String PHONE_AMOUNT_ATTRIBUTE_NAME = "phoneAmount";
     private static final String SEARCH_FIELD_ATTRIBUTE_NAME = "searchField";
     private static final Integer DEFAULT_CURRENT_PAGE = 1;
@@ -58,16 +59,16 @@ public class ProductListPageController {
         this.priceService = priceService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String showProductList(Model model) {
         countPageParameters();
         data = Arrays.asList(dataArray);
         setModelAttributes(model);
-        return PRODUCT_LIST_ATTRIBUTE_NAME;
+        return PRODUCT_LIST_VIEW_NAME;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public void getFormParam(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+    @PostMapping
+    public String getFormParam(HttpServletRequest request, Model model) {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);
@@ -85,11 +86,10 @@ public class ProductListPageController {
                 isAscend = Boolean.valueOf(tempAscend);
             }
         }
-
         data = recalculateData(dataString);
         dataArray = (Integer[]) data.toArray();
         setModelAttributes(model);
-        response.sendRedirect(request.getRequestURI());
+        return PRODUCT_LIST_VIEW_NAME;
     }
 
     private List recalculateData(String dataString) {

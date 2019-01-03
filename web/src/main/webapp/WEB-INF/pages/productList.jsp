@@ -13,7 +13,6 @@
     </script>
 
     <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
-    <script type="text/JavaScript" src="resources/i18n/scripts/jquery.i18n.properties.js"></script>
     <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
 
@@ -29,7 +28,6 @@
     <link href="${plpStyles}" rel="stylesheet"/>
     <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -39,7 +37,6 @@
                 aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item active">
@@ -67,7 +64,9 @@
                     <span id="cartSize" class="badge badge-light">${cartSize}</span>
                 </a>
                 <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice" class="badge badge-light">${cartPrice}</span> <i class="fa fa-dollar"></i>
+                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice"
+                                                                                                    class="badge badge-light">${cartPrice}</span>
+                    <i class="fa fa-dollar"></i>
                 </button>
             </form>
         </div>
@@ -87,96 +86,110 @@
 <script>
     var data = ${data};
 </script>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-auto">
-            <form method="post" name="orderByForm" id="orderByForm">
-                <table class="table table-hover text-center ">
-                    <thead>
-                    <tr>
-                        <th class="text-center"><spring:message code="phones.field.image"/></th>
-                        <th class="text-center"><spring:message code="phones.field.brand"/>
-                            <button id="brand" class="ordering">
-                                <a>
-                                    <div class="fa fa-chevron-up rotate"></div>
-                                </a>
-                            </button>
-                        </th>
-                        <th class="text-center"><spring:message code="phones.field.model"/>
-                            <button id="model" class="ordering">
-                                <a>
-                                    <div class="fa fa-chevron-up rotate"></div>
-                                </a>
-                            </button>
-                        </th>
-                        <th class="text-center"><spring:message code="phones.field.os"/>
-                            <button id="os" class="ordering">
-                                <a>
-                                    <div class="fa fa-chevron-up rotate"></div>
-                                </a>
-                            </button>
-                        </th>
-                        <th class="text-center"><spring:message code="phones.field.display"/>
-                            <button id="displaySizeInches" class="ordering">
-                                <a>
-                                    <div class="fa fa-chevron-up rotate"></div>
-                                </a>
-                            </button>
-                        </th>
-                        <th class="text-center"><spring:message code="phones.field.colors"/></th>
-                        <th class="text-center"><spring:message code="phones.field.price"/>
-                            <button id="price" class="ordering">
-                                <a>
-                                    <div class="fa fa-chevron-up rotate"></div>
-                                </a>
-                            </button>
-                        </th>
-                        <th class="text-center"><spring:message code="phones.field.quantity"/></th>
-                        <th class="text-center"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
+<c:choose>
+    <c:when test="${not empty phones}">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <form method="post" name="orderByForm" id="orderByForm">
+                        <table class="table table-hover text-center ">
+                            <thead>
+                            <tr>
+                                <th class="text-center"><spring:message code="phones.field.image"/></th>
+                                <th class="text-center"><spring:message code="phones.field.brand"/>
+                                    <button id="brand" class="ordering">
+                                        <a>
+                                            <div class="fa fa-chevron-up rotate"></div>
+                                        </a>
+                                    </button>
+                                </th>
+                                <th class="text-center"><spring:message code="phones.field.model"/>
+                                    <button id="model" class="ordering">
+                                        <a>
+                                            <div class="fa fa-chevron-up rotate"></div>
+                                        </a>
+                                    </button>
+                                </th>
+                                <th class="text-center"><spring:message code="phones.field.os"/>
+                                    <button id="os" class="ordering">
+                                        <a>
+                                            <div class="fa fa-chevron-up rotate"></div>
+                                        </a>
+                                    </button>
+                                </th>
+                                <th class="text-center"><spring:message code="phones.field.display"/>
+                                    <button id="displaySizeInches" class="ordering">
+                                        <a>
+                                            <div class="fa fa-chevron-up rotate"></div>
+                                        </a>
+                                    </button>
+                                </th>
+                                <th class="text-center"><spring:message code="phones.field.colors"/></th>
+                                <th class="text-center"><spring:message code="phones.field.price"/>
+                                    <button id="price" class="ordering">
+                                        <a>
+                                            <div class="fa fa-chevron-up rotate"></div>
+                                        </a>
+                                    </button>
+                                </th>
+                                <th class="text-center"><spring:message code="phones.field.quantity"/></th>
+                                <th class="text-center"><spring:message code="phones.field.add"/></th>
+                                <th class="text-center"><spring:message code="phones.field.info"/></th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                    <input type="hidden" name="orderBy" id="orderName" value="${orderBy}"/>
-                    <input type="hidden" name="orderByAscend" id="orderAscend" value="${isAscend}"/>
-                    <input type="hidden" name="orderDataString" id="orderData"/>
+                            <input type="hidden" name="orderBy" id="orderName" value="${orderBy}"/>
+                            <input type="hidden" name="orderByAscend" id="orderAscend" value="${isAscend}"/>
+                            <input type="hidden" name="orderDataString" id="orderData"/>
 
-                    <c:forEach var="phone" items="${phones}">
-                        <tr>
-                            <td>
-                                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
-                            </td>
-                            <td>${phone.brand}</td>
-                            <td>${phone.model}</td>
-                            <td>${phone.os}</td>
-                            <td>${phone.displaySizeInches}</td>
-                            <td>
-                                <c:forEach var="color" items="${phone.colors}">
-                                    <p>${color.code}</p>
-                                </c:forEach>
-                            </td>
-                            <td class="text-right"><i class="fa fa-dollar"></i>${phone.price}</td>
-                            <td>
-                                <input id="input${phone.id}" type="text" class="addition form-control"
-                                       aria-label="Small"
-                                       aria-describedby="inputGroup-sizing-lg" placeholder="${inputPlaceholder}">
-                                <p><span class="success" id="messageSuccess${phone.id}">
+                            <c:forEach var="phone" items="${phones}">
+                                <tr>
+                                    <td>
+                                        <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                                    </td>
+                                    <td>${phone.brand}</td>
+                                    <td>${phone.model}</td>
+                                    <td>${phone.os}</td>
+                                    <td>${phone.displaySizeInches}</td>
+                                    <td>
+                                        <c:forEach var="color" items="${phone.colors}">
+                                            <p>${color.code}</p>
+                                        </c:forEach>
+                                    </td>
+                                    <td class="text-right"><i class="fa fa-dollar"></i>${phone.price}</td>
+                                    <td>
+                                        <input id="input${phone.id}" type="text" class="addition form-control"
+                                               aria-label="Small"
+                                               aria-describedby="inputGroup-sizing-lg"
+                                               placeholder="${inputPlaceholder}">
+                                        <p><span class="success" id="messageSuccess${phone.id}">
                                 </span></p>
-                                <p><span class="error" id="messageError${phone.id}"></span></p>
-                            </td>
-                            <td>
-                                <button type="submit" id="add${phone.id}" class="addition btn btn-success btn-md ml-3">
-                                    <i class="fa fa-plus-circle"></i> <spring:message code="button.add"/>
-                                </button>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </form>
+                                        <p><span class="error" id="messageError${phone.id}"></span></p>
+                                    </td>
+                                    <td>
+                                        <button type="submit" id="add${phone.id}"
+                                                class="addition btn btn-success btn-md ml-3">
+                                            <i class="fa fa-plus-circle"></i> <spring:message code="button.add"/>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <a href="<c:url value="/productDetails/${phone.id}"/>" type="button"
+                                           class="btn btn-primary btn-md ml-3">
+                                            <i class="fa fa-info-circle"></i> <spring:message code="button.details"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </c:when>
+</c:choose>
+
 <div class="panel panel-info">
     <div class="panel-heading bg-secondary text-center text-white font-italic"><spring:message
             code="info.current.page"/>
@@ -189,12 +202,10 @@
         </ul>
     </form>
 </nav>
-<footer class="container-fluid text-center">
-    <script src="${iconClickHandler}"></script>
-    <script src="${pagination}"></script>
-    <script src="${addToCart}"></script>
-    <script src="${whenDocReady}"></script>
-    <p><spring:message code="footer.message"/></p>
-</footer>
+<script src="${iconClickHandler}"></script>
+<script src="${pagination}"></script>
+<script src="${addToCart}"></script>
+<script src="${whenDocReady}"></script>
+<jsp:include page="/resources/common/footer.jsp"/>
 </body>
 </html>
