@@ -2,6 +2,7 @@ package com.es.core.service;
 
 import com.es.core.cart.Cart;
 import com.es.core.cart.CartItem;
+import com.es.core.dao.OrderDao;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
@@ -29,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final PriceService priceService;
     private final MessageSource messageSource;
     private final CartService cartService;
+    private final OrderDao orderDao;
 
     @Value("exception.out.of.stock")
     private String outOfStockMessage;
@@ -40,12 +42,13 @@ public class OrderServiceImpl implements OrderService {
     private BigDecimal deliveryPrice;
 
     @Autowired
-    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService, MessageSource messageSource, CartService cartService) {
+    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService, MessageSource messageSource, CartService cartService, OrderDao orderDao) {
         this.phoneService = phoneService;
         this.stockService = stockService;
         this.priceService = priceService;
         this.messageSource = messageSource;
         this.cartService = cartService;
+        this.orderDao = orderDao;
     }
 
     @Override
@@ -56,11 +59,10 @@ public class OrderServiceImpl implements OrderService {
             Optional<Phone> optionalPhone = phoneService.get(cartItem.getPhoneId());
             if(optionalPhone.isPresent()) {
                 Phone phone = optionalPhone.get();
-                Long id = cartItem.getPhoneId();
                 Pair quantityMessagePair = getLocalizedFinalQuantityAndMessage(cartItem);
                 Long quantity = Long.valueOf(quantityMessagePair.getKey().toString());
                 String message = quantityMessagePair.getValue().toString();
-                OrderItem orderItem = createOrderItem(phone,id,quantity,message);
+                OrderItem orderItem = createOrderItem(phone,quantity,message);
                 orderItems.add(orderItem);
             }
         });
@@ -68,15 +70,17 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(getTotalOrderPrice(order));
         order.setDeliveryPrice(deliveryPrice);
         order.setOrderItems(orderItems);
+        order.setStatus(OrderStatus.NEW);
+        order.setId(UUID.randomUUID().toString());
+        setOrderItemsId(order,order.getId());
         return order;
     }
 
-    private OrderItem createOrderItem(Phone phone,Long id,Long quantity,String message) {
+    private OrderItem createOrderItem(Phone phone,Long quantity,String message) {
         OrderItem orderItem = new OrderItem();
         orderItem.setMessage(message);
         orderItem.setQuantity(quantity);
         orderItem.setPhone(phone);
-        orderItem.setId(id);
         return orderItem;
     }
 
@@ -104,8 +108,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void placeOrder(Order order)  {
         cartService.getCart().getCartItems().clear();
-        order.setStatus(OrderStatus.NEW);
-        order.setId(UUID.randomUUID().toString());
+        orderDao.placeOrder(order);
     }
 
     @Override
@@ -117,5 +120,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<String> getOrderMessages(Order order) {
         return order.getOrderItems().stream().map(OrderItem::getMessage).collect(Collectors.toList());
+    }
+
+    @Override
+    public void setOrderItemsId(Order order, String id) {
+        order.getOrderItems().forEach(orderItem -> orderItem.setId(id));
     }
 }

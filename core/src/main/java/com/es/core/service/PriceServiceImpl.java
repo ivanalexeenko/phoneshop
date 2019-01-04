@@ -35,7 +35,7 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public BigDecimal countOrderSubtotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream().map(orderItem -> {
-            Optional<Phone> optionalPhone = phoneService.get(orderItem.getId());
+            Optional<Phone> optionalPhone = phoneService.get(orderItem.getPhone().getId());
             if (optionalPhone.isPresent()) {
                 return optionalPhone.get().getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity()));
             }

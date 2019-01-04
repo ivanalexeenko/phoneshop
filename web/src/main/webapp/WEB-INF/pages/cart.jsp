@@ -110,7 +110,7 @@
                             </button>
                             <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" type="button"
                                style="color: black" href="<c:url value="/order"/>">
-                                <spring:message code="link.order.name"/><i class="fa fa-arrow-right"></i>
+                                <spring:message code="link.order.name"/> <i class="fa fa-arrow-right"></i>
                             </a>
                         </div>
                         <c:forEach items="${phones}" var="phone">

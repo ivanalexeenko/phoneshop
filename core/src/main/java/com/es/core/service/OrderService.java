@@ -11,4 +11,5 @@ public interface OrderService {
     void placeOrder(Order order);
     BigDecimal getTotalOrderPrice(Order order);
     List<String> getOrderMessages(Order order);
+    void setOrderItemsId(Order order, String id);
 }

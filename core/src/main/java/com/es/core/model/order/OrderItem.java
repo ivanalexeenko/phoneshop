@@ -3,7 +3,7 @@ package com.es.core.model.order;
 import com.es.core.model.phone.Phone;
 
 public class OrderItem {
-    private Long id;
+    private String id;
     private Phone phone;
     private Long quantity;
     private String message;
@@ -16,11 +16,11 @@ public class OrderItem {
         return message;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
