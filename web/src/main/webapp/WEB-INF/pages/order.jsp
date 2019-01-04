@@ -6,6 +6,7 @@
 
 <html>
 <head>
+    <title><spring:message code="title.order"/></title>
     <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
     <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
@@ -19,38 +20,7 @@
     <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="<c:url value="/productList"/>"><spring:message code="head.app.name"/></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
-                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
-            <ul class="navbar-nav m-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message
-                            code="link.productlist.name"/><span
-                            class="sr-only"></span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="<c:url value="/cart"/>"><spring:message code="link.cart.name"/></a>
-                </li>
-            </ul>
-            <div class="inline my-2 my-lg-0">
-                <a class="btn btn-success btn-md ml-3" href="<c:url value="/cart"/>">
-                    <i class="fa fa-shopping-cart"></i> <spring:message code="link.cart.name"/>
-                    <span id="cartSize" class="badge badge-light">${cartSize}</span>
-                </a>
-                <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
-                    <i class="text-center text-white"><spring:message code="cart.price"/></i> <span id="cartPrice"
-                                                                                                    class="badge badge-light">${cartPrice}</span>
-                    <i class="fa fa-dollar"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</nav>
+<jsp:include page="/resources/common/header.jsp"/>
 <section class="jumbotron text-center">
     <div class="container">
         <h1 class="jumbotron-heading"><spring:message code="order.page.header"/></h1>
@@ -78,8 +48,6 @@
                                 <th class="text-center" scope="col"><spring:message
                                         code="phones.field.colors"/></th>
                                 <th class="text-center" scope="col"><spring:message
-                                        code="column.cart.page.stock"/></th>
-                                <th class="text-center" scope="col"><spring:message
                                         code="column.cart.page.actual.quantity"/></th>
                                 <th class="text-center" scope="col"><spring:message
                                         code="column.cart.page.price"/></th>
@@ -98,7 +66,6 @@
                                             <p>${color.code}</p>
                                         </c:forEach>
                                     </td>
-                                    <td class="text-center">${stocks[i.index].stock}</td>
                                     <td class="text-center">${cartItems[i.index].quantity}</td>
                                     <td class="text-center">${phone.price} <i class="fa fa-dollar"></i></td>
                                     <td class="text-center">
@@ -153,82 +120,96 @@
                 </div>
             </div>
         </div>
-        <div class="container mb-4">
-            <div class="row">
-                <div class="col-sm-auto">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                            <tr>
-                                <td colspan="2">
-                                    <h3 class="text-center"><strong><spring:message
-                                            code="order.confirm.header"/></strong></h3>
-                                </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th><spring:message code="order.confirm.first.name"/></th>
-                                <td class="text-center">
-                                    <label>
-                                        <input name="firstName" class="form-control text-left" type="text"/>
-                                    </label>
-                                    <p class="text-center text-info"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><spring:message code="order.confirm.last.name"/></th>
-                                <td class="text-center">
-                                    <label>
-                                        <input name="lastName" class="form-control text-left" type="text"/>
-                                    </label>
-                                    <p class="text-center text-info"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><spring:message code="order.confirm.address"/></th>
-                                <td class="text-center">
-                                    <label>
-                                        <input name="address" class="form-control text-left" type="text"/>
-                                    </label>
-                                    <p class="text-center text-info"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th><spring:message code="order.confirm.phone"/></th>
-                                <td class="text-center">
-                                    <label>
-                                        <input name="phone" class="form-control text-left" type="text"/>
-                                    </label>
-                                    <p class="text-center text-info"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <div class="form-group">
-                                        <label for="comment"><spring:message code="order.confirm.description"/></label>
-                                        <textarea class="form-control" rows="5" id="comment"></textarea>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a type="button"
-                                       class="btn btn-primary text-white">
-                                        <i class="fa fa-hand-grab-o"></i> <spring:message code="order.submit"/>
-                                    </a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+        <form method="post">
+            <div class="container mb-4">
+                <div class="row">
+                    <div class="col-sm-auto">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                <tr>
+                                    <td colspan="2">
+                                        <h3 class="text-center"><strong><spring:message
+                                                code="order.confirm.header"/></strong></h3>
+                                    </td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th><spring:message code="order.confirm.first.name"/></th>
+                                    <td class="text-center">
+                                        <label>
+                                            <input name="orderInput" value="${orderInputs[0]}"
+                                                   class="form-control text-left" type="text"/>
+                                        </label>
+                                        <c:if test="${not empty inputMessages[0]}">
+                                            <p class="text-center text-danger">${inputMessages[0]}</p>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><spring:message code="order.confirm.last.name"/></th>
+                                    <td class="text-center">
+                                        <label>
+                                            <input name="orderInput" value="${orderInputs[1]}"
+                                                   class="form-control text-left" type="text"/>
+                                        </label>
+                                        <c:if test="${not empty inputMessages[1]}">
+                                            <p class="text-center text-danger">${inputMessages[1]}</p>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><spring:message code="order.confirm.address"/></th>
+                                    <td class="text-center">
+                                        <label>
+                                            <input name="orderInput" value="${orderInputs[2]}"
+                                                   class="form-control text-left" type="text"/>
+                                        </label>
+                                        <c:if test="${not empty inputMessages[2]}">
+                                            <p class="text-center text-danger">${inputMessages[2]}</p>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><spring:message code="order.confirm.phone"/></th>
+                                    <td class="text-center">
+                                        <label>
+                                            <input name="orderInput" value="${orderInputs[3]}"
+                                                   class="form-control text-left" type="text"/>
+                                        </label>
+                                        <c:if test="${not empty inputMessages[3]}">
+                                            <p class="text-center text-danger">${inputMessages[3]}</p>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="form-group">
+                                            <label for="comment"><spring:message
+                                                    code="order.confirm.description"/></label>
+                                            <textarea class="form-control" rows="5" name="orderInput"
+                                                      id="comment">${orderInputs[4]}</textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button type="submit"
+                                                class="btn btn-primary text-white">
+                                            <i class="fa fa-hand-grab-o"></i> <spring:message code="order.submit"/>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </c:otherwise>
 </c:choose>
-<footer class="container-fluid text-center">
-    <p><spring:message code="footer.message"/></p>
-</footer>
+<jsp:include page="/resources/common/footer.jsp"/>
 </body>
 </html>

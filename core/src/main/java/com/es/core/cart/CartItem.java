@@ -2,8 +2,9 @@ package com.es.core.cart;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class CartItem {
+public class CartItem implements Serializable {
     @NotNull(message = "error.phoneid.empty")
     private Long phoneId;
 

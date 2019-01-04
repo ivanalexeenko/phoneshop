@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Order {
-    private Long id;
+    private String id;
     private List<OrderItem> orderItems;
     private BigDecimal subtotal;
     private BigDecimal deliveryPrice;
@@ -25,11 +25,11 @@ public class Order {
 
     private OrderStatus status;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

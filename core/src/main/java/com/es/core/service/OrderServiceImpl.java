@@ -5,6 +5,7 @@ import com.es.core.cart.CartItem;
 import com.es.core.exception.OutOfStockException;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import javafx.util.Pair;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private final StockService stockService;
     private final PriceService priceService;
     private final MessageSource messageSource;
+    private final CartService cartService;
 
     @Value("exception.out.of.stock")
     private String outOfStockMessage;
@@ -33,15 +36,16 @@ public class OrderServiceImpl implements OrderService {
     @Value("quantity.ok.message")
     private String quantityOkMessage;
 
-    @Value("5")
+    @Value("${delivery.price}")
     private BigDecimal deliveryPrice;
 
     @Autowired
-    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService, MessageSource messageSource) {
+    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService, MessageSource messageSource, CartService cartService) {
         this.phoneService = phoneService;
         this.stockService = stockService;
         this.priceService = priceService;
         this.messageSource = messageSource;
+        this.cartService = cartService;
     }
 
     @Override
@@ -99,7 +103,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order)  {
-        throw new UnsupportedOperationException("TODO");
+        cartService.getCart().getCartItems().clear();
+        order.setStatus(OrderStatus.NEW);
+        order.setId(UUID.randomUUID().toString());
     }
 
     @Override

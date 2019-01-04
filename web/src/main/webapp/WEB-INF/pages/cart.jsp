@@ -6,6 +6,7 @@
 
 <html>
 <head>
+    <title><spring:message code="title.cart"/></title>
     <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
     <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
