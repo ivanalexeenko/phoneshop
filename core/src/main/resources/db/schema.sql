@@ -65,8 +65,8 @@ create table stocks (
 create table orders (
   id              VARCHAR(100),
   subtotal        FLOAT,
-  delivery        FLOAT,
-  total           FLOAT,
+  deliveryPrice   FLOAT,
+  totalPrice      FLOAT,
   firstName       VARCHAR(100),
   lastName        VARCHAR(100),
   deliveryAddress VARCHAR(100),

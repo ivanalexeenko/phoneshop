@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final PhoneService phoneService;
     private final StockService stockService;
     private final PriceService priceService;
     private final MessageSource messageSource;
@@ -42,8 +41,7 @@ public class OrderServiceImpl implements OrderService {
     private BigDecimal deliveryPrice;
 
     @Autowired
-    public OrderServiceImpl(PhoneService phoneService, StockService stockService, PriceService priceService, MessageSource messageSource, CartService cartService, OrderDao orderDao) {
-        this.phoneService = phoneService;
+    public OrderServiceImpl(StockService stockService, PriceService priceService, MessageSource messageSource, CartService cartService, OrderDao orderDao) {
         this.stockService = stockService;
         this.priceService = priceService;
         this.messageSource = messageSource;
@@ -56,15 +54,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
         cart.getCartItems().forEach(cartItem -> {
-            Optional<Phone> optionalPhone = phoneService.get(cartItem.getPhoneId());
-            if(optionalPhone.isPresent()) {
-                Phone phone = optionalPhone.get();
-                Pair quantityMessagePair = getLocalizedFinalQuantityAndMessage(cartItem);
-                Long quantity = Long.valueOf(quantityMessagePair.getKey().toString());
-                String message = quantityMessagePair.getValue().toString();
-                OrderItem orderItem = createOrderItem(phone,quantity,message);
-                orderItems.add(orderItem);
-            }
+            Pair quantityMessagePair = getLocalizedFinalQuantityAndMessage(cartItem);
+            Long quantity = Long.valueOf(quantityMessagePair.getKey().toString());
+            String message = quantityMessagePair.getValue().toString();
+            OrderItem orderItem = createOrderItem(cartItem.getPhoneId(), quantity, message);
+            orderItems.add(orderItem);
         });
         order.setSubtotal(priceService.countOrderSubtotalPrice(orderItems));
         order.setTotalPrice(getTotalOrderPrice(order));
@@ -72,41 +66,41 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItems(orderItems);
         order.setStatus(OrderStatus.NEW);
         order.setId(UUID.randomUUID().toString());
-        setOrderItemsId(order,order.getId());
+        setOrderItemsId(order, order.getId());
         return order;
     }
 
-    private OrderItem createOrderItem(Phone phone,Long quantity,String message) {
+    private OrderItem createOrderItem(Long phoneId, Long quantity, String message) {
         OrderItem orderItem = new OrderItem();
         orderItem.setMessage(message);
         orderItem.setQuantity(quantity);
-        orderItem.setPhone(phone);
+        orderItem.setPhoneId(phoneId);
         return orderItem;
     }
 
-    private Pair<Long,String> getLocalizedFinalQuantityAndMessage(CartItem cartItem) {
+    private Pair<Long, String> getLocalizedFinalQuantityAndMessage(CartItem cartItem) {
         Stock stock = stockService.getStock(cartItem.getPhoneId());
         Long finalQuantity;
         String message;
         try {
-            finalQuantity = checkStockQuantityCoherence(stock,cartItem);
-            message = messageSource.getMessage(quantityOkMessage,null, LocaleContextHolder.getLocale());
+            finalQuantity = checkStockQuantityCoherence(stock, cartItem);
+            message = messageSource.getMessage(quantityOkMessage, null, LocaleContextHolder.getLocale());
         } catch (OutOfStockException e) {
             finalQuantity = Long.valueOf(stock.getStock());
-            message = messageSource.getMessage(outOfStockMessage,new Object[]{cartItem.getQuantity(),stock.getStock()},LocaleContextHolder.getLocale());
+            message = messageSource.getMessage(outOfStockMessage, new Object[]{cartItem.getQuantity(), stock.getStock()}, LocaleContextHolder.getLocale());
         }
-        return new Pair<>(finalQuantity,message);
+        return new Pair<>(finalQuantity, message);
     }
 
-    private Long checkStockQuantityCoherence(Stock stock,CartItem cartItem) throws OutOfStockException {
-        if(stock.getStock() < cartItem.getQuantity()) {
+    private Long checkStockQuantityCoherence(Stock stock, CartItem cartItem) throws OutOfStockException {
+        if (stock.getStock() < cartItem.getQuantity()) {
             throw new OutOfStockException(outOfStockMessage);
         }
         return cartItem.getQuantity();
     }
 
     @Override
-    public void placeOrder(Order order)  {
+    public void placeOrder(Order order) {
         cartService.getCart().getCartItems().clear();
         orderDao.placeOrder(order);
     }
@@ -125,5 +119,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void setOrderItemsId(Order order, String id) {
         order.getOrderItems().forEach(orderItem -> orderItem.setId(id));
+    }
+
+    @Override
+    public List<OrderItem> getOrderItems(String orderId) {
+        return orderDao.getOrderItems(orderId);
+    }
+
+    @Override
+    public Optional<Order> getOrder(String id) {
+        return orderDao.getOrder(id);
     }
 }
