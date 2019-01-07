@@ -60,6 +60,7 @@ public class OrderOverviewPageController {
             }).collect(Collectors.toList()));
         }
         phones = phones.stream().filter(Objects::nonNull).collect(Collectors.toList());
+
         model.addAttribute(ORDER_ATTRIBUTE_NAME, order);
         model.addAttribute(PHONES_ATTRIBUTE_NAME, phones);
         return ORDER_OVERVIEW_PAGE_NAME;
