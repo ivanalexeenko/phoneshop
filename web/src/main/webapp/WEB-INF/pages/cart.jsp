@@ -6,19 +6,10 @@
 
 <html>
 <head>
-    <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
-    <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
-
-    <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
+    <title><spring:message code="title.cart"/></title>
+    <jsp:include page="/resources/common/includes/incheader.jsp"/>
     <spring:url value="/resources/updateCart/updateCart.js?1" var="updateCart"/>
     <spring:url value="/resources/cartReady/cartReady.js?1" var="cartReady"/>
-    <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
-    <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
-
-    <link href="${plpStyles}" rel="stylesheet"/>
-    <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
         var phoneIds = ${phoneIds};
     </script>
@@ -108,8 +99,8 @@
                                 <i class="fa fa-repeat"></i> <spring:message code="button.update"/>
                             </button>
                             <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center" type="button"
-                               style="color: black">
-                                <spring:message code="link.order.name"/><i class="fa fa-arrow-right"></i>
+                               style="color: black" href="<c:url value="/order"/>">
+                                <spring:message code="link.order.name"/> <i class="fa fa-arrow-right"></i>
                             </a>
                         </div>
                         <c:forEach items="${phones}" var="phone">

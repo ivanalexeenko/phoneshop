@@ -19,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +36,7 @@ public class CartPageController {
     private static final String PHONE_IDS_ATTRIBUTE_NAME = "phoneIds";
     private static final String QUANTITY_STRINGS_ATTRIBUTE_NAME = "quantityStrings";
     private static final String MESSAGES_ATTRIBUTE_NAME = "messages";
-    private static final String HIDDEN_QUANTITY_PARAMETER_NAME = "hiddenQuantity";
-    private static final String HIDDEN_PHONE_ID_PARAMETER_NAME = "hiddenPhoneId";
     private static final String EMPTY_MESSAGE = "";
-    private static final String DELETE_ID_ATTRIBUTE_NAME = "deleteId";
     private final CartService cartService;
     private final PriceService priceService;
     private final PhoneService phoneService;
@@ -164,6 +160,9 @@ public class CartPageController {
     private Map<Long, Long> checkQuantityFields(String[] phoneIds, String[] quantities, Model model) {
         if(quantities.length == 0) {
             quantities = new String[1];
+        }
+        if(phoneIds.length == 0) {
+            phoneIds = new String[1];
         }
         Map<Long, Long> cartItemMap = new HashMap<>();
         List<String> quantityStrings = new ArrayList<>();

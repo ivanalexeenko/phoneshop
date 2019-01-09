@@ -3,20 +3,10 @@
 <html>
 <head>
     <title><spring:message code="title.pdp"/></title>
-    <script src="${pageContext.request.contextPath}/webjars/jquery/3.1.0/jquery.min.js"></script>
-    <script src="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-
-    <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
+    <jsp:include page="/resources/common/includes/incheader.jsp"/>
     <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
     <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
     <spring:url value="/resources/i18n/jquery.i18n.properties.js?1" var="i18nJS"/>
-    <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
-    <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
-
-    <link href="${plpStyles}" rel="stylesheet"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <jsp:include page="/resources/common/header.jsp"/>
