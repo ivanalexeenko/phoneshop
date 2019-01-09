@@ -7,13 +7,7 @@
 <html>
 <head>
     <title><spring:message code="title.order.overview"/></title>
-    <script src="${pageContext.request.contextPath}/webjars/jquery/3.1.0/jquery.min.js"></script>
-    <script src="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
-    <link href="${plpStyles}" rel="stylesheet"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">
+    <jsp:include page="/resources/common/includes/incheader.jsp"/>
 </head>
 <body>
 <jsp:include page="/resources/common/header.jsp"/>

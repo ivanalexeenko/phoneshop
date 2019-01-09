@@ -37,6 +37,7 @@ public class OrderPageController {
     private static final String TOTAL_ATTRIBUTE_NAME = "totalPrice";
     private static final String INPUT_MESSAGES_ATTRIBUTE_NAME = "inputMessages";
     private static final String ORDER_INPUTS_ATTRIBUTE_NAME = "orderInputs";
+    private static final String ORDER_INPUT_PARAMETER_NAME = "orderInput";
     private static final int FIRST_NAME_INDEX = 0;
     private static final int LAST_NAME_INDEX = 1;
     private static final int ADDRESS_INDEX = 2;
@@ -70,7 +71,7 @@ public class OrderPageController {
     }
 
     @PostMapping
-    public String placeOrder(@RequestParam(value = "orderInput") List<String> orderInputs, Model model) {
+    public String placeOrder(@RequestParam(value = ORDER_INPUT_PARAMETER_NAME) List<String> orderInputs, Model model) {
         Pair<List<String>, Boolean> inputPair = addAndGetInputMessages(orderInputs);
         List<String> inputMessages = inputPair.getKey();
         Boolean hasErrors = inputPair.getValue();

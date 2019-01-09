@@ -7,9 +7,7 @@ import com.es.core.exception.OutOfStockException;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
-import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -54,9 +52,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
         cart.getCartItems().forEach(cartItem -> {
-            Pair quantityMessagePair = getLocalizedFinalQuantityAndMessage(cartItem);
-            Long quantity = Long.valueOf(quantityMessagePair.getKey().toString());
-            String message = quantityMessagePair.getValue().toString();
+            String message = getLocalizedMessage(cartItem);
+            Long quantity = cartItem.getQuantity();
             OrderItem orderItem = createOrderItem(cartItem.getPhoneId(), quantity, message);
             orderItems.add(orderItem);
         });
@@ -78,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
         return orderItem;
     }
 
-    private Pair<Long, String> getLocalizedFinalQuantityAndMessage(CartItem cartItem) {
+    private String getLocalizedMessage(CartItem cartItem) {
         Stock stock = stockService.getStock(cartItem.getPhoneId());
         Long finalQuantity;
         String message;
@@ -89,7 +86,8 @@ public class OrderServiceImpl implements OrderService {
             finalQuantity = Long.valueOf(stock.getStock());
             message = messageSource.getMessage(outOfStockMessage, new Object[]{cartItem.getQuantity(), stock.getStock()}, LocaleContextHolder.getLocale());
         }
-        return new Pair<>(finalQuantity, message);
+        cartItem.setQuantity(finalQuantity);
+        return message;
     }
 
     private Long checkStockQuantityCoherence(Stock stock, CartItem cartItem) throws OutOfStockException {

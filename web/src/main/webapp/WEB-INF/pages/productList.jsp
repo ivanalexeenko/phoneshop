@@ -4,30 +4,17 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <head>
     <title><spring:message code="title.plp"/></title>
-
+    <jsp:include page="/resources/common/includes/incheader.jsp"/>
     <script>
         var data = "${data}";
         var totalPages = "${totalPages}";
         var currentPage = "${currentPage}";
         var visiblePages = "${visiblePages}";
     </script>
-
-    <script src="webjars/jquery/3.1.0/jquery.min.js"></script>
-    <script src="webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
-
-    <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
     <spring:url value="/resources/sorting/iconClickHandler.js?1" var="iconClickHandler"/>
     <spring:url value="/resources/pagination/pagination.js?1" var="pagination"/>
     <spring:url value="/resources/add2cart/addToCart.js?1" var="addToCart"/>
     <spring:url value="/resources/onready/ready.js?1" var="whenDocReady"/>
-
-    <spring:message code="input.field.placeholder" var="inputPlaceholder"/>
-    <spring:message code="search.field.placeholder" var="searchPlaceholder"/>
-
-    <link href="${plpStyles}" rel="stylesheet"/>
-    <link rel="stylesheet" href="webjars/bootstrap/4.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webjars/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
