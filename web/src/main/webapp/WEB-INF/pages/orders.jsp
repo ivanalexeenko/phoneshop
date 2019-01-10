@@ -20,7 +20,8 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
             <ul class="navbar-nav m-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message code="link.productlist.name"/><span
+                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message
+                            code="link.productlist.name"/><span
                             class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">

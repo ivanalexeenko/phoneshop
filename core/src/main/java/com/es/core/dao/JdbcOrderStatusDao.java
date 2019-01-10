@@ -40,20 +40,24 @@ public class JdbcOrderStatusDao implements StatusDao {
                 Long phoneId = orderItem.getPhoneId();
                 Stock stock = stockDao.getStock(phoneId);
                 Long quantity = orderItem.getQuantity();
-                Integer newStockValue;
-                Integer newReservedValue;
-                if (order.getStatus().equals(OrderStatus.NEW) && status.equals(OrderStatus.DELIVERED)) {
-                    newStockValue = stock.getStock();
-                    newReservedValue = stock.getReserved() - quantity.intValue();
-                } else if (order.getStatus().equals(OrderStatus.NEW) && status.equals(OrderStatus.REJECTED)) {
-                    newStockValue = stock.getStock() + quantity.intValue();
-                    newReservedValue = stock.getReserved() - quantity.intValue();
-                } else {
-                    newStockValue = stock.getStock();
-                    newReservedValue = stock.getReserved();
-                }
-                jdbcTemplate.update(UPDATE_STOCK_AND_RESERVED_QUERY, newStockValue, newReservedValue, phoneId);
+                updateStocks(order, stock, quantity, status, phoneId);
             });
         }
+    }
+
+    private void updateStocks(Order order, Stock stock, Long quantity, OrderStatus status, Long phoneId) {
+        Integer newStockValue;
+        Integer newReservedValue;
+        if (order.getStatus().equals(OrderStatus.NEW) && status.equals(OrderStatus.DELIVERED)) {
+            newStockValue = stock.getStock();
+            newReservedValue = stock.getReserved() - quantity.intValue();
+        } else if (order.getStatus().equals(OrderStatus.NEW) && status.equals(OrderStatus.REJECTED)) {
+            newStockValue = stock.getStock() + quantity.intValue();
+            newReservedValue = stock.getReserved() - quantity.intValue();
+        } else {
+            newStockValue = stock.getStock();
+            newReservedValue = stock.getReserved();
+        }
+        jdbcTemplate.update(UPDATE_STOCK_AND_RESERVED_QUERY, newStockValue, newReservedValue, phoneId);
     }
 }

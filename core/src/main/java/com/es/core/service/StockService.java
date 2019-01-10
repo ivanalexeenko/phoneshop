@@ -5,5 +5,6 @@ import com.es.core.model.phone.Stock;
 
 public interface StockService {
     Stock getStock(Long phoneId);
+
     void updateStock(Order order);
 }

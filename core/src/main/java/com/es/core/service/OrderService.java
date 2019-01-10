@@ -11,12 +11,20 @@ import java.util.Optional;
 
 public interface OrderService {
     Order createOrder(Cart cart);
+
     void placeOrder(Order order);
+
     BigDecimal getTotalOrderPrice(Order order);
+
     List<String> getOrderMessages(Order order);
+
     void setOrderItemsId(Order order, String id);
+
     List<OrderItem> getOrderItems(String orderId);
+
     Optional<Order> getOrder(String id);
+
     List<Order> getOrders();
+
     List<Phone> getPhonesByOrderId(String id);
 }
