@@ -13,6 +13,21 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="<c:url value="/productList"/>"><spring:message code="head.app.name"/></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample07"
+                aria-controls="navbarsExample07" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarsExample07">
+            <ul class="navbar-nav m-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value="/productList"/>"><spring:message code="link.productlist.name"/><span
+                            class="sr-only"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<c:url value="/admin/orders"/>"><spring:message code="title.orders"/><span
+                            class="sr-only"></span></a>
+            </ul>
+        </div>
     </div>
 </nav>
 <c:choose>
@@ -177,27 +192,39 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <c:if test="${not statusSet}">
-                                <form method="post">
+                            <c:choose>
+                                <c:when test="${not statusSet}">
+                                    <form method="post">
+                                        <div class="btn-group col-6 float-right">
+                                            <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center"
+                                               href="<c:url value="/admin/orders"/>" type="button" style="color: black">
+                                                <i class="fa fa-arrow-left"></i> <spring:message
+                                                    code="back.to.orders.text"/>
+                                            </a>
+                                            <button name="newStatus" value="0"
+                                                    class="btn btn-outline-success btn-md ml-3 col-12 text-center"
+                                                    type="submit">
+                                                <i class="fa fa-truck"></i> <spring:message
+                                                    code="button.set.delivered"/>
+                                            </button>
+                                            <button name="newStatus" value="1"
+                                                    class="btn btn-outline-danger btn-md ml-3 col-12 text-center"
+                                                    type="submit">
+                                                <i class="fa fa-ban"></i> <spring:message code="button.set.rejected"/>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
                                     <div class="btn-group col-6 float-right">
                                         <a class="btn btn-outline-warning btn-md ml-3 col-12 text-center"
                                            href="<c:url value="/admin/orders"/>" type="button" style="color: black">
                                             <i class="fa fa-arrow-left"></i> <spring:message
                                                 code="back.to.orders.text"/>
                                         </a>
-                                        <button name="newStatus" value="0"
-                                                class="btn btn-outline-success btn-md ml-3 col-12 text-center"
-                                                type="submit">
-                                            <i class="fa fa-truck"></i> <spring:message code="button.set.delivered"/>
-                                        </button>
-                                        <button name="newStatus" value="1"
-                                                class="btn btn-outline-danger btn-md ml-3 col-12 text-center"
-                                                type="submit">
-                                            <i class="fa fa-ban"></i> <spring:message code="button.set.rejected"/>
-                                        </button>
                                     </div>
-                                </form>
-                            </c:if>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
 

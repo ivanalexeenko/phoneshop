@@ -18,4 +18,9 @@ public class StatusServiceImpl implements StatusService {
     public void updateStatus(OrderStatus status, String orderId) {
         statusDao.updateStatusWithId(status, orderId);
     }
+
+    @Override
+    public void updateStockStatusBased(OrderStatus status, String orderId) {
+        statusDao.updateStockStatusBased(status, orderId);
+    }
 }

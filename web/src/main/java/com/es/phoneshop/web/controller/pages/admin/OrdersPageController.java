@@ -55,8 +55,10 @@ public class OrdersPageController {
     public String setOrderStatus(Model model, @PathVariable String orderId,
                                  @RequestParam(value = NEW_STATUS_PARAM_NAME) Integer newStatus) {
         if (newStatus == DELIVERED_INDEX) {
+            statusService.updateStockStatusBased(OrderStatus.DELIVERED, orderId);
             statusService.updateStatus(OrderStatus.DELIVERED, orderId);
         } else if (newStatus == REJECTED_INDEX) {
+            statusService.updateStockStatusBased(OrderStatus.REJECTED, orderId);
             statusService.updateStatus(OrderStatus.REJECTED, orderId);
         }
         addModelOrderPhoneAttributes(model, orderId);

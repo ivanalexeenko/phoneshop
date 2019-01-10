@@ -4,4 +4,5 @@ import com.es.core.model.order.OrderStatus;
 
 public interface StatusDao {
     void updateStatusWithId(OrderStatus status, String orderId);
+    void updateStockStatusBased(OrderStatus status, String orderId);
 }
