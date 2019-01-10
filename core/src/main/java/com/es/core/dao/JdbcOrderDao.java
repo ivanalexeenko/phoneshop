@@ -23,6 +23,7 @@ public class JdbcOrderDao implements OrderDao {
             "lastName", "deliveryAddress", "contactPhoneNo", "description", "status"};
     private static final String SELECT_ORDER_ITEMS_WITH_ID_QUERY = "select * from orderItems where orderId = ?";
     private static final String SELECT_ORDER_WITH_ID_QUERY = "select * from orders where id = ?";
+    private static final String SELECT_ORDERS_QUERY = "select * from orders";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -51,12 +52,16 @@ public class JdbcOrderDao implements OrderDao {
     public Optional<Order> getOrder(String id) {
         Order order;
         try {
-            order = jdbcTemplate.queryForObject(SELECT_ORDER_WITH_ID_QUERY,new Object[]{id},new BeanPropertyRowMapper<>(Order.class));
+            order = jdbcTemplate.queryForObject(SELECT_ORDER_WITH_ID_QUERY, new Object[]{id}, new BeanPropertyRowMapper<>(Order.class));
             return Optional.of(order);
-        }
-        catch (EmptyResultDataAccessException exception) {
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return jdbcTemplate.query(SELECT_ORDERS_QUERY, new Object[]{}, new BeanPropertyRowMapper<>(Order.class));
     }
 
     private Object[] invokeOrderGetters(Order order) {

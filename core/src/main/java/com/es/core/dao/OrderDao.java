@@ -11,4 +11,5 @@ public interface OrderDao {
     void placeOrder(Order order);
     List<OrderItem> getOrderItems(String orderId);
     Optional<Order> getOrder(String id);
+    List<Order> getOrders();
 }

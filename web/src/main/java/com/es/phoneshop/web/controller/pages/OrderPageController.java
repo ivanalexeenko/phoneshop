@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping(value = "/order")
 public class OrderPageController {
     private static final String ORDER_PAGE_NAME = "order";
-    private static final String ORDER_OVERVIEW_PAGE_NAME = "/orderOverview/";
+    private static final String ORDER_OVERVIEW_PAGE_NAME = "orderOverview/";
     private static final String CART_SIZE_ATTRIBUTE_NAME = "cartSize";
     private static final String CART_PRICE_ATTRIBUTE_NAME = "cartPrice";
     private static final String STOCKS_ATTRIBUTE_NAME = "stocks";

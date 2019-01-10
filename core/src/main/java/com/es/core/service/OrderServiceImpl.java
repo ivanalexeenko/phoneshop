@@ -7,6 +7,7 @@ import com.es.core.exception.OutOfStockException;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
+import com.es.core.model.phone.Phone;
 import com.es.core.model.phone.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,16 +16,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private final StockService stockService;
     private final PriceService priceService;
+    private final PhoneService phoneService;
     private final MessageSource messageSource;
     private final CartService cartService;
     private final OrderDao orderDao;
@@ -39,9 +38,10 @@ public class OrderServiceImpl implements OrderService {
     private BigDecimal deliveryPrice;
 
     @Autowired
-    public OrderServiceImpl(StockService stockService, PriceService priceService, MessageSource messageSource, CartService cartService, OrderDao orderDao) {
+    public OrderServiceImpl(StockService stockService, PriceService priceService, PhoneService phoneService, MessageSource messageSource, CartService cartService, OrderDao orderDao) {
         this.stockService = stockService;
         this.priceService = priceService;
+        this.phoneService = phoneService;
         this.messageSource = messageSource;
         this.cartService = cartService;
         this.orderDao = orderDao;
@@ -127,5 +127,28 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Optional<Order> getOrder(String id) {
         return orderDao.getOrder(id);
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return orderDao.getOrders();
+    }
+
+    @Override
+    public List<Phone> getPhonesByOrderId(String id) {
+        Optional<Order> optionalOrder = this.getOrder(id);
+        Order order = null;
+        List<Phone> phones = new ArrayList<>();
+        if (optionalOrder.isPresent()) {
+            order = optionalOrder.get();
+            List<OrderItem> itemList = this.getOrderItems(id);
+            order.setOrderItems(itemList);
+            phones.addAll(order.getOrderItems().stream().map(orderItem -> {
+                Optional<Phone> optionalPhone = phoneService.get(orderItem.getPhoneId());
+                return optionalPhone.get();
+            }).collect(Collectors.toList()));
+        }
+        phones = phones.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return phones;
     }
 }

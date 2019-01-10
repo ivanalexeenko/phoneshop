@@ -142,7 +142,7 @@
                                         <label for="comment"><spring:message
                                                 code="order.confirm.description"/></label>
                                         <textarea class="form-control" rows="5" name="orderInput"
-                                                 disabled id="comment">${order.description} </textarea>
+                                                  disabled id="comment">${order.description} </textarea>
                                     </div>
                                 </td>
                             </tr>
