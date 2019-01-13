@@ -1,6 +1,7 @@
 package com.es.core.service;
 
 import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Stock;
 import com.es.core.dao.StockDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,10 @@ public class StockServiceImpl implements StockService {
     @Override
     public void updateStock(Order order) {
         stockDao.updateStock(order);
+    }
+
+    @Override
+    public void updateStockStatusBased(OrderStatus status, String orderId) {
+        stockDao.updateStockStatusBased(status, orderId);
     }
 }

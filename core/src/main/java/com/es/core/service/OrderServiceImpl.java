@@ -16,7 +16,11 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -150,5 +154,10 @@ public class OrderServiceImpl implements OrderService {
         }
         phones = phones.stream().filter(Objects::nonNull).collect(Collectors.toList());
         return phones;
+    }
+
+    @Override
+    public void updateStatus(OrderStatus status, String orderId) {
+        orderDao.updateStatusWithId(status, orderId);
     }
 }

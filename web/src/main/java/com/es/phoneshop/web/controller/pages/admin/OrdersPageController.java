@@ -4,7 +4,7 @@ import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 import com.es.core.service.OrderService;
-import com.es.core.service.StatusService;
+import com.es.core.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,12 +25,12 @@ public class OrdersPageController {
     private static final int DELIVERED_INDEX = 0;
     private static final int REJECTED_INDEX = 1;
     private final OrderService orderService;
-    private final StatusService statusService;
+    private final StockService stockService;
 
     @Autowired
-    public OrdersPageController(OrderService orderService, StatusService statusService) {
+    public OrdersPageController(OrderService orderService, StockService stockService) {
         this.orderService = orderService;
-        this.statusService = statusService;
+        this.stockService = stockService;
     }
 
     @GetMapping("/orders")
@@ -55,11 +55,11 @@ public class OrdersPageController {
     public String setOrderStatus(Model model, @PathVariable String orderId,
                                  @RequestParam(value = NEW_STATUS_PARAM_NAME) Integer newStatus) {
         if (newStatus == DELIVERED_INDEX) {
-            statusService.updateStockStatusBased(OrderStatus.DELIVERED, orderId);
-            statusService.updateStatus(OrderStatus.DELIVERED, orderId);
+            stockService.updateStockStatusBased(OrderStatus.DELIVERED, orderId);
+            orderService.updateStatus(OrderStatus.DELIVERED, orderId);
         } else if (newStatus == REJECTED_INDEX) {
-            statusService.updateStockStatusBased(OrderStatus.REJECTED, orderId);
-            statusService.updateStatus(OrderStatus.REJECTED, orderId);
+            stockService.updateStockStatusBased(OrderStatus.REJECTED, orderId);
+            orderService.updateStatus(OrderStatus.REJECTED, orderId);
         }
         addModelOrderPhoneAttributes(model, orderId);
         model.addAttribute(STATUS_SET_ATTRIBUTE_NAME, true);

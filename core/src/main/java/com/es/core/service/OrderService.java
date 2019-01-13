@@ -3,6 +3,7 @@ package com.es.core.service;
 import com.es.core.cart.Cart;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Phone;
 
 import java.math.BigDecimal;
@@ -27,4 +28,6 @@ public interface OrderService {
     List<Order> getOrders();
 
     List<Phone> getPhonesByOrderId(String id);
+
+    void updateStatus(OrderStatus status, String orderId);
 }
