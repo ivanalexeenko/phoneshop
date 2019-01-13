@@ -85,7 +85,7 @@ public class OrderPageController {
         }
         model.asMap().clear();
         orderService.placeOrder(order);
-        stockService.updateStock(order);
+        stockService.updateStocks(order);
         String redirect = ORDER_OVERVIEW_PAGE_NAME + order.getId();
         return "redirect:/" + redirect;
     }

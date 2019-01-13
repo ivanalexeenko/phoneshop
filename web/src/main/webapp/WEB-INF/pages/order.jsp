@@ -43,7 +43,6 @@
                                         code="column.cart.page.price"/></th>
                                 <th class="text-center"></th>
                                 <th class="text-center"><spring:message code="order.item.message"/></th>
-                                <th class="text-center"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -66,17 +65,14 @@
                                         </a>
                                     </td>
                                     <td class="text-center text-info">${messages[i.index]}</td>
-                                    <td class="text-center"></td>
                                 </tr>
                             </c:forEach>
                             <tr>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
-                                <td></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
-                                <td></td>
                                 <td class="text-center"><strong><spring:message code="order.subtotal"/></strong></td>
                                 <td class="text-center"><strong>${subtotalPrice} <i class="fa fa-dollar"></i></strong>
                                 </td>
@@ -84,11 +80,9 @@
                             <tr>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
-                                <td></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
-                                <td></td>
                                 <td class="text-center"><strong><spring:message code="order.delivery"/></strong></td>
                                 <td class="text-center"><strong>${deliveryPrice} <i class="fa fa-dollar"></i></strong>
                                 </td>
@@ -96,11 +90,9 @@
                             <tr>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
-                                <td></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
-                                <td></td>
                                 <td class="text-center"><strong><spring:message code="order.total"/></strong></td>
                                 <td class="text-center"><strong>${totalPrice} <i class="fa fa-dollar"></i></strong></td>
                             </tr>

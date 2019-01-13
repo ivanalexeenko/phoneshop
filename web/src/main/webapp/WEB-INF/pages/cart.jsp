@@ -42,8 +42,6 @@
                                     <th class="text-center" scope="col"><spring:message
                                             code="column.cart.page.product"/></th>
                                     <th class="text-center" scope="col"><spring:message
-                                            code="column.cart.page.stock"/></th>
-                                    <th class="text-center" scope="col"><spring:message
                                             code="column.cart.page.actual.quantity"/></th>
                                     <th class="text-center" scope="col"><spring:message
                                             code="column.cart.page.quantity"/></th>
@@ -59,7 +57,6 @@
                                                 src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
                                         </td>
                                         <td class="text-center">${phone.model}</td>
-                                        <td class="text-center">${stocks[i.index].stock}</td>
                                         <td class="text-center">${cartItems[i.index].quantity}</td>
                                         <td class="text-center">
                                             <label>

@@ -22,8 +22,10 @@ public class OrdersPageController {
     private static final String ORDERS_PAGE_NAME = "orders";
     private static final String STATUS_SET_ATTRIBUTE_NAME = "statusSet";
     private static final String NEW_STATUS_PARAM_NAME = "newStatus";
-    private static final int DELIVERED_INDEX = 0;
-    private static final int REJECTED_INDEX = 1;
+    private static final String DELIVERED_INDEX_ATTRIBUTE_NAME = "deliveredIndex";
+    private static final String REJECTED_INDEX_ATTRIBUTE_NAME = "rejectedIndex";
+    private static final Integer DELIVERED_INDEX = 1;
+    private static final Integer REJECTED_INDEX = 2;
     private final OrderService orderService;
     private final StockService stockService;
 
@@ -43,6 +45,8 @@ public class OrdersPageController {
     @GetMapping("/orders/{orderId}")
     public String showOrder(Model model, @PathVariable String orderId) {
         addModelOrderPhoneAttributes(model, orderId);
+        model.addAttribute(DELIVERED_INDEX_ATTRIBUTE_NAME, DELIVERED_INDEX);
+        model.addAttribute(REJECTED_INDEX_ATTRIBUTE_NAME, REJECTED_INDEX);
         Optional<Order> optionalOrder = orderService.getOrder(orderId);
         if (optionalOrder.isPresent()) {
             boolean setOrder = !optionalOrder.get().getStatus().equals(OrderStatus.NEW);
@@ -53,14 +57,10 @@ public class OrdersPageController {
 
     @PostMapping("/orders/{orderId}")
     public String setOrderStatus(Model model, @PathVariable String orderId,
-                                 @RequestParam(value = NEW_STATUS_PARAM_NAME) Integer newStatus) {
-        if (newStatus == DELIVERED_INDEX) {
-            stockService.updateStockStatusBased(OrderStatus.DELIVERED, orderId);
-            orderService.updateStatus(OrderStatus.DELIVERED, orderId);
-        } else if (newStatus == REJECTED_INDEX) {
-            stockService.updateStockStatusBased(OrderStatus.REJECTED, orderId);
-            orderService.updateStatus(OrderStatus.REJECTED, orderId);
-        }
+                                 @RequestParam(value = NEW_STATUS_PARAM_NAME) Integer newStatusIndex) {
+        OrderStatus status = OrderStatus.values()[newStatusIndex];
+        stockService.updateStockStatusBased(status, orderId);
+        orderService.updateStatus(status, orderId);
         addModelOrderPhoneAttributes(model, orderId);
         model.addAttribute(STATUS_SET_ATTRIBUTE_NAME, true);
         return ORDERS_PAGE_NAME;

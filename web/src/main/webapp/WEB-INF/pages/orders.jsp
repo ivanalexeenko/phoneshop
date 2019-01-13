@@ -202,13 +202,13 @@
                                                 <i class="fa fa-arrow-left"></i> <spring:message
                                                     code="back.to.orders.text"/>
                                             </a>
-                                            <button name="newStatus" value="0"
+                                            <button name="newStatus" value="${deliveredIndex}"
                                                     class="btn btn-outline-success btn-md ml-3 col-12 text-center"
                                                     type="submit">
                                                 <i class="fa fa-truck"></i> <spring:message
                                                     code="button.set.delivered"/>
                                             </button>
-                                            <button name="newStatus" value="1"
+                                            <button name="newStatus" value="${rejectedIndex}"
                                                     class="btn btn-outline-danger btn-md ml-3 col-12 text-center"
                                                     type="submit">
                                                 <i class="fa fa-ban"></i> <spring:message code="button.set.rejected"/>
