@@ -29,6 +29,19 @@
                             class="sr-only"></span></a>
             </ul>
         </div>
+        <c:if test="${isLogin}">
+            <button class="btn btn-info btn-md ml-3" style="opacity: 1" disabled="disabled">
+                <i class="text-center text-white"><spring:message code="login.username"/></i> <span class="badge badge-light">${username}</span>
+            </button>
+            <a class="btn btn-primary btn-md ml-3" href="<c:url value="/security_logout"/>">
+                <i class="fa fa-user-circle"></i> <spring:message code="logout.text"/>
+            </a>
+        </c:if>
+        <c:if test="${not isLogin}">
+            <a class="btn btn-primary btn-md ml-3" href="<c:url value="/login"/>">
+                <i class="fa fa-user-circle"></i> <spring:message code="login.text"/>
+            </a>
+        </c:if>
     </div>
 </nav>
 <c:choose>

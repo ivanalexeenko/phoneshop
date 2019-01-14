@@ -5,6 +5,8 @@
     <script type="text/javascript" src="http://botmonster.com/jquery-bootpag/jquery.bootpag.js"></script>
     <spring:url value="/resources/styles/plpStyles.css" var="plpStyles"/>
     <link href="${plpStyles}" rel="stylesheet"/>
+    <spring:url value="/resources/styles/loginStyles.css" var="loginStyles"/>
+    <link href="${loginStyles}" rel="stylesheet"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/4.1.0/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/webjars/font-awesome/4.7.0/css/font-awesome.min.css">

@@ -6,6 +6,7 @@ import com.es.core.model.phone.Phone;
 import com.es.core.service.OrderService;
 import com.es.core.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,8 @@ public class OrdersPageController {
     private static final String NEW_STATUS_PARAM_NAME = "newStatus";
     private static final String DELIVERED_INDEX_ATTRIBUTE_NAME = "deliveredIndex";
     private static final String REJECTED_INDEX_ATTRIBUTE_NAME = "rejectedIndex";
+    private static final String IS_LOGIN_ATTRIBUTE_NAME = "isLogin";
+    private static final String USERNAME_ATTRIBUTE_NAME = "username";
     private static final Integer DELIVERED_INDEX = 1;
     private static final Integer REJECTED_INDEX = 2;
     private final OrderService orderService;
@@ -36,14 +39,16 @@ public class OrdersPageController {
     }
 
     @GetMapping("/orders")
-    public String showOrders(Model model) {
+    public String showOrders(Model model, Authentication authentication) {
         List<Order> orders = orderService.getOrders();
         model.addAttribute(ORDERS_ATTRIBUTE_NAME, orders);
+        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, authentication.isAuthenticated());
+        model.addAttribute(USERNAME_ATTRIBUTE_NAME, authentication.getName());
         return ORDERS_PAGE_NAME;
     }
 
     @GetMapping("/orders/{orderId}")
-    public String showOrder(Model model, @PathVariable String orderId) {
+    public String showOrder(Model model, @PathVariable String orderId, Authentication authentication) {
         addModelOrderPhoneAttributes(model, orderId);
         model.addAttribute(DELIVERED_INDEX_ATTRIBUTE_NAME, DELIVERED_INDEX);
         model.addAttribute(REJECTED_INDEX_ATTRIBUTE_NAME, REJECTED_INDEX);
@@ -52,6 +57,8 @@ public class OrdersPageController {
             boolean setOrder = !optionalOrder.get().getStatus().equals(OrderStatus.NEW);
             model.addAttribute(STATUS_SET_ATTRIBUTE_NAME, setOrder);
         }
+        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, authentication.isAuthenticated());
+        model.addAttribute(USERNAME_ATTRIBUTE_NAME, authentication.getName());
         return ORDERS_PAGE_NAME;
     }
 

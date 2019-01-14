@@ -4,6 +4,7 @@ import com.es.core.service.CartService;
 import com.es.core.service.PhoneService;
 import com.es.core.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,6 +39,7 @@ public class ProductListPageController {
     private static final String REGEX = ",";
     private static final String CART_SIZE = "cartSize";
     private static final String CART_PRICE_ATTRIBUTE_NAME = "cartPrice";
+    private static final String IS_LOGIN_ATTRIBUTE_NAME = "isLogin";
     private Integer currentPage = 1;
     private Integer totalPages;
     private Integer visiblePages = 7;
@@ -60,10 +62,17 @@ public class ProductListPageController {
     }
 
     @GetMapping
-    public String showProductList(Model model) {
+    public String showProductList(Model model, Authentication authentication) {
         countPageParameters();
         data = Arrays.asList(dataArray);
         setModelAttributes(model);
+        boolean isLogin;
+        if (authentication != null) {
+            isLogin = authentication.isAuthenticated();
+        } else {
+            isLogin = false;
+        }
+        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, isLogin);
         return PRODUCT_LIST_VIEW_NAME;
     }
 
