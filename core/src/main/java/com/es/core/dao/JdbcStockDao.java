@@ -1,13 +1,17 @@
 package com.es.core.dao;
 
 import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import com.es.core.model.phone.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcStockDao implements StockDao {
@@ -15,10 +19,12 @@ public class JdbcStockDao implements StockDao {
     private static final String UPDATE_STOCK_WITH_ID = "update stocks set stock = ?, reserved = ? where phoneId = ?";
 
     private final JdbcTemplate jdbcTemplate;
+    private final OrderDao orderDao;
 
     @Autowired
-    public JdbcStockDao(JdbcTemplate jdbcTemplate) {
+    public JdbcStockDao(JdbcTemplate jdbcTemplate, OrderDao orderDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.orderDao = orderDao;
     }
 
     @Override
@@ -27,14 +33,13 @@ public class JdbcStockDao implements StockDao {
     }
 
     @Override
-    public void updateStock(Order order) {
-        order.getOrderItems().forEach(orderItem -> {
-            Long phoneId = orderItem.getPhoneId();
-            Long quantity = orderItem.getQuantity();
-            Stock stock = this.getStock(phoneId);
-            Integer newStockValue = stock.getStock() - quantity.intValue();
-            Integer newReservedValue = stock.getReserved() + quantity.intValue();
-            jdbcTemplate.update(UPDATE_STOCK_WITH_ID, newStockValue, newReservedValue, phoneId);
+    public void updateStocks(List<Stock> newStocks, List<Long> phoneIds) {
+        final Integer index[] = new Integer[1];
+        index[0] = 0;
+        newStocks.forEach(newStock -> {
+            Long phoneId = phoneIds.get(index[0]);
+            jdbcTemplate.update(UPDATE_STOCK_WITH_ID, newStock.getStock(), newStock.getReserved(), phoneId);
+            index[0]++;
         });
     }
 }

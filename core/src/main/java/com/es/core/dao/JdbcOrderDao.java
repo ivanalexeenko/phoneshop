@@ -2,6 +2,7 @@ package com.es.core.dao;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,6 +24,8 @@ public class JdbcOrderDao implements OrderDao {
             "lastName", "deliveryAddress", "contactPhoneNo", "description", "status"};
     private static final String SELECT_ORDER_ITEMS_WITH_ID_QUERY = "select * from orderItems where orderId = ?";
     private static final String SELECT_ORDER_WITH_ID_QUERY = "select * from orders where id = ?";
+    private static final String SELECT_ORDERS_QUERY = "select * from orders";
+    private static final String UPDATE_STATUS_QUERY = "update orders set status = ? where id = ?";
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -51,12 +54,21 @@ public class JdbcOrderDao implements OrderDao {
     public Optional<Order> getOrder(String id) {
         Order order;
         try {
-            order = jdbcTemplate.queryForObject(SELECT_ORDER_WITH_ID_QUERY,new Object[]{id},new BeanPropertyRowMapper<>(Order.class));
+            order = jdbcTemplate.queryForObject(SELECT_ORDER_WITH_ID_QUERY, new Object[]{id}, new BeanPropertyRowMapper<>(Order.class));
             return Optional.of(order);
-        }
-        catch (EmptyResultDataAccessException exception) {
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        return jdbcTemplate.query(SELECT_ORDERS_QUERY, new Object[]{}, new BeanPropertyRowMapper<>(Order.class));
+    }
+
+    @Override
+    public void updateStatusWithId(OrderStatus status, String orderId) {
+        jdbcTemplate.update(UPDATE_STATUS_QUERY, status.toString(), orderId);
     }
 
     private Object[] invokeOrderGetters(Order order) {
