@@ -8,9 +8,7 @@ import com.es.core.model.phone.Stock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -30,27 +28,23 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public void updateStocks(Order order) {
-        List<Stock> newStocks = new ArrayList<>();
-        List<Long> phoneIds = new ArrayList<>();
+        Map<Long, Stock> stocksAndIds = new HashMap<>();
         order.getOrderItems().forEach(orderItem -> {
             Long phoneId = orderItem.getPhoneId();
             Long quantity = orderItem.getQuantity();
             Stock stock = stockDao.getStock(phoneId);
             Integer newStockValue = stock.getStock() - quantity.intValue();
             Integer newReservedValue = stock.getReserved() + quantity.intValue();
-            Stock newStock = new Stock();
-            newStock.setStock(newStockValue);
-            newStock.setReserved(newReservedValue);
-            phoneIds.add(phoneId);
-            newStocks.add(newStock);
+            stock.setStock(newStockValue);
+            stock.setReserved(newReservedValue);
+            stocksAndIds.put(phoneId, stock);
         });
-        stockDao.updateStocks(newStocks, phoneIds);
+        stockDao.updateStocks(stocksAndIds);
     }
 
     @Override
     public void updateStockStatusBased(OrderStatus status, String orderId) {
-        List<Long> phoneIds = new ArrayList<>();
-        List<Stock> newStocks = new ArrayList<>();
+        Map<Long, Stock> stocksAndIds = new HashMap<>();
         Optional<Order> optionalOrder = orderDao.getOrder(orderId);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
@@ -60,11 +54,10 @@ public class StockServiceImpl implements StockService {
                 Stock stock = this.getStock(phoneId);
                 Long quantity = orderItem.getQuantity();
                 Stock newStock = calculateNewStock(order, stock, quantity, status);
-                phoneIds.add(phoneId);
-                newStocks.add(newStock);
+                stocksAndIds.put(phoneId, newStock);
             });
         }
-        stockDao.updateStocks(newStocks, phoneIds);
+        stockDao.updateStocks(stocksAndIds);
     }
 
     private Stock calculateNewStock(Order order, Stock stock, Long quantity, OrderStatus status) {

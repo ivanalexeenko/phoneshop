@@ -21,6 +21,11 @@ public class UserAccessController {
                                 @RequestParam(value = LOGOUT_PARAM_NAME, required = false) Boolean isLogout, Authentication authentication) {
         model.addAttribute(IS_ERROR_ATTRIBUTE_NAME, isError);
         model.addAttribute(IS_LOGOUT_ATTRIBUTE_NAME, isLogout);
+        setModelAuthenticationAttributes(authentication,model);
+        return LOGIN_PAGE_NAME;
+    }
+
+    private void setModelAuthenticationAttributes(Authentication authentication, Model model) {
         boolean isLogin;
         if (authentication != null) {
             isLogin = authentication.isAuthenticated();
@@ -29,6 +34,5 @@ public class UserAccessController {
             isLogin = false;
         }
         model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, isLogin);
-        return LOGIN_PAGE_NAME;
     }
 }

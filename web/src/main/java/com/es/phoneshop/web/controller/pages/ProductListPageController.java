@@ -66,13 +66,7 @@ public class ProductListPageController {
         countPageParameters();
         data = Arrays.asList(dataArray);
         setModelAttributes(model);
-        boolean isLogin;
-        if (authentication != null) {
-            isLogin = authentication.isAuthenticated();
-        } else {
-            isLogin = false;
-        }
-        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, isLogin);
+        setModelAuthenticationAttribute(authentication, model);
         return PRODUCT_LIST_VIEW_NAME;
     }
 
@@ -138,5 +132,15 @@ public class ProductListPageController {
             totalPages = DEFAULT_TOTAL_PAGES;
             currentPage = DEFAULT_CURRENT_PAGE;
         }
+    }
+
+    private void setModelAuthenticationAttribute(Authentication authentication, Model model) {
+        boolean isLogin;
+        if (authentication != null) {
+            isLogin = authentication.isAuthenticated();
+        } else {
+            isLogin = false;
+        }
+        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, isLogin);
     }
 }

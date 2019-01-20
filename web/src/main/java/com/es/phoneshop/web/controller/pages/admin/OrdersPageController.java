@@ -42,8 +42,7 @@ public class OrdersPageController {
     public String showOrders(Model model, Authentication authentication) {
         List<Order> orders = orderService.getOrders();
         model.addAttribute(ORDERS_ATTRIBUTE_NAME, orders);
-        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, authentication.isAuthenticated());
-        model.addAttribute(USERNAME_ATTRIBUTE_NAME, authentication.getName());
+        setModelAuthenticationAttributes(authentication, model);
         return ORDERS_PAGE_NAME;
     }
 
@@ -57,8 +56,7 @@ public class OrdersPageController {
             boolean setOrder = !optionalOrder.get().getStatus().equals(OrderStatus.NEW);
             model.addAttribute(STATUS_SET_ATTRIBUTE_NAME, setOrder);
         }
-        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, authentication.isAuthenticated());
-        model.addAttribute(USERNAME_ATTRIBUTE_NAME, authentication.getName());
+        setModelAuthenticationAttributes(authentication, model);
         return ORDERS_PAGE_NAME;
     }
 
@@ -84,5 +82,16 @@ public class OrdersPageController {
         model.addAttribute(ORDER_ATTRIBUTE_NAME, order);
         model.asMap().remove(ORDERS_ATTRIBUTE_NAME);
         model.addAttribute(PHONES_ATTRIBUTE_NAME, phones);
+    }
+
+    private void setModelAuthenticationAttributes(Authentication authentication, Model model) {
+        boolean isLogin;
+        if (authentication != null) {
+            isLogin = authentication.isAuthenticated();
+            model.addAttribute(USERNAME_ATTRIBUTE_NAME, authentication.getName());
+        } else {
+            isLogin = false;
+        }
+        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, isLogin);
     }
 }
