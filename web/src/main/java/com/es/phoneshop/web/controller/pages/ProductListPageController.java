@@ -71,7 +71,7 @@ public class ProductListPageController {
     }
 
     @PostMapping
-    public String getFormParam(HttpServletRequest request, Model model) {
+    public String getFormParam(HttpServletRequest request, Model model, Authentication authentication) {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);
@@ -92,6 +92,7 @@ public class ProductListPageController {
         data = recalculateData(dataString);
         dataArray = (Integer[]) data.toArray();
         setModelAttributes(model);
+        setModelAuthenticationAttribute(authentication, model);
         return PRODUCT_LIST_VIEW_NAME;
     }
 

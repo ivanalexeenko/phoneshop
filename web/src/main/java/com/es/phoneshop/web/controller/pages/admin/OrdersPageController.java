@@ -62,12 +62,14 @@ public class OrdersPageController {
 
     @PostMapping("/orders/{orderId}")
     public String setOrderStatus(Model model, @PathVariable String orderId,
-                                 @RequestParam(value = NEW_STATUS_PARAM_NAME) Integer newStatusIndex) {
+                                 @RequestParam(value = NEW_STATUS_PARAM_NAME) Integer newStatusIndex,
+                                 Authentication authentication) {
         OrderStatus status = OrderStatus.values()[newStatusIndex];
         stockService.updateStockStatusBased(status, orderId);
         orderService.updateStatus(status, orderId);
         addModelOrderPhoneAttributes(model, orderId);
         model.addAttribute(STATUS_SET_ATTRIBUTE_NAME, true);
+        setModelAuthenticationAttributes(authentication, model);
         return ORDERS_PAGE_NAME;
     }
 
