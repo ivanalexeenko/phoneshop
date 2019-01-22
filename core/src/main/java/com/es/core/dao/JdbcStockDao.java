@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -33,13 +34,9 @@ public class JdbcStockDao implements StockDao {
     }
 
     @Override
-    public void updateStocks(List<Stock> newStocks, List<Long> phoneIds) {
-        final Integer index[] = new Integer[1];
-        index[0] = 0;
-        newStocks.forEach(newStock -> {
-            Long phoneId = phoneIds.get(index[0]);
-            jdbcTemplate.update(UPDATE_STOCK_WITH_ID, newStock.getStock(), newStock.getReserved(), phoneId);
-            index[0]++;
+    public void updateStocks(Map<Long, Stock> stocksAndIds) {
+        stocksAndIds.forEach((phoneId, stock) -> {
+            jdbcTemplate.update(UPDATE_STOCK_WITH_ID, stock.getStock(), stock.getReserved(), phoneId);
         });
     }
 }

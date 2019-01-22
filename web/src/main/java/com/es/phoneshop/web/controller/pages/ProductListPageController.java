@@ -4,6 +4,7 @@ import com.es.core.service.CartService;
 import com.es.core.service.PhoneService;
 import com.es.core.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -38,6 +39,7 @@ public class ProductListPageController {
     private static final String REGEX = ",";
     private static final String CART_SIZE = "cartSize";
     private static final String CART_PRICE_ATTRIBUTE_NAME = "cartPrice";
+    private static final String IS_LOGIN_ATTRIBUTE_NAME = "isLogin";
     private Integer currentPage = 1;
     private Integer totalPages;
     private Integer visiblePages = 7;
@@ -60,15 +62,16 @@ public class ProductListPageController {
     }
 
     @GetMapping
-    public String showProductList(Model model) {
+    public String showProductList(Model model, Authentication authentication) {
         countPageParameters();
         data = Arrays.asList(dataArray);
         setModelAttributes(model);
+        setModelAuthenticationAttribute(authentication, model);
         return PRODUCT_LIST_VIEW_NAME;
     }
 
     @PostMapping
-    public String getFormParam(HttpServletRequest request, Model model) {
+    public String getFormParam(HttpServletRequest request, Model model, Authentication authentication) {
         String tempCurrentPage = request.getParameter(CURRENT_PAGE_ATTRIBUTE_NAME);
         String tempSearch = request.getParameter(SEARCH_FIELD_ATTRIBUTE_NAME);
         String tempOrder = request.getParameter(ORDER_BY_ATTRIBUTE_NAME);
@@ -89,6 +92,7 @@ public class ProductListPageController {
         data = recalculateData(dataString);
         dataArray = (Integer[]) data.toArray();
         setModelAttributes(model);
+        setModelAuthenticationAttribute(authentication, model);
         return PRODUCT_LIST_VIEW_NAME;
     }
 
@@ -129,5 +133,15 @@ public class ProductListPageController {
             totalPages = DEFAULT_TOTAL_PAGES;
             currentPage = DEFAULT_CURRENT_PAGE;
         }
+    }
+
+    private void setModelAuthenticationAttribute(Authentication authentication, Model model) {
+        boolean isLogin;
+        if (authentication != null) {
+            isLogin = authentication.isAuthenticated();
+        } else {
+            isLogin = false;
+        }
+        model.addAttribute(IS_LOGIN_ATTRIBUTE_NAME, isLogin);
     }
 }

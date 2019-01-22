@@ -55,6 +55,17 @@
                                                                                                     class="badge badge-light">${cartPrice}</span>
                     <i class="fa fa-dollar"></i>
                 </button>
+                <c:if test="${isLogin}">
+                    <a class="btn btn-primary btn-md ml-3" href="<c:url value="/security_logout"/>">
+                        <i class="fa fa-user-circle"></i> <spring:message code="logout.text"/>
+                    </a>
+                </c:if>
+                <c:if test="${not isLogin}">
+                    <a class="btn btn-primary btn-md ml-3" href="<c:url value="/login"/>">
+                        <i class="fa fa-user-circle"></i> <spring:message code="login.text"/>
+                    </a>
+                </c:if>
+
             </form>
         </div>
     </div>
