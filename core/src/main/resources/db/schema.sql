@@ -80,3 +80,12 @@ create table orderItems (
   phoneId  BIGINT,
   quantity SMALLINT
 );
+
+create table comments (
+  id      BIGINT AUTO_INCREMENT PRIMARY KEY,
+  phoneId BIGINT,
+  name    VARCHAR(100),
+  rating  SMALLINT,
+  comment VARCHAR(100),
+  status  VARCHAR(20)
+);

@@ -212,8 +212,96 @@
                 </div>
             </form>
         </div>
+        <div class="col-sm-3">
+            <div class="text-center">
+                <h1>Comments</h1>
+            </div>
+            <div class="card">
+                <div class="text-center text-info">
+                    <c:if test="${empty comments}">
+                        <h2>No comments yet, be the first one to comment!</h2>
+                    </c:if>
+                </div>
+                <div class="list-group list-group-flush" style="flex-grow: 1;overflow-y: scroll">
+                    <c:if test="${not empty comments}">
+                        <c:forEach items="${comments}" var="comment">
+                            <p>Name:${comment.name}</p>
+                            <p>Rating:${comment.rating}</p>
+                            <a class="list-group-item list-group-item-action"><b>${comment.comment}</b></a>
+                        </c:forEach>
+                    </c:if>
+                </div>
+            </div>
+        </div>
+        <form method="post">
+            <div class="col-sm-3">
+                <div class="container mb-4">
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h3 class="text-center"><strong>
+                                                Leave Your Comment Here
+                                            </strong></h3>
+                                        </td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>Name:</th>
+                                        <td class="text-center">
+                                            <label>
+                                                <input name="commentInput" value="${commentInputs[0]}"
+                                                       class="form-control text-left" type="text"/>
+                                            </label>
+                                            <c:if test="${not empty inputMessages[0]}">
+                                                <p class="text-center text-danger">${inputMessages[0]}</p>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Rating:</th>
+                                        <td class="text-center">
+                                            <label>
+                                                <input name="commentInput" value="${commentInputs[1]}"
+                                                       class="form-control text-left" type="text"/>
+                                            </label>
+                                            <c:if test="${not empty inputMessages[1]}">
+                                                <p class="text-center text-danger">${inputMessages[1]}</p>
+                                            </c:if>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="form-group">
+                                                <label for="comment">Comment:</label>
+                                                <textarea class="form-control" rows="5" name="commentInput"
+                                                          id="comment">${commentInputs[2]}</textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button type="submit"
+                                                    class="btn btn-primary text-white">
+                                                <i class="fa fa-hand-grab-o"></i> Leave comment
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
 <script src="${i18nJS}"></script>
 <script src="${addToCart}"></script>
 <script src="${whenDocReady}"></script>
