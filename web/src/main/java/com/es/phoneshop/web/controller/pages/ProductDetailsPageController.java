@@ -66,7 +66,6 @@ public class ProductDetailsPageController {
         commentService.addComment(commentItem);
         addModelAttributes(model, phoneId);
         addModelCommentsAttribute(model, phoneId);
-
         return PRODUCT_DETAILS_VIEW_NAME;
     }
 
